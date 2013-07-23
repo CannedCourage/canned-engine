@@ -3,7 +3,7 @@
 
 //ADD CONST CORRECTNESS
 
-#include "CollisionAreas.h"
+#include "Physics\CollisionAreas.h"
 
 bool isIntersecting( BoundingCircle circle, BoundingRectangle rect, Vector* closestPointOnRectangle );
 

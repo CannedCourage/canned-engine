@@ -3,9 +3,10 @@
 #ifndef _IENGINE_H_
 #define _IENGINE_H_
 
-#include "Engine\Modules.h"
-
+class System;
 class SceneManager;
+class DefaultSettings;
+class Graphics;
 
 class IEngine
 {
@@ -13,19 +14,19 @@ private:
 protected:
 
 	//Constant interface to engine modules
-	SceneManager* const manager;
-	DefaultSettings* const settings; //Make const to prevent scenes etc. being able to change settings?
+	System &system;
+	SceneManager &manager;
+	DefaultSettings &settings;
 
-	Graphics* const graphics;
-	LPDIRECT3D9 const Interface;
-	LPDIRECT3DDEVICE9 const device;
+	//Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
+	Graphics &graphics;
 
-	Input* const input;
-	Sound* const sound;
+	//Input &input;
+	//Sound &sound;
 	//Physics* const physics;
 public:
 
-	IEngine( void );
+	IEngine( System &s );
 	~IEngine( void );
 
 	virtual void OnLost( void );

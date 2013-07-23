@@ -1,6 +1,6 @@
 #include <d3d9.h>
 #include <d3dx9.h>
-#include "windows.h"
+#include <windows.h>
 
 #ifndef _CV_CAMERA_H_
 #define _CV_CAMERA_H_

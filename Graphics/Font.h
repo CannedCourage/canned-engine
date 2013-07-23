@@ -1,15 +1,17 @@
 #ifndef _FONT_H_
 #define _FONT_H_
 
-#include "Graphics.h"
+#include "Graphics\Graphics.h"
 #include <string>
+
+class System;
 
 class Font
 {
 private:
 protected:
 
-	Graphics* const graphics;
+	Graphics& graphics;
 
 	std::string text;
 
@@ -21,7 +23,7 @@ protected:
 	D3DXFONT_DESCA description;
 public:
 
-	Font( void );
+	Font( System &s );
 	~Font( void );
 
 	void Create( void );

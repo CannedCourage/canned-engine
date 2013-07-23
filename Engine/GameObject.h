@@ -1,8 +1,10 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
-#include "IEngine.h"
-#include "Tag.h"
+#include "Engine\IEngine.h"
+#include "Engine\Tag.h"
+
+class System;
 
 class GameObject : public IEngine
 {
@@ -17,7 +19,7 @@ protected:
 	//TODO: Put engine interface in components instead?
 public:
 
-	GameObject( void );
+	GameObject( System &s );
 	~GameObject( void );
 };
 

@@ -7,6 +7,8 @@
 #include "GUI\Widget.h"
 #include <list>
 
+class System;
+
 class GUI : public IScene
 {
 private:
@@ -18,7 +20,7 @@ protected:
 	void AddWidget( Widget* w );
 public:
 
-	GUI( const char* n = "DEFAULT_GUI" );
+	GUI( System &s, const char* n = "DEFAULT_GUI" );
 	~GUI( void );
 
 	virtual void WidgetClicked(Widget* widget) = 0;

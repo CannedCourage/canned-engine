@@ -1,7 +1,7 @@
-#include <stdio.h>
-
 #ifndef _LOG_H_
 #define _LOG_H_
+
+#include <stdio.h>
 
 #define DEFAULT_LOG_FILENAME "ScottEngine_Log"
 

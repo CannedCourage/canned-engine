@@ -1,10 +1,13 @@
 #include "Engine\IEngine.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
+//#include "Engine\Modules.h"
 
-IEngine::IEngine( void ) : manager( SceneManager::Get() ), settings( &(manager->settings) ),// window( &(manager->window) ),
-	graphics( &( manager->graphics ) ), Interface( graphics->Interface() ), device( graphics->Device() ),
-	input( &( manager->input ) ),
-	sound( &( manager->sound ) )
+IEngine::IEngine( System &s ) : system( s ),
+								manager( s.sceneManager ),
+								settings( s.settings ),
+								graphics( s.graphics )
+								//input( s.input ),
+								//sound( s.sound )
 {
 }
 

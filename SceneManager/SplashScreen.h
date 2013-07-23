@@ -5,6 +5,11 @@
 
 #include "SceneManager\IScene.h"
 
+#include <d3d9.h>
+#include <d3dx9.h>
+
+class System;
+
 class SplashScreen : public IScene
 {
 private:
@@ -28,7 +33,7 @@ protected:
 	void RenderOut( void );
 public:
 
-	SplashScreen( const char* n = "SplashScreen" );
+	SplashScreen( System &s, const char* n = "SplashScreen" );
 	~SplashScreen( void );
 	void Load( void );
 	void Unload( void );

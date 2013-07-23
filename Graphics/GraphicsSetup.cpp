@@ -2,7 +2,7 @@
 
 void Graphics::CreateInterface( void )
 {
-	HWND hWnd = window->getHandle();
+	HWND hWnd = window.getHandle();
 
     mInterface = Direct3DCreate9( D3D_SDK_VERSION );
 
@@ -18,7 +18,7 @@ void Graphics::GetAdapters( void )
 
 	if( adapterCount > 0 )
 	{
-		window->AdapterDialog();
+		window.AdapterDialog();
 	}
 	else
 	{
@@ -30,7 +30,7 @@ void Graphics::GetAdapters( void )
 	for( UINT i = 0; i < adapterCount; i++ )
 	{
 		mInterface->GetAdapterIdentifier( i, 0, &( adapters[i] ) );
-		window->AddAdapterOption( adapters[i].Description );
+		window.AddAdapterOption( adapters[i].Description );
 	}
 }
 
@@ -135,7 +135,7 @@ void Graphics::CheckDeviceCaps( void )
 
 void Graphics::SetParameters( void )
 {
-	HWND hWnd = window->getHandle();
+	HWND hWnd = window.getHandle();
 
 	ZeroMemory( &fullParameters, sizeof( fullParameters ) );
 	fullParameters.AutoDepthStencilFormat = depthFormat;				//16 bit depth buffer, 0 bit stencil buffer
@@ -147,7 +147,7 @@ void Graphics::SetParameters( void )
 	fullParameters.Flags = NULL;										//No flags
 	fullParameters.FullScreen_RefreshRateInHz = refresh;				//Refresh rate, 0 asks DX to choose
 	fullParameters.hDeviceWindow = hWnd;
-	fullParameters.MultiSampleQuality = 0;						//Anti-Aliasing quality
+	fullParameters.MultiSampleQuality = 0;								//Anti-Aliasing quality
 	fullParameters.MultiSampleType = AA;								//No Anti-Aliasing
 	fullParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	//Present back buffer once per screen refresh
 	fullParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;					//Discard old frames
@@ -352,7 +352,12 @@ void Graphics::SetMultisample16( void )
 
 void Graphics::CreateDevice( void )
 {
-	HWND hWnd = window->getHandle();
+	HWND hWnd = window.getHandle();
+
+	char* error = new char[256];
+	sprintf( error, "Windows Handle: %d", adapter );
+
+	log.Message( error );
 
 	ErrorCheck( mInterface->CreateDevice(adapter,
                       deviceType,

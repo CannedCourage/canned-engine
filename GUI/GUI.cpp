@@ -1,6 +1,7 @@
 #include "GUI\GUI.h"
+#include "System\System.h"
 
-GUI::GUI( const char* n ) : IScene( n )
+GUI::GUI( System &s, const char* n ) : IScene( s, n )
 {
 }
 

@@ -1,20 +1,20 @@
 #include "Graphics\Graphics.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
-Graphics::Graphics( void ) : ILoggable("Graphics"), settings( &(SceneManager::Get()->settings) ), window( &(SceneManager::Get()->window) ), mInterface( NULL ), mDevice( NULL ),
-	showCursorFullscreen( false ), forceClientToRes( true )
+Graphics::Graphics( System &s ) : ILoggable("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
+	showCursorFullscreen( false ), forceClientToRes( true ), adapter( 0 )
 {
-	windowed = !(settings->client.fullscreen);
-	xResolution = settings->client.xResolution;
-	yResolution = settings->client.yResolution;
-	xWindowPosition = settings->window.x;
-	yWindowPosition = settings->window.y;
-	xWindowSize = settings->window.width;
-	yWindowSize = settings->window.height;
+	windowed = !(settings.client.fullscreen);
+	xResolution = settings.client.xResolution;
+	yResolution = settings.client.yResolution;
+	xWindowPosition = settings.window.x;
+	yWindowPosition = settings.window.y;
+	xWindowSize = settings.window.width;
+	yWindowSize = settings.window.height;
 	clientWidth = xResolution; //Plus one?
 	clientHeight = yResolution; //Plus one?
-	xClientPos = settings->client.x;
-	yClientPos = settings->client.y;
+	xClientPos = settings.client.x;
+	yClientPos = settings.client.y;
 
 	deviceType = D3DDEVTYPE_HAL;
 	behaviourFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
@@ -151,22 +151,22 @@ void Graphics::SetFullscreen( void )
 {
 	if( windowed )
 	{
-		settings->client.fullscreen = true;
+		settings.client.fullscreen = true;
 		windowed = false;
 
 		SetParameters();
 
-		SceneManager::Get()->OnLost();
+		system.sceneManager.OnLost();
 
 		if( Reset() )
 		{
-			SceneManager::Get()->OnRecover();
+			system.sceneManager.OnRecover();
 			SetRenderStates();
 		}
 
 		if( !showCursorFullscreen )
 		{
-			window->Cursor( false );
+			window.Cursor( false );
 		}
 	}
 	else
@@ -179,22 +179,22 @@ void Graphics::SetWindowed( void )
 {
 	if( !windowed )
 	{
-		settings->client.fullscreen = false;
+		settings.client.fullscreen = false;
 		windowed = true;
 
 		SetParameters();
 
-		SceneManager::Get()->OnLost();
+		system.sceneManager.OnLost();
 
 		if( Reset() )
 		{
-			SceneManager::Get()->OnRecover();
+			system.sceneManager.OnRecover();
 			SetRenderStates();
 		}
 
-		window->Update();
+		window.Update();
 
-		window->Cursor( true );
+		window.Cursor( true );
 	}
 	else
 	{
@@ -206,8 +206,8 @@ void Graphics::SetClientSize( const int& width, const int& height )
 {
 	if( windowed )
 	{
-		settings->client.width = clientWidth = width;
-		settings->client.height = clientHeight = height;
+		settings.client.width = clientWidth = width;
+		settings.client.height = clientHeight = height;
 	}
 }
 
@@ -215,8 +215,8 @@ void Graphics::SetClientPosition( const int& x, const int& y )
 {
 	if( windowed )
 	{
-		settings->client.x = xClientPos = x;
-		settings->client.y = yClientPos = y;
+		settings.client.x = xClientPos = x;
+		settings.client.y = yClientPos = y;
 	}
 }
 
@@ -224,18 +224,18 @@ void Graphics::ForceWindowAroundClient( void )
 {
 	RECT temp = { xClientPos, yClientPos, xClientPos + clientWidth, yClientPos + clientHeight };
 	
-	window->ForceAroundClient( temp );
+	window.ForceAroundClient( temp );
 
 	if( windowed )
 	{
-		window->Update();
+		window.Update();
 	}
 }
 
 void Graphics::SetResolution( const int& width, const int& height )
 {
-	settings->client.xResolution = xResolution = width;
-	settings->client.yResolution = yResolution = height;
+	settings.client.xResolution = xResolution = width;
+	settings.client.yResolution = yResolution = height;
 
 	SetParameters();
 
@@ -336,7 +336,7 @@ void Graphics::ErrorCheck( HRESULT result, LPCTSTR info )
 	LPTSTR error = new TCHAR[256];
 	wsprintf( error, TEXT( "Graphics: %s\r\n%s" ), info, text );
 
-	//window->ErrorDialog( error );
+	//window.ErrorDialog( error );
 
 	throw( error );
 }

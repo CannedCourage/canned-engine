@@ -1,14 +1,14 @@
 #include "Window\Window.h"
 #include "Graphics\Screen.h"
 #include "StandardResources\resource.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
 #define FULLSCREEN		WS_EX_TOPMOST | WS_POPUP
 #define WINDOWED2		WS_OVERLAPPEDWINDOW
 #define WINDOWED		( WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE )
 
-Window::Window( void ) : ILoggable( "Window" ), settings( &(SceneManager::Get()->settings) ),
-	x( settings->window.x ), y( settings->window.y ), width( settings->window.width ), height( settings->window.height ), maximised( settings->window.maximised )
+Window::Window( System &s ) : ILoggable( "Window" ), settings( s.settings ),
+	x( settings.window.x ), y( settings.window.y ), width( settings.window.width ), height( settings.window.height ), maximised( settings.window.maximised )
 {
 }
 
@@ -48,9 +48,9 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 
 	//Create The Window
 	DWORD style;
-	RECT adjusted = { settings->client.x, settings->client.y, ( settings->client.x + settings->client.width ), ( settings->client.y + settings->client.height ) };
+	RECT adjusted = { settings.client.x, settings.client.y, ( settings.client.x + settings.client.width ), ( settings.client.y + settings.client.height ) };
 
-	if( settings->client.fullscreen )
+	if( settings.client.fullscreen )
 	{
 		style = FULLSCREEN;
 
@@ -64,14 +64,14 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 
 		AdjustWindowRectEx( &adjusted, style, true, 0 );
 
-		settings->window.x = adjusted.left;
-		settings->window.y = adjusted.top;
-		settings->window.width = ( adjusted.right - adjusted.left );
-		settings->window.height = ( adjusted.bottom - adjusted.top );
+		settings.window.x = adjusted.left;
+		settings.window.y = adjusted.top;
+		settings.window.width = ( adjusted.right - adjusted.left );
+		settings.window.height = ( adjusted.bottom - adjusted.top );
 	}
 
 	//					   Extended Window Style, class to use, title bar text, Window Style, x, y, width, height, parent window, menu handle, app instance, creation data
-	hwnd = CreateWindowEx( 0, L"GameWindow", L"ScottEngine", style, settings->window.x, settings->window.y, settings->window.width, settings->window.height, NULL, NULL, hInstance, NULL );
+	hwnd = CreateWindowEx( 0, L"GameWindow", L"ScottEngine", style, settings.window.x, settings.window.y, settings.window.width, settings.window.height, NULL, NULL, hInstance, NULL );
 
 	if( hwnd == NULL )
 	{
@@ -212,14 +212,14 @@ void Window::Update( void )
 
 void Window::SetPosition( const int& X, const int& Y )
 {
-	settings->window.x = x = X;
-	settings->window.y = y = Y;
+	settings.window.x = x = X;
+	settings.window.y = y = Y;
 }
 
 void Window::SetSize( const int& Width, const int& Height )
 {
-	settings->window.width = width = Width;
-	settings->window.height = height = Height;
+	settings.window.width = width = Width;
+	settings.window.height = height = Height;
 }
 
 void Window::Cursor( const bool& show )

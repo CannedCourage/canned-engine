@@ -1,18 +1,22 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "Graphics.h"
+#include <d3d9.h>
+#include <d3dx9.h>
+
+class System;
+class Graphics;
 
 class Texture
 {
 private:
 protected:
 
-	Graphics* const graphics;
+	Graphics& graphics;
 	LPDIRECT3DTEXTURE9 texture;
 public:
 
-	Texture( void );
+	Texture( System &s );
 	~Texture( void );
 
 	LPDIRECT3DTEXTURE9* getTexture( void );

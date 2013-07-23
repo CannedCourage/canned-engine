@@ -1,7 +1,11 @@
 #ifndef _VERTEXBUFFER_H_
 #define _VERTEXBUFFER_H_
 
-#include "Graphics\Graphics.h"
+#include <d3d9.h>
+#include <d3dx9.h>
+
+class System;
+class Graphics;
 
 template <class T>
 class VertexBuffer
@@ -9,7 +13,7 @@ class VertexBuffer
 private:
 protected:
 
-	Graphics* const graphics;
+	Graphics& graphics;
 	LPDIRECT3DVERTEXBUFFER9 buffer;
 
 	DWORD usage, format;
@@ -19,7 +23,7 @@ public:
 	VOID* memory;
 	T* vertices;
 
-	VertexBuffer( void );
+	VertexBuffer( System &s );
 	~VertexBuffer( void );
 
 	LPDIRECT3DVERTEXBUFFER9 getBuffer( void );

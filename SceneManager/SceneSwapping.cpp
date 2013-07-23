@@ -1,4 +1,6 @@
 #include "SceneManager\SceneManager.h"
+#include "SceneManager\IScene.h"
+#include "GUI\GUI.h"
 
 void SceneManager::ChangeScene( IScene* const newScene )
 {

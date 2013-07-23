@@ -1,0 +1,11 @@
+{
+ "folders": [
+  {
+   "path": "/C/Users/Scott/Programming/Projects/GitHub/canned-engine", 
+   "file_exclude_patterns": [
+    "Engine/timer2.cpp", 
+    "Engine/timer2.h"
+   ]
+  }
+ ]
+}

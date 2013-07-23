@@ -1,4 +1,5 @@
 #include "SceneManager\SceneManager.h"
+#include "GUI\GUI.h"
 
 void SceneManager::PushGUI( GUI* const newGUI )
 {

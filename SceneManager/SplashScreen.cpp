@@ -1,8 +1,10 @@
 //Implementation of test scene
 #include "SceneManager\SplashScreen.h"
 #include "SceneManager\SceneManager.h"
+#include "System\System.h"
+#include "SceneManager\Scenes.h"
 
-SplashScreen::SplashScreen( const char* n ) : IScene(n), vertexBuffer( NULL ), texture( NULL ), time( 0.0f )
+SplashScreen::SplashScreen( System &s, const char* n ) : IScene( s, n ), vertexBuffer( NULL ), texture( NULL ), time( 0.0f )
 {
 	tuMin = 0.0f;
 	tuMax = 1.0f;
@@ -25,25 +27,25 @@ void SplashScreen::Load( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings->client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings->client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings->client.xResolution, (float)settings->client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.client.xResolution, (float)settings.client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
 		};
 
-		graphics->ErrorCheck( device->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
+		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
 
-		graphics->ErrorCheck( D3DXCreateTextureFromFile( device, TEXT( "StandardResources/SplashScreen.png" ), &texture ), TEXT( "SplashScreen: Texture creation FAILED" ) );
+		graphics.ErrorCheck( D3DXCreateTextureFromFile( graphics.Device(), TEXT( "StandardResources/SplashScreen.png" ), &texture ), TEXT( "SplashScreen: Texture creation FAILED" ) );
 
 		VOID* pVoid;
 
-		graphics->ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer" ) );
+		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer" ) );
 		memcpy( pVoid, vertices, sizeof(vertices) );
-		graphics->ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer" ) );
+		graphics.ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer" ) );
 	}
 
 	//Always set state and report
 	loaded = true;
-	manager->ReportFinishedLoading( this );
+	system.sceneManager.ReportFinishedLoading( this );
 }
 
 void SplashScreen::Unload( void )
@@ -66,7 +68,7 @@ void SplashScreen::Unload( void )
 
 	//Always set state and report
 	loaded = false;
-	manager->ReportFinishedUnloading( this );
+	system.sceneManager.ReportFinishedUnloading( this );
 }
 
 void SplashScreen::OnLost( void )
@@ -88,7 +90,7 @@ void SplashScreen::OnRecover( void )
 {
 	if( lost )
 	{
-		graphics->ErrorCheck( device->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
+		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
 
 		//Textures are in MANAGED pool
 
@@ -96,30 +98,30 @@ void SplashScreen::OnRecover( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings->client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings->client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings->client.xResolution, (float)settings->client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.client.xResolution, (float)settings.client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
 		};
 
 		VOID* pVoid;
 
-		graphics->ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer again" ) );
+		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer again" ) );
 		memcpy( pVoid, vertices, sizeof(vertices) );
-		graphics->ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer again" ) );
+		graphics.ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer again" ) );
 	}
 	lost = false;
 }
 
 void SplashScreen::FadeIn( void )
 {
-	SetState(update);
+	SetState( update );
 }
 
 void SplashScreen::MainLoop( void )
 {
 	if( time > maxTime )
 	{
-		manager->ChangeScene( new TestScene() );
+		system.sceneManager.ChangeScene( new TestScene( system ) );
 	}
 	else
 	{
@@ -134,39 +136,39 @@ void SplashScreen::FadeOut( void )
 
 void SplashScreen::RenderIn( void )
 {
-	device->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
-	device->BeginScene();    // begins the 3D scene
-	device->EndScene();    // ends the 3D scene
-	device->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
+	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+	graphics.Device()->BeginScene();    // begins the 3D scene
+	graphics.Device()->EndScene();    // ends the 3D scene
+	graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }
 
 void SplashScreen::RenderMain( void )
 {
 	// clear the window to a deep blue
-	device->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
 
-    device->BeginScene();    // begins the 3D scene
+    graphics.Device()->BeginScene();    // begins the 3D scene
 
-	device->SetFVF(Vertex2dTx::format);
+	graphics.Device()->SetFVF(Vertex2dTx::format);
 
-	device->SetTexture( 0, texture );
-	device->SetTextureStageState(0,D3DTSS_COLOROP,D3DTOP_SELECTARG1);
-	device->SetTextureStageState(0,D3DTSS_COLORARG1,D3DTA_TEXTURE);
-	device->SetTextureStageState(0,D3DTSS_COLORARG2,D3DTA_DIFFUSE); 
+	graphics.Device()->SetTexture( 0, texture );
+	graphics.Device()->SetTextureStageState(0,D3DTSS_COLOROP,D3DTOP_SELECTARG1);
+	graphics.Device()->SetTextureStageState(0,D3DTSS_COLORARG1,D3DTA_TEXTURE);
+	graphics.Device()->SetTextureStageState(0,D3DTSS_COLORARG2,D3DTA_DIFFUSE); 
 	
-	device->SetStreamSource( 0, vertexBuffer, 0, sizeof(Vertex2dTx) );
+	graphics.Device()->SetStreamSource( 0, vertexBuffer, 0, sizeof(Vertex2dTx) );
 
-    device->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 );
+    graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 );
 
-	device->EndScene();    // ends the 3D scene
+	graphics.Device()->EndScene();    // ends the 3D scene
 
-    device->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
+    graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }
 
 void SplashScreen::RenderOut( void )
 {
-	device->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
-	device->BeginScene();    // begins the 3D scene
-	device->EndScene();    // ends the 3D scene
-	device->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
+	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+	graphics.Device()->BeginScene();    // begins the 3D scene
+	graphics.Device()->EndScene();    // ends the 3D scene
+	graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }

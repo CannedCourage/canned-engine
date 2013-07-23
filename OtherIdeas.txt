@@ -1,0 +1,9 @@
+Create new scene
+	supply string
+	string = LUA scripting file
+	generic scene is initialised with reference to system + LUA file name
+	generic scene calls similarly structured LUA functions
+	Lua functions call C++ code via luabind
+
+
+The upshot of this is that it means scene can be a generic class

@@ -1,8 +1,22 @@
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 #include "Graphics\Screen.h"
 #include "StandardResources\resource.h"
 
-int SceneManager::Run( void )
+System::System( void ) : ILoggable( "System" ), sceneManager( *this ), window( *this ), graphics( *this )
+{
+}
+
+int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
+{
+	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
+	graphics.Initialise();
+	//input;
+	//sound;
+
+	return result;
+}
+
+int System::Run( void )
 {
 	//The Message Loop
 	MSG msg;				//A system message
@@ -21,27 +35,22 @@ int SceneManager::Run( void )
         if( msg.message == WM_QUIT )
             break;
 
-		if( update )
-		{
-			if( !Update() )
-			{
-				break;
-			}
-			else
-			{
-				if( render )
-				{
-					Render();
-				}
-			}
-		}
+		sceneManager.Run();	//Game Loop
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
 	//~The Message Loop
 }
 
-LRESULT CALLBACK SceneManager::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
+//If the System is shutting down, that means end of program, time to do cleanup
+void System::Shutdown( void )
+{
+	graphics.CleanUp();
+
+	window.Destroy();
+}
+
+LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch( msg )
 	{
@@ -143,8 +152,8 @@ LRESULT CALLBACK SceneManager::MessageHandler( HWND hWnd, UINT msg, WPARAM wPara
 						case BN_CLICKED:
 							window.DestroyDialogs();
 							graphics.Reset();
-							SetUpdate( true );
-							SetRender( true );
+							sceneManager.SetUpdate( true );
+							sceneManager.SetRender( true );
 							break;
 					}
 					break;
@@ -171,67 +180,9 @@ LRESULT CALLBACK SceneManager::MessageHandler( HWND hWnd, UINT msg, WPARAM wPara
 	return 0;
 }
 
-/* This has moved to the Window class
-int SceneManager::InitWindow( HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow )
+System::~System( void )
 {
-	//Register the window class
-	windowClass.cbSize = sizeof( WNDCLASSEX );									//The size of the structure
-	windowClass.style = CS_HREDRAW | CS_VREDRAW;								//The Class Style
-	windowClass.lpfnWndProc = WndProc;											//Pointer to Function that points to the Windows Procedure
-	windowClass.cbClsExtra = 0;													//Extra data allocated for this class in memory, usually 0
-	windowClass.cbWndExtra = 0;													//Extra data allocated in memory PER WINDOW of this type, usually 0
-	windowClass.hInstance = hInstance;											//Handle to application instance
-	windowClass.hIcon = LoadIcon( hInstance, MAKEINTRESOURCE( IDI_MYICON ) );	//Large Icon (Alt-Tab) LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MYICON))
-	windowClass.hCursor = LoadCursor( hInstance, IDC_ARROW );					//Cursor displayed when over the window
-	//windowClass.hbrBackground = ( HBRUSH )( COLOR_WINDOW+1 );					//Background brush that sets the colour of the background
-	windowClass.hbrBackground = NULL;
-	windowClass.lpszMenuName = MAKEINTRESOURCE( IDR_MENU1 );					//Name of a menu resource the windows of this class use
-	windowClass.lpszClassName = windowClassName;								//Class identifier
-	windowClass.hIconSm = LoadIcon( hInstance, MAKEINTRESOURCE( IDI_MYICON ) );	//Small Icon (Taskbar, etc)
+	graphics.CleanUp();
 
-	if( !RegisterClassEx( &windowClass ) )
-	{
-		MessageBox( NULL, L"Window Registration Failed :(", L"Error!", MB_ICONEXCLAMATION | MB_OK );
-		log.Message( "Window Registration Failed :(" );
-		return 0;
-	}
-	//~Register the window class
-
-	//Create The Window
-	DWORD style;
-	RECT adjusted = { settings.client.x, settings.client.y, ( settings.client.x + settings.client.width ), ( settings.client.y + settings.client.height ) };
-
-	if( settings.client.fullscreen )
-	{
-		style = FULLSCREEN;
-
-		while (ShowCursor(false) >= 0);
-	}
-	else
-	{
-		style = WINDOWED;
-
-		AdjustWindowRectEx( &adjusted, style, true, 0 );
-
-		settings.window.x = adjusted.left;
-		settings.window.y = adjusted.top;
-		settings.window.width = ( adjusted.right - adjusted.left );
-		settings.window.height = ( adjusted.bottom - adjusted.top );
-	}
-
-	//					   Extended Window Style, class to use, title bar text, Window Style, x, y, width, height, parent window, menu handle, app instance, creation data
-	hWnd = CreateWindowEx( 0, windowClassName, L"ScottEngine", style, settings.window.x, settings.window.y, settings.window.width, settings.window.height, NULL, NULL, hInstance, NULL );
-
-	if( hWnd == NULL )
-	{
-		MessageBox( hWnd, L"Window Creation Failed! :(", L"Error!", MB_ICONEXCLAMATION | MB_OK );
-		return 0;
-	}
-
-	ShowWindow( hWnd, nCmdShow );	//Show window, initial state determined by nCmdShow
-	UpdateWindow( hWnd );			//Redraw
-
-	//~Create The Window
-	return 1;
+	window.Destroy();
 }
-//*/

@@ -29,8 +29,8 @@ void Graphics::GetMode( void )
 	{
 		delete modes;
 	}
-
-	window->ClearDisplayOptions();
+	
+	window.ClearDisplayOptions();
 
 	modes = new D3DDISPLAYMODE[modeCount];
 
@@ -49,7 +49,7 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						window->AddDisplayOption( temp );
+						window.AddDisplayOption( temp );
 						j++;
 					}
 				}
@@ -60,7 +60,7 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						window->AddDisplayOption( temp );
+						window.AddDisplayOption( temp );
 						j++;
 					}
 				}
@@ -71,7 +71,7 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						window->AddDisplayOption( temp );
+						window.AddDisplayOption( temp );
 						j++;
 					}
 				}

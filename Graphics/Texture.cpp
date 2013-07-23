@@ -1,7 +1,7 @@
 #include "Graphics\Texture.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
-Texture::Texture( void ) : graphics( &( SceneManager::Get()->graphics ) ), texture( NULL )
+Texture::Texture( System &s ) : graphics( s.graphics ), texture( NULL )
 {
 }
 
@@ -19,7 +19,7 @@ void Texture::LoadFromFile( const char* file )
 {
 	Unload();
 
-	graphics->ErrorCheck( D3DXCreateTextureFromFileA( graphics->Device(), file, &texture ), TEXT( "Creating Texture From File" ) );
+	graphics.ErrorCheck( D3DXCreateTextureFromFileA( graphics.Device(), file, &texture ), TEXT( "Creating Texture From File" ) );
 }
 
 void Texture::Unload( void )

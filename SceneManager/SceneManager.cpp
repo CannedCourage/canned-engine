@@ -1,8 +1,12 @@
 //Implementation of SceneManager
 
+#include "System\System.h"
 #include "SceneManager\SceneManager.h"
+#include "SceneManager\Scenes.h"
+#include "SceneManager\IScene.h"
+#include "GUI\GUI.h"
 
-int SceneManager::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
+SceneManager::SceneManager( System &s ) : system( s )
 {
 	currentScene = NULL;
 	nextScene = NULL;
@@ -11,19 +15,31 @@ int SceneManager::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, 
 	update = false;
 	render = false;
 
-	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
-
-	graphics.Initialise();
-
 	//TO DO: determine default starting scene then initialise
 	//Temp: Use SplashScreen
-	currentScene = new SplashScreen();
+	currentScene = new SplashScreen( system );
 	//currentScene->Load();
 
 	currentSceneFinished = false;
 	nextSceneReady = false;
+}
 
-	return result;
+void SceneManager::Run( void )
+{
+	if( update )
+		{
+			if( !Update() )
+			{
+				return;
+			}
+			else
+			{
+				if( render )
+				{
+					Render();
+				}
+			}
+		}
 }
 
 bool SceneManager::Update( void )
@@ -53,13 +69,13 @@ bool SceneManager::Update( void )
 
 void SceneManager::Render()
 {
-	graphics.DoChecks();
+	system.graphics.DoChecks();
 	//TODO: Create game object manager to handle Lost and Recover events, etc.
-	if( graphics.IsDeviceLost() )	//Device is lost
+	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{
 		OnLost();	//Destroy existing resources
 		log.Message( "Device Lost", true );
-		if( graphics.Reset() )	//Reset() will return true if the device was successfully 'found'
+		if( system.graphics.Reset() )	//Reset() will return true if the device was successfully 'found'
 		{
 			log.Message( "Recovering", true );
 			OnRecover();	//Recreate resources that existed before the device was lost
@@ -86,26 +102,6 @@ void SceneManager::Render()
 			(*itr)->Render();
 		}
 	}
-}
-
-//If the SceneManager is shutting down, that means end of program, time to do cleanup
-void SceneManager::Shutdown( void )
-{
-	ClearGUIStack();
-
-	if( nextScene != NULL )
-	{
-		nextScene->Unload();
-	}
-
-	if( currentScene != NULL )
-	{
-		currentScene->Unload();
-	}
-
-	graphics.CleanUp();
-
-	window.Destroy();
 }
 
 void SceneManager::OnLost( void )
@@ -141,5 +137,20 @@ void SceneManager::OnRecover( void )
 		{
 			nextScene->OnRecover();
 		}
+	}
+}
+
+SceneManager::~SceneManager( void )
+{
+	ClearGUIStack();
+
+	if( nextScene != NULL )
+	{
+		nextScene->Unload();
+	}
+
+	if( currentScene != NULL )
+	{
+		currentScene->Unload();
 	}
 }

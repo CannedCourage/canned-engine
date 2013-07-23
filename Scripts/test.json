@@ -3,16 +3,16 @@
 		"fullscreen" : false,
 		"height" : 700,
 		"width" : 1280,
-		"x" : 324,
+		"x" : 327,
 		"xResolution" : 1280,
-		"y" : 175,
+		"y" : 214,
 		"yResolution" : 720
 	},
 	"window" : {
 		"height" : 758,
 		"maximised" : false,
 		"width" : 1296,
-		"x" : 316,
-		"y" : 125
+		"x" : 319,
+		"y" : 164
 	}
 }

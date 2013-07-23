@@ -2,10 +2,10 @@
 #define _VBUFFERDEF_
 
 #include "Graphics\VertexBuffer.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
 template <class T>
-VertexBuffer<T>::VertexBuffer( void ) : graphics( &( SceneManager::Get()->graphics ) ), buffer( NULL ), usage( D3DUSAGE_WRITEONLY ), format( T::format ), pool( D3DPOOL_DEFAULT ), memory( NULL ), vertices( NULL )
+VertexBuffer<T>::VertexBuffer( System &s ) : graphics( s.graphics ), buffer( NULL ), usage( D3DUSAGE_WRITEONLY ), format( T::format ), pool( D3DPOOL_DEFAULT ), memory( NULL ), vertices( NULL )
 {
 }
 
@@ -30,7 +30,7 @@ LPDIRECT3DVERTEXBUFFER9 VertexBuffer<T>::getBuffer( void )
 template <class T>
 void VertexBuffer<T>::Create( void )
 {
-	graphics->ErrorCheck( graphics->Device()->CreateVertexBuffer( sizeof(vertices), usage, format, pool, &buffer, NULL ), TEXT( "VertexBuffer creation failed" ) );
+	graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( sizeof(vertices), usage, format, pool, &buffer, NULL ), TEXT( "VertexBuffer creation failed" ) );
 }
 
 template <class T>
@@ -62,13 +62,13 @@ void VertexBuffer<T>::OnRecover( void )
 template <class T>
 void VertexBuffer<T>::Lock( void )
 {
-	graphics->ErrorCheck( buffer->Lock( 0, 0, (void**)&memory, 0 ), TEXT( "Error locking vertex buffer buffer" ) );
+	graphics.ErrorCheck( buffer->Lock( 0, 0, (void**)&memory, 0 ), TEXT( "Error locking vertex buffer buffer" ) );
 }
 
 template <class T>
 void VertexBuffer<T>::Unlock( void )
 {
-	graphics->ErrorCheck( buffer->Unlock(), TEXT( "Error unlocking vertex buffer" ) );
+	graphics.ErrorCheck( buffer->Unlock(), TEXT( "Error unlocking vertex buffer" ) );
 }
 
 template <class T>

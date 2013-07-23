@@ -1,6 +1,8 @@
 #ifndef _MODULES_H_
 #define _MODULES_H_
 
+#include "SceneManager\SceneManager.h"
+
 #include "Engine\DefaultSettings.h"
 #include "Window\Window.h"
 

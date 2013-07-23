@@ -2,15 +2,17 @@
 #define _WINDOW_H_
 
 #include "Logging\ILoggable.h"
-#include "Engine\DefaultSettings.h"
 #include <Windows.h>
+
+class System;
+class DefaultSettings;
 
 class Window : public ILoggable
 {
 private:
 protected:
 
-	DefaultSettings* const settings;
+	DefaultSettings &settings;
 
 	HWND hwnd;				//Handle
 	WNDCLASSEX windowClass;	//A structure that stores information used to create the window
@@ -22,7 +24,7 @@ protected:
 	bool maximised;
 public:
 
-	Window( void );
+	Window( System &s );
 	~Window( void );
 
 	HWND const getHandle( void ) const;

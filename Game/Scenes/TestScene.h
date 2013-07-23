@@ -4,6 +4,8 @@
 #include "SceneManager\IScene.h"
 #include "Graphics\VertexBuffer.h"
 
+class System;
+
 class TestScene : public IScene
 {
 private:
@@ -29,7 +31,7 @@ protected:
 	void RenderOut( void );
 public:
 
-	TestScene( void );
+	TestScene( System &s );
 	~TestScene( void );
 	void Load( void );
 	void Unload( void );

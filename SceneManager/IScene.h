@@ -7,6 +7,8 @@
 #include "Logging\ILoggable.h"
 #include "Camera\Camera.h"
 
+class System;
+
 enum sceneStates { init = 0 , update = 1, out = 2, };
 
 class IScene : public IEngine, public ILoggable
@@ -30,7 +32,7 @@ public:
 
 	const char* name;
 
-	IScene( const char* n = "DEFAULT", sceneStates s = init );
+	IScene( System &sys, const char* n = "DEFAULT", sceneStates s = init );
 	~IScene( void );
 	virtual void Update( void );
 	virtual void Render( void );

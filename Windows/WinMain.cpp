@@ -2,45 +2,47 @@
 #define WIN32_LEAN_AND_MEAN
 #endif //WIN32_LEAN_AND_MEAN
 
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
-SceneManager* Game = NULL;
+System* sys = NULL;
 
 //WinMain, Parameters: hInstance( application instance ), hPrevInstance( previous instance of the application running, unused holdover from win16 ), 
 //lpCmdLine( command line arguments, not including program name ), nCmdShow( specifies initial window state, i.e. minimised, maximised, this is set in shortcut properties )
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	Game = SceneManager::Get();
+	sys = new System();
 
 	try
 	{
-		if( !Game )
+		if( !sys )
 		{
+			MessageBox( NULL, TEXT( "Error during construction" ), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
 			return 0;
 		}
 	}
 	catch( LPCTSTR error )
 	{
 		MessageBox( NULL, error, TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
-		if( Game != NULL )
+		if( sys != NULL )
 		{
-			Game->Quit();
+			sys->Quit();
 		}
 	}
 
 	try
 	{
-		if( !Game->Initialise( hInstance, lpCmdLine, nCmdShow ) )
+		if( !sys->Initialise( hInstance, lpCmdLine, nCmdShow ) )
 		{
+			MessageBox( NULL, TEXT( "Error during initialisation" ), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
 			return 0;
 		}
 	}
 	catch( LPCTSTR error )
 	{
 		MessageBox( NULL, error, TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
-		if( Game != NULL )
+		if( sys != NULL )
 		{
-			Game->Quit();
+			sys->Quit();
 		}
 	}
 
@@ -48,34 +50,40 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	try
 	{
 		//Run() implements the message loop, which is the main loop
-		result = Game->Run();
+		result = sys->Run();
 	}
 	catch( LPCTSTR error )
 	{
 		MessageBox( NULL, error, TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
-		if( Game != NULL )
+		if( sys != NULL )
 		{
-			Game->Quit();
+			sys->Quit();
 		}
 	}
 
 	try
 	{
-		Game->Shutdown();
+		sys->Shutdown();
 	}
 	catch( LPCTSTR error )
 	{
 		MessageBox( NULL, error, TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
-		if( Game != NULL )
+		if( sys != NULL )
 		{
-			Game->Quit();
+			sys->Quit();
 		}
+	}
+
+	if( sys != NULL )
+	{
+		delete sys;
+		sys = NULL;
 	}
 
 	return result;
 }
 
-//Window Procedure: This processes messages for the window, Parameters: hWnd( handle to the window ), msg( message being processed ), wParam( and lParam are additional information
+//Window Procedure: This processes messages for the window, Parameters: hWnd( handle to the window ), msg( message being processed ), wParam and lParam are additional information
 LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch( msg )
@@ -87,7 +95,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 			PostQuitMessage( 0 ); //Send WM_QUIT
 			break;
 		default: 
-			return Game->MessageHandler( hWnd, msg, wParam, lParam );
+			return sys->MessageHandler( hWnd, msg, wParam, lParam );
 	}
 	return 0;
 }

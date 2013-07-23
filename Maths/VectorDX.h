@@ -1,7 +1,7 @@
 #ifndef _VECTORDX_H_
 #define _VECTORDX_H_
 
-#include "Vector.h"
+#include "Maths\Vector.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 

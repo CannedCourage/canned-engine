@@ -15,6 +15,8 @@
 #include "Engine\DefaultSettings.h"
 #include "Window\Window.h"
 
+class System;
+
 enum ASPECT { FourThree, SixteenNine, SixteenTen };
 
 class Graphics : public ILoggable
@@ -22,8 +24,9 @@ class Graphics : public ILoggable
 private:
 protected:
 
-	DefaultSettings* const settings;
-	Window* const window;
+	System& system;
+	DefaultSettings &settings;
+	Window &window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX
 	LPDIRECT3DDEVICE9 mDevice;					//the rendering device (graphics card)
@@ -83,7 +86,7 @@ protected:
 	void ForceWindowAroundClient( void );
 public:
 
-	Graphics( void );
+	Graphics( System& s );
 	~Graphics( void );
 
 	LPDIRECT3D9 const Interface( void ) const;

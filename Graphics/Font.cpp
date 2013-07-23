@@ -1,7 +1,7 @@
 #include "Graphics\Font.h"
-#include "SceneManager\SceneManager.h"
+#include "System\System.h"
 
-Font::Font( void ) : graphics( &( SceneManager::Get()->graphics ) ), text(), font( NULL ), position(), alignment( DT_TOP | DT_LEFT ), colour( 0xffffffff ), description()
+Font::Font( System &s ) : graphics( s.graphics ), text(), font( NULL ), position(), alignment( DT_TOP | DT_LEFT ), colour( 0xffffffff ), description()
 {
 }
 
@@ -14,7 +14,7 @@ void Font::Create( void )
 {
 	Destroy();
 
-	D3DXCreateFontIndirectA( graphics->Device(), &description, &font );
+	D3DXCreateFontIndirectA( graphics.Device(), &description, &font );
 }
 
 void Font::Create( const D3DXFONT_DESCA& desc )
@@ -124,10 +124,10 @@ void Font::Draw( const char* string )
 
 void Font::OnLost( void )
 {
-	graphics->ErrorCheck( font->OnLostDevice(), TEXT( "Font: On Lost Device Called" ) );
+	graphics.ErrorCheck( font->OnLostDevice(), TEXT( "Font: On Lost Device Called" ) );
 }
 
 void Font::OnRecover( void )
 {
-	graphics->ErrorCheck( font->OnResetDevice(), TEXT( "Font: On Reset Device Called" ) );
+	graphics.ErrorCheck( font->OnResetDevice(), TEXT( "Font: On Reset Device Called" ) );
 }

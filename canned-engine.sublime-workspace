@@ -1,0 +1,562 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"S",
+				"System"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Graphics/Graphics.cpp",
+			"settings":
+			{
+				"buffer_size": 7239,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Graphics/Graphics.h",
+			"settings":
+			{
+				"buffer_size": 3378,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Graphics/GraphicsSetup.cpp",
+			"settings":
+			{
+				"buffer_size": 8602,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/System.cpp",
+			"settings":
+			{
+				"buffer_size": 4503,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Logging/Log.h",
+			"settings":
+			{
+				"buffer_size": 675,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"brows",
+				"Preferences: Browse Packages"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"package control in",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Add Channel"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"package control",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Discover Packages"
+			],
+			[
+				"package ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 146.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Scene Template.cpp",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Scene Template.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/DefaultSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/GUIStack.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/GameObject.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/GameObject.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Modules.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Tag.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Tag.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Screen.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager_Windows.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Collider.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Collider.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Components.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Rigidbody.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Rigidbody.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Transform.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Transform.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/Widget.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/Widget.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/GUI.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/GUI.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/ILoggable.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorDX.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorDX.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/Camera.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/Camera.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CameraDX.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CameraDX.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/ControlConstants.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/Metrics.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/timer2.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/timer2.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/copy.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/test.json",
+		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Scripts/DefaultSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneManager_Windows.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneSwapping.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SplashScreen.cpp",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logging/Log.cpp",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/",
+		"/C/Users/Scott/Programming/install-tl/install-tl-20120511/README",
+		"/C/Users/Scott/Programming/OpenGL/Lesson01/Lesson1.cpp",
+		"/C/Users/Scott/Programming/enet-1.3.1/README",
+		"/C/Users/Scott/Programming/enet-1.3.1/docs/FAQ.dox",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Github Tools/README.md",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/SideBarEnhancements/messages/11.13.2012.1305.0.txt",
+		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Window/Window.cpp",
+		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Window/Window.h",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Directory Settings/README.md",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/User/Package Control.sublime-settings",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Lib\\x86"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"system",
+			"System",
+			"system",
+			"manager",
+			"system",
+			"SceneManager",
+			"this",
+			"\"\n",
+			"settings->",
+			"manager->",
+			"settings->",
+			"device->",
+			"device",
+			"graphics->",
+			"window->",
+			"System::",
+			"settings->",
+			"device",
+			"manager->",
+			"device",
+			"graphics->",
+			"->",
+			");\n",
+			"->",
+			"\\",
+			"/",
+			"static",
+			"SceneManager",
+			"Game",
+			"SceneManager",
+			"System",
+			"\\",
+			"Sound",
+			"Input",
+			"Graphics",
+			"localFile",
+			"d3d",
+			"d3dx9"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Graphics/Graphics.cpp",
+					"settings":
+					{
+						"buffer_size": 7239,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								290,
+								290
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Graphics/Graphics.h",
+					"settings":
+					{
+						"buffer_size": 3378,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								385,
+								385
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 216.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Graphics/GraphicsSetup.cpp",
+					"settings":
+					{
+						"buffer_size": 8602,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8600,
+								8600
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2795.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "System/System.cpp",
+					"settings":
+					{
+						"buffer_size": 4503,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Logging/Log.h",
+					"settings":
+					{
+						"buffer_size": 675,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								479,
+								479
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"scen",
+				"SceneManager/SceneManager.cpp"
+			],
+			[
+				"grap",
+				"Graphics/Graphics.h"
+			],
+			[
+				"ien",
+				"Engine/IEngine.cpp"
+			],
+			[
+				"iengin",
+				"Engine/IEngine.h"
+			],
+			[
+				"isc",
+				"SceneManager/IScene.h"
+			],
+			[
+				"iscne",
+				"SceneManager/IScene.cpp"
+			],
+			[
+				"mod",
+				"Engine/Modules.h"
+			],
+			[
+				"sc",
+				"SceneManager/SceneManager_Windows.cpp"
+			],
+			[
+				"",
+				"SceneManager/SceneManager.h"
+			],
+			[
+				"winmai",
+				"Windows/WinMain.cpp"
+			],
+			[
+				"sceneman",
+				"SceneManager/SceneManager.cpp"
+			],
+			[
+				"scne",
+				"SceneManager/SceneManager_Windows.cpp"
+			],
+			[
+				"ieng",
+				"Engine/IEngine.h"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 250.0,
+	"status_bar_visible": true
+}
