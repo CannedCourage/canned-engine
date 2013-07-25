@@ -2,7 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif //WIN32_LEAN_AND_MEAN
 
-#include "System\System.h"
+#include "System/System.h"
 
 System* sys = NULL;
 

@@ -1,5 +1,5 @@
-#include "Game\Scenes\TestScene.h"
-#include "System\System.h"
+#include "Game/Scenes/TestScene.h"
+#include "System/System.h"
 
 TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL ), cubeTex( NULL ), font( NULL ), buffer( s )
 {

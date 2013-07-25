@@ -3,16 +3,19 @@
 
 #include <Windows.h>
 
-#include "Logging\ILoggable.h"
-#include "Engine\Modules.h"
+#include "Logging/Log.h"
+#include "SceneManager/SceneManager.h"
+#include "Engine/DefaultSettings.h"
+#include "Window/Window.h"
+#include "Graphics/Graphics.h"
 
-//Engine
-
-class System : ILoggable
+class System
 {
 private:
 
 protected:
+
+	Log log;
 
 public:
 

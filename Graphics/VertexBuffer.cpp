@@ -1,8 +1,8 @@
 #ifndef _VBUFFERDEF_
 #define _VBUFFERDEF_
 
-#include "Graphics\VertexBuffer.h"
-#include "System\System.h"
+#include "Graphics/VertexBuffer.h"
+#include "System/System.h"
 
 template <class T>
 VertexBuffer<T>::VertexBuffer( System &s ) : graphics( s.graphics ), buffer( NULL ), usage( D3DUSAGE_WRITEONLY ), format( T::format ), pool( D3DPOOL_DEFAULT ), memory( NULL ), vertices( NULL )

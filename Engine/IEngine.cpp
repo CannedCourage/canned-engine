@@ -1,6 +1,6 @@
-#include "Engine\IEngine.h"
-#include "System\System.h"
-//#include "Engine\Modules.h"
+#include "Engine/IEngine.h"
+#include "System/System.h"
+//#include "Engine/Modules.h"
 
 IEngine::IEngine( System &s ) : system( s ),
 								manager( s.sceneManager ),

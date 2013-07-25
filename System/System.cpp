@@ -1,8 +1,7 @@
-#include "System\System.h"
-#include "Graphics\Screen.h"
-#include "StandardResources\resource.h"
+#include "System/System.h"
+#include "StandardResources/resource.h"
 
-System::System( void ) : ILoggable( "System" ), sceneManager( *this ), window( *this ), graphics( *this )
+System::System( void ) : log( "System" ), sceneManager( *this ), window( *this ), graphics( *this )
 {
 }
 

@@ -1,12 +1,11 @@
 //Implementation of SceneManager
 
-#include "System\System.h"
-#include "SceneManager\SceneManager.h"
-#include "SceneManager\Scenes.h"
-#include "SceneManager\IScene.h"
-#include "GUI\GUI.h"
+#include "System/System.h"
+#include "SceneManager/SceneManager.h"
+#include "SceneManager/Scenes.h"
+#include "SceneManager/IScene.h"
 
-SceneManager::SceneManager( System &s ) : system( s )
+SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 {
 	currentScene = NULL;
 	nextScene = NULL;
@@ -61,9 +60,6 @@ bool SceneManager::Update( void )
 		return false;
 	}
 
-	if( !GUIStack.empty() )
-	GUIStack.front()->Update();
-
 	return true;
 }
 
@@ -93,13 +89,6 @@ void SceneManager::Render()
 			{
 				currentScene->Load();
 			}
-		}
-
-		deque<GUI*>::reverse_iterator itr;
-
-		for( itr = GUIStack.rbegin(); itr != GUIStack.rend(); itr++ )
-		{
-			(*itr)->Render();
 		}
 	}
 }
@@ -142,8 +131,6 @@ void SceneManager::OnRecover( void )
 
 SceneManager::~SceneManager( void )
 {
-	ClearGUIStack();
-
 	if( nextScene != NULL )
 	{
 		nextScene->Unload();

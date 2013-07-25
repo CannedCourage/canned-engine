@@ -1,5 +1,5 @@
-#include "Graphics\Font.h"
-#include "System\System.h"
+#include "Graphics/Font.h"
+#include "System/System.h"
 
 Font::Font( System &s ) : graphics( s.graphics ), text(), font( NULL ), position(), alignment( DT_TOP | DT_LEFT ), colour( 0xffffffff ), description()
 {

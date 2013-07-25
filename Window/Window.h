@@ -1,16 +1,18 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include "Logging\ILoggable.h"
 #include <Windows.h>
+#include "Logging/Log.h"
 
 class System;
 class DefaultSettings;
 
-class Window : public ILoggable
+class Window
 {
 private:
 protected:
+
+	Log log;
 
 	DefaultSettings &settings;
 

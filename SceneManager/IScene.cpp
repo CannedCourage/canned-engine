@@ -1,8 +1,8 @@
 //Base scene functionality
-#include "SceneManager\IScene.h"
-#include "System\System.h"
+#include "SceneManager/IScene.h"
+#include "System/System.h"
 
-IScene::IScene( System &sys, const char* n, sceneStates s ) : IEngine( sys ), ILoggable( n ), name( n ), state( s ), loaded( false ), lost( false ), mainCamera( NULL )
+IScene::IScene( System &sys, const char* n, sceneStates s ) : IEngine( sys ), log( n ), name( n ), state( s ), loaded( false ), lost( false )
 {
 }
 

@@ -1,4 +1,4 @@
-#include "Graphics\VertexFormats.h"
+#include "Graphics/VertexFormats.h"
 
 int Vertex2d::stride = sizeof(Vertex2d);
 int Vertex3d::stride = sizeof(Vertex3d);

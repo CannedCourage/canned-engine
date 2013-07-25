@@ -3,24 +3,23 @@
 #ifndef _ISCENE_H_
 #define _ISCENE_H_
 
-#include "Engine\IEngine.h"
-#include "Logging\ILoggable.h"
-#include "Camera\Camera.h"
+#include "Engine/IEngine.h"
+#include "Logging/Log.h"
 
 class System;
 
 enum sceneStates { init = 0 , update = 1, out = 2, };
 
-class IScene : public IEngine, public ILoggable
+class IScene : public IEngine
 {
 private:
 protected:
 
+	Log log;
+
 	sceneStates state, nextState;	//State info
 	bool loaded;					//Has the scene been loaded?
 	bool lost;
-
-	Camera* mainCamera;
 
 	virtual void FadeIn( void ) = 0;
 	virtual void MainLoop( void ) = 0;

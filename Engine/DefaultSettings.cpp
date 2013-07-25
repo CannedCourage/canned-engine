@@ -1,10 +1,10 @@
-#include "Engine\DefaultSettings.h"
+#include "Engine/DefaultSettings.h"
 
-#define SETTINGS "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/DefaultSettings.json"
-#define COPY "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/copy.json"
-#define TEST "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/test.json"
+#define SETTINGS "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json"
+#define COPY "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/copy.json"
+#define TEST "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json"
 
-DefaultSettings::DefaultSettings( void ) : ILoggable("DefaultSettings"), filename( SETTINGS ), copy( COPY ), test( TEST )
+DefaultSettings::DefaultSettings( void ) : log("DefaultSettings"), filename( SETTINGS ), copy( COPY ), test( TEST )
 {
 	in.loadFromFile( filename );
 	in.writeToFile( copy );	//Preserve the original

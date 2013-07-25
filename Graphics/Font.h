@@ -1,7 +1,7 @@
 #ifndef _FONT_H_
 #define _FONT_H_
 
-#include "Graphics\Graphics.h"
+#include "Graphics/Graphics.h"
 #include <string>
 
 class System;

@@ -1,15 +1,17 @@
 #ifndef _DEFAULTSETTINGS_H_
 #define _DEFAULTSETTINGS_H_
 
-#include "Logging\ILoggable.h"
+#include "Logging/Log.h"
 
 #include <JsonBox.h>
 using namespace JsonBox;
 
-class DefaultSettings : ILoggable
+class DefaultSettings
 {
 private:
 protected:
+
+	Log log;
 
 	Value in;
 

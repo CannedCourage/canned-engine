@@ -1,4 +1,4 @@
-#include "Graphics\Graphics.h"
+#include "Graphics/Graphics.h"
 
 void Graphics::CreateInterface( void )
 {

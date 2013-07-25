@@ -3,7 +3,7 @@
 #ifndef _SPLASHSCREEN_H_
 #define _SPLASHSCREEN_H_
 
-#include "SceneManager\IScene.h"
+#include "SceneManager/IScene.h"
 
 #include <d3d9.h>
 #include <d3dx9.h>

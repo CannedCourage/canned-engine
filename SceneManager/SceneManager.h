@@ -3,22 +3,22 @@
 #ifndef _SCENEMANAGER_H_
 #define _SCENEMANAGER_H_
 
-//Engine
-#include "Logging\ILoggable.h"
+#include "Logging/Log.h"
 
 #include <deque>
 using std::deque;
 
 class System;
 class IScene;
-class GUI;
 
-class SceneManager : public ILoggable
+class SceneManager
 {
 private:
 
 	//const SceneManager& operator=( const SceneManager& src );
 protected:
+
+	Log log;
 
 	System &system;
 
@@ -26,7 +26,6 @@ protected:
 	bool currentSceneFinished;
 	IScene* nextScene;
 	bool nextSceneReady;
-	deque<GUI*> GUIStack;
 
 	bool update;
 	bool render;
@@ -51,10 +50,6 @@ public:
 	void PreloadScene( IScene* const newScene );
 	void ReportFinishedLoading( IScene* const scene );
 	void ReportFinishedUnloading( IScene* const scene );
-	void PushGUI( GUI* const newGUI );
-	GUI* const PopGUI( void );
-	GUI* const SwapToGUI( GUI* const newGUI );
-	void ClearGUIStack( void );
 };
 
 inline void SceneManager::SetUpdate( const bool& b )

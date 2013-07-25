@@ -1,8 +1,8 @@
 #ifndef _TESTSCENE_H_
 #define _TESTSCENE_H_
 
-#include "SceneManager\IScene.h"
-#include "Graphics\VertexBuffer.h"
+#include "SceneManager/IScene.h"
+#include "Graphics/VertexBuffer.h"
 
 class System;
 

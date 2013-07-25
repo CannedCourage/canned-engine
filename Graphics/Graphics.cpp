@@ -1,7 +1,7 @@
-#include "Graphics\Graphics.h"
-#include "System\System.h"
+#include "Graphics/Graphics.h"
+#include "System/System.h"
 
-Graphics::Graphics( System &s ) : ILoggable("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
+Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
 	showCursorFullscreen( false ), forceClientToRes( true ), adapter( 0 )
 {
 	windowed = !(settings.client.fullscreen);

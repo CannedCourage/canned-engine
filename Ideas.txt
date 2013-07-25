@@ -1,0 +1,4 @@
+A set colour function that takes normalised parameters i.e. 0.0-1.0 inclusive.
+Makes the function more extenisble.
+
+Using a C++ union to combine different versions of the three data elements of a vector.

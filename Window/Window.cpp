@@ -1,13 +1,12 @@
-#include "Window\Window.h"
-#include "Graphics\Screen.h"
-#include "StandardResources\resource.h"
-#include "System\System.h"
+#include "Window/Window.h"
+#include "StandardResources/resource.h"
+#include "System/System.h"
 
 #define FULLSCREEN		WS_EX_TOPMOST | WS_POPUP
 #define WINDOWED2		WS_OVERLAPPEDWINDOW
 #define WINDOWED		( WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE )
 
-Window::Window( System &s ) : ILoggable( "Window" ), settings( s.settings ),
+Window::Window( System &s ) : log( "Window" ), settings( s.settings ),
 	x( settings.window.x ), y( settings.window.y ), width( settings.window.width ), height( settings.window.height ), maximised( settings.window.maximised )
 {
 }
@@ -36,7 +35,7 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 	windowClass.hbrBackground = NULL;
 	//windowClass.hbrBackground = ( HBRUSH )( COLOR_WINDOW+1 );					//Background brush that sets the colour of the background
 	windowClass.lpszMenuName = MAKEINTRESOURCE( IDR_MENU1 );					//Name of a menu resource the windows of this class use
-	windowClass.lpszClassName = L"GameWindow";								//Class identifier
+	windowClass.lpszClassName = "GameWindow";								//Class identifier
 	windowClass.hIconSm = LoadIcon( hInstance, MAKEINTRESOURCE( IDI_MYICON ) );	//Small Icon (Taskbar, etc)
 
 	if( !RegisterClassEx( &windowClass ) )
@@ -71,11 +70,11 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 	}
 
 	//					   Extended Window Style, class to use, title bar text, Window Style, x, y, width, height, parent window, menu handle, app instance, creation data
-	hwnd = CreateWindowEx( 0, L"GameWindow", L"ScottEngine", style, settings.window.x, settings.window.y, settings.window.width, settings.window.height, NULL, NULL, hInstance, NULL );
+	hwnd = CreateWindowEx( 0, "GameWindow", "ScottEngine", style, settings.window.x, settings.window.y, settings.window.width, settings.window.height, NULL, NULL, hInstance, NULL );
 
 	if( hwnd == NULL )
 	{
-		MessageBox( hwnd, L"Window Creation Failed! :(", L"Error!", MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( hwnd, "Window Creation Failed! :(", "Error!", MB_ICONEXCLAMATION | MB_OK );
 		return 0;
 	}
 

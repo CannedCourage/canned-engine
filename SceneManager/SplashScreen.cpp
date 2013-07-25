@@ -1,8 +1,8 @@
 //Implementation of test scene
-#include "SceneManager\SplashScreen.h"
-#include "SceneManager\SceneManager.h"
-#include "System\System.h"
-#include "SceneManager\Scenes.h"
+#include "SceneManager/SplashScreen.h"
+#include "SceneManager/SceneManager.h"
+#include "System/System.h"
+#include "SceneManager/Scenes.h"
 
 SplashScreen::SplashScreen( System &s, const char* n ) : IScene( s, n ), vertexBuffer( NULL ), texture( NULL ), time( 0.0f )
 {

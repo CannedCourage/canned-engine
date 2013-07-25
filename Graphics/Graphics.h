@@ -9,20 +9,21 @@
 #pragma comment (lib, "d3d9.lib")
 #pragma comment (lib, "d3dx9.lib")
 
-#include "Graphics\VertexFormats.h"
-#include "Graphics\Screen.h"
-#include "Logging\ILoggable.h"
-#include "Engine\DefaultSettings.h"
-#include "Window\Window.h"
+#include "Graphics/VertexFormats.h"
+#include "Engine/DefaultSettings.h"
+#include "Window/Window.h"
+#include "Logging/Log.h"
 
 class System;
 
 enum ASPECT { FourThree, SixteenNine, SixteenTen };
 
-class Graphics : public ILoggable
+class Graphics
 {
 private:
 protected:
+
+	Log log;
 
 	System& system;
 	DefaultSettings &settings;

@@ -1,5 +1,5 @@
-#include "Graphics\Texture.h"
-#include "System\System.h"
+#include "Graphics/Texture.h"
+#include "System/System.h"
 
 Texture::Texture( System &s ) : graphics( s.graphics ), texture( NULL )
 {
