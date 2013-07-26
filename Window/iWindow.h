@@ -4,24 +4,24 @@
 #include "Logging/Log.h"
 
 class System;
-class DefaultSettings;
+class Settings;
 
-class Window
+class iWindow
 {
 private:
 protected:
 
 	Log log;
 
-	DefaultSettings &settings;
+	Settings &settings;
 
 	int windowX, windowY, windowWidth, windowHeight;
 	int clientX, clientY, clientWidth, clientHeight;
 	bool maximised;
 public:
 
-	Window( System &s )
-	~Window( void )
+	iWindow( System &s );
+	~iWindow( void );
 
 	//virtual int Create( void ) = 0;
 	//virtual void Destroy( void ) = 0;

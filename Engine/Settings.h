@@ -6,7 +6,7 @@
 #include <JsonBox.h>
 using namespace JsonBox;
 
-class DefaultSettings
+class Settings
 {
 private:
 protected:
@@ -46,8 +46,8 @@ public:
 		bool fullscreen;
 	} client;
 
-	DefaultSettings( void );
-	~DefaultSettings( void );
+	Settings( void );
+	~Settings( void );
 
 	void Save( void );
 };

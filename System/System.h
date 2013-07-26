@@ -5,8 +5,9 @@
 
 #include "Logging/Log.h"
 #include "SceneManager/SceneManager.h"
-#include "Engine/DefaultSettings.h"
+#include "Engine/Settings.h"
 #include "Window/Window.h"
+#include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"
 
 class System
@@ -21,7 +22,7 @@ public:
 
 	//Engine
 	SceneManager sceneManager;
-	DefaultSettings settings;
+	Settings settings;
 	Window window;
 	Graphics graphics;
 	//Input input;

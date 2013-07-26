@@ -6,21 +6,21 @@
 #define WINDOWED2		WS_OVERLAPPEDWINDOW
 #define WINDOWED		( WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE )
 
-Window::Window( System &s ) : iWindow( s )
+WindowMS::WindowMS( System &s ) : iWindow( s )
 {
 }
 
-Window::~Window( void )
+WindowMS::~WindowMS( void )
 {
 	Destroy();
 }
 
-HWND const Window::getHandle( void ) const
+HWND const WindowMS::getHandle( void ) const
 {
 	return hwnd;
 }
 
-int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
+int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
 	//Register the window class
 	windowClass.cbSize = sizeof( WNDCLASSEX );									//The size of the structure
@@ -52,13 +52,13 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 	{
 		style = FULLSCREEN;
 
-		Cursor(false);
+		CursorVisible(false);
 	}
 	else
 	{
 		style = WINDOWED;
 
-		Cursor(true);
+		CursorVisible(true);
 
 		AdjustWindowRectEx( &adjusted, style, true, 0 );
 
@@ -83,10 +83,10 @@ int Window::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int 
 	//~Create The Window
 	return 1;
 
-	Window::hInstance = hInstance;
+	WindowMS::hInstance = hInstance;
 }
 
-void Window::Destroy( void )
+void WindowMS::Destroy( void )
 {
 	UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 
@@ -97,12 +97,12 @@ void Window::Destroy( void )
 	}
 }
 
-int Window::Recreate( void )
+int WindowMS::Recreate( void )
 {
 	return 0;
 }
 
-void Window::Update( void )
+void WindowMS::Update( void )
 {
 	MoveWindow( hwnd, windowX, windowY, windowWidth, windowHeight, true );
 	SetWindowLong( hwnd, GWL_STYLE, WINDOWED );
@@ -110,19 +110,31 @@ void Window::Update( void )
 	SetWindowPos( hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_DRAWFRAME );
 }
 
-void Window::SetWindowPosition( const int& X, const int& Y )
+void WindowMS::SetWindowPosition( const int& X, const int& Y )
 {
 	windowX = X;
 	windowY = Y;
 }
 
-void Window::SetWindowSize( const int& Width, const int& Height )
+void WindowMS::SetWindowSize( const int& Width, const int& Height )
 {
 	windowWidth = Width;
 	windowHeight = Height;
 }
 
-void Window::Cursor( const bool& show )
+void WindowMS::SetClientPosition( const int& X, const int& Y )
+{
+	clientX = X;
+	clientY = Y;
+}
+
+void WindowMS::SetClientSize( const int& Width, const int& Height )
+{
+	clientWidth = Width;
+	clientHeight = Height;
+}
+
+void WindowMS::CursorVisible( const bool& show )
 {
 	if( show )
 	{
@@ -134,12 +146,12 @@ void Window::Cursor( const bool& show )
 	}
 }
 
-void Window::MoveCursor( const int& X, const int& Y )
+void WindowMS::MoveCursor( const int& X, const int& Y )
 {
 	SetCursorPos( X, Y );
 }
 
-int Window::ErrorDialog( LPCTSTR message )
+int WindowMS::Dialog( char* message, char* title )
 {
-	return MessageBox( hwnd, message, TEXT( "Error" ), MB_ICONEXCLAMATION | MB_OK );
+	return MessageBox( hwnd, message, title, MB_ICONEXCLAMATION | MB_OK );
 }

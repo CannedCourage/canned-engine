@@ -1,10 +1,10 @@
-#include "Engine/DefaultSettings.h"
+#include "Engine/Settings.h"
 
 #define SETTINGS "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json"
 #define COPY "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/copy.json"
 #define TEST "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json"
 
-DefaultSettings::DefaultSettings( void ) : log("DefaultSettings"), filename( SETTINGS ), copy( COPY ), test( TEST )
+Settings::Settings( void ) : log("Settings"), filename( SETTINGS ), copy( COPY ), test( TEST )
 {
 	in.loadFromFile( filename );
 	in.writeToFile( copy );	//Preserve the original
@@ -27,12 +27,12 @@ DefaultSettings::DefaultSettings( void ) : log("DefaultSettings"), filename( SET
 	}
 }
 
-DefaultSettings::~DefaultSettings( void )
+Settings::~Settings( void )
 {
 	Save(); //Save the defaults
 }
 
-void DefaultSettings::ParseWindowDefaults( Value v )
+void Settings::ParseWindowDefaults( Value v )
 {
 	Object _window;
 	Object::iterator itr;
@@ -71,7 +71,7 @@ void DefaultSettings::ParseWindowDefaults( Value v )
 	}
 }
 
-void DefaultSettings::ParseClientDefaults( Value v )
+void Settings::ParseClientDefaults( Value v )
 {
 	Object _client;
 	Object::iterator itr;
@@ -118,7 +118,7 @@ void DefaultSettings::ParseClientDefaults( Value v )
 	}
 }
 
-void DefaultSettings::PrepareOutValue( void )
+void Settings::PrepareOutValue( void )
 {
 	out["window"]["x"] = Value( window.x );
 	out["window"]["y"] = Value( window.y );
@@ -135,7 +135,7 @@ void DefaultSettings::PrepareOutValue( void )
 	out["client"]["height"] = Value( client.height );
 }
 
-void DefaultSettings::Save( void )
+void Settings::Save( void )
 {
 	PrepareOutValue();
 

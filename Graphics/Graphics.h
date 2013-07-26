@@ -10,7 +10,7 @@
 #pragma comment (lib, "d3dx9.lib")
 
 #include "Graphics/VertexFormats.h"
-#include "Engine/DefaultSettings.h"
+#include "Engine/Settings.h"
 #include "Window/Window.h"
 #include "Logging/Log.h"
 
@@ -26,7 +26,7 @@ protected:
 	Log log;
 
 	System& system;
-	DefaultSettings &settings;
+	Settings &settings;
 	Window &window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX

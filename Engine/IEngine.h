@@ -5,7 +5,7 @@
 
 class System;
 class SceneManager;
-class DefaultSettings;
+class Settings;
 class Graphics;
 
 class IEngine
@@ -16,7 +16,7 @@ protected:
 	//Constant interface to engine modules
 	System &system;
 	SceneManager &manager;
-	DefaultSettings &settings;
+	Settings &settings;
 
 	//Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
 	Graphics &graphics;

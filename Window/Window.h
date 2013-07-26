@@ -5,7 +5,7 @@
 #include "Logging/Log.h"
 
 class System;
-class DefaultSettings;
+class Settings;
 
 class Window
 {
@@ -14,7 +14,7 @@ protected:
 
 	Log log;
 
-	DefaultSettings &settings;
+	Settings &settings;
 
 	HWND hwnd;				//Handle
 	WNDCLASSEX windowClass;	//A structure that stores information used to create the window
