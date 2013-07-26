@@ -34,7 +34,7 @@ int System::Run( void )
         if( msg.message == WM_QUIT )
             break;
 
-		sceneManager.Run();	//Game Loop
+		sceneManager.Run();	//Game Loop?
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
@@ -98,9 +98,6 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 			{
 				switch( wParam )
 				{
-					case VK_ESCAPE:
-						Quit();
-						break;
 					case VK_UP:
 						log.Message( "Up received" );
 						graphics.ChangeView();

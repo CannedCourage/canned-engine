@@ -19,11 +19,16 @@ void Graphics::GetAdapters( void )
 
 	if( adapterCount > 0 )
 	{
-		//window.AdapterDialog();
 	}
 	else
 	{
 		throw( TEXT( "No suitable adapter" ) );
+	}
+
+	if( adapters != NULL )
+	{
+		delete[] adapters;
+		adapters = NULL;
 	}
 
 	adapters = new D3DADAPTER_IDENTIFIER9[adapterCount];
@@ -31,14 +36,11 @@ void Graphics::GetAdapters( void )
 	for( UINT i = 0; i < adapterCount; i++ )
 	{
 		mInterface->GetAdapterIdentifier( i, 0, &( adapters[i] ) );
-		//window.AddAdapterOption( adapters[i].Description );
 	}
 }
 
 void Graphics::SelectAdapter( int index )
 {
-	index--;	//Subtract one to align combobox index with adapter number, assumes nonsorted list and corresponding adapter list
-
 	if( index >= 0 )
 	{
 		adapter = index;
@@ -53,13 +55,13 @@ void Graphics::SelectBufferFormat( const int& index )
 {
 	switch( index )
 	{
-		case 1:
+		case 0:
 			SetBufferFormat32();
 			break;
-		case 2:
+		case 1:
 			SetBufferFormat24();
 			break;
-		case 3:
+		case 2:
 			SetBufferFormat16();
 			break;
 		default:
@@ -72,16 +74,16 @@ void Graphics::SelectDepthFormat( const int& index )
 {
 	switch( index )
 	{
-		case 1:
+		case 0:
 			SetDepthBufferD32();
 			break;
-		case 2:
+		case 1:
 			SetDepthBufferD24S8();
 			break;
-		case 3:
+		case 2:
 			SetDepthBufferD15S1();
 			break;
-		case 4:
+		case 3:
 			SetDepthBufferD16();
 			break;
 		default:
@@ -94,19 +96,19 @@ void Graphics::SelectMultisample( const int& n )
 {
 	switch( n )
 	{
-		case 1:
+		case 0:
 			SetMultisampleOff();
 			break;
-		case 2:
+		case 1:
 			SetMultisample2();
 			break;
-		case 3:
+		case 2:
 			SetMultisample4();
 			break;
-		case 4:
+		case 3:
 			SetMultisample8();
 			break;
-		case 5:
+		case 4:
 			SetMultisample16();
 			break;
 		default:
@@ -170,21 +172,21 @@ void Graphics::SetParameters( void )
 	windowParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;				//Discard old frames
 	windowParameters.Windowed = true;
 
-	if( windowed )
+	if( fullscreen )
 	{
-		presentParameters = &( windowParameters );
+		presentParameters = &( fullParameters );
 	}
 	else
 	{
-		presentParameters = &( fullParameters );
+		presentParameters = &( windowParameters );
 	}
 }
 
 void Graphics::SetBufferFormat16( void )
 {
-	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_R5G6B5, D3DFMT_R5G6B5, windowed ) != D3D_OK )
+	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_R5G6B5, D3DFMT_R5G6B5, !fullscreen ) != D3D_OK )
 	{
-		if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_REF, D3DFMT_R5G6B5, D3DFMT_R5G6B5, windowed ) )
+		if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_REF, D3DFMT_R5G6B5, D3DFMT_R5G6B5, !fullscreen ) )
 		{
 			throw( TEXT( "Graphics: No appropriate format or device could be found" ) );
 		}
@@ -207,7 +209,7 @@ void Graphics::SetBufferFormat16( void )
 
 void Graphics::SetBufferFormat24( void )
 {
-	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, D3DFMT_X8R8G8B8, windowed ) != D3D_OK )
+	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, D3DFMT_X8R8G8B8, !fullscreen ) != D3D_OK )
 	{
 		SetBufferFormat16();
 	}
@@ -222,7 +224,7 @@ void Graphics::SetBufferFormat24( void )
 
 void Graphics::SetBufferFormat32( void )
 {
-	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, D3DFMT_A8R8G8B8, windowed ) != D3D_OK )
+	if( mInterface->CheckDeviceType( adapter, D3DDEVTYPE_HAL, D3DFMT_A8R8G8B8, D3DFMT_A8R8G8B8, !fullscreen ) != D3D_OK )
 	{
 		SetBufferFormat24();
 	}
@@ -301,7 +303,7 @@ void Graphics::SetMultisampleOff( void )
 
 void Graphics::SetMultisample2( void )
 {
-	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, windowed, D3DMULTISAMPLE_2_SAMPLES, &qualityAA ) != D3D_OK )
+	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, !fullscreen, D3DMULTISAMPLE_2_SAMPLES, &qualityAA ) != D3D_OK )
 	{
 		SetMultisampleOff();
 	}
@@ -314,7 +316,7 @@ void Graphics::SetMultisample2( void )
 
 void Graphics::SetMultisample4( void )
 {
-	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, windowed, D3DMULTISAMPLE_4_SAMPLES, &qualityAA ) != D3D_OK )
+	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, !fullscreen, D3DMULTISAMPLE_4_SAMPLES, &qualityAA ) != D3D_OK )
 	{
 		SetMultisample2();
 	}
@@ -327,7 +329,7 @@ void Graphics::SetMultisample4( void )
 
 void Graphics::SetMultisample8( void )
 {
-	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, windowed, D3DMULTISAMPLE_8_SAMPLES, &qualityAA ) != D3D_OK )
+	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, !fullscreen, D3DMULTISAMPLE_8_SAMPLES, &qualityAA ) != D3D_OK )
 	{
 		SetMultisample4();
 	}
@@ -340,7 +342,7 @@ void Graphics::SetMultisample8( void )
 
 void Graphics::SetMultisample16( void )
 {
-	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, windowed, D3DMULTISAMPLE_16_SAMPLES, &qualityAA ) != D3D_OK )
+	if( mInterface->CheckDeviceMultiSampleType( adapter, deviceType, backbufferFormat, !fullscreen, D3DMULTISAMPLE_16_SAMPLES, &qualityAA ) != D3D_OK )
 	{
 		SetMultisample8();
 	}
@@ -354,11 +356,6 @@ void Graphics::SetMultisample16( void )
 void Graphics::CreateDevice( void )
 {
 	HWND hWnd = window.getHandle();
-
-	char* error = new char[256];
-	sprintf( error, "Windows Handle: %d", adapter );
-
-	log.Message( error );
 
 	ErrorCheck( mInterface->CreateDevice(adapter,
                       deviceType,

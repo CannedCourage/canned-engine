@@ -17,6 +17,9 @@ class Settings;
 class WindowMS;
 
 enum ASPECT { FourThree, SixteenNine, SixteenTen };
+enum BUFFER { ThirtyTwo, TwentyFour, Sixteen };
+enum DEPTH { D32, D24S8, D15S1, D16 };
+enum SAMPLE { Off, TwoSamples, FourSamples, EightSamples, SixteenSamples };
 
 class Graphics
 {
@@ -52,7 +55,7 @@ protected:
 
 	HRESULT deviceState;
 
-	bool windowed;
+	bool fullscreen;
 	int xResolution, yResolution;
 	int xWindowPosition, yWindowPosition;
 	int xWindowSize, yWindowSize;
@@ -114,17 +117,14 @@ public:
 
 	void DoChecks( void );
 	bool Reset( void );
+	void Refresh( void );
 
-	//Mutators, change state information, but don't cause updates
 	void SetResolution( const int& width, const int& height );
 	void SetClientSize( const int& width, const int& height );
 	void SetClientPosition( const int& x, const int& y );
-	//Methods that cause updates immediately
 	void SetFullscreen( void );
 	void SetWindowed( void );
-	void ChangeResolution( const int& width, const int& height );
 	void ChangeView( void ); //Toggle Fullscreen
-	void ChangeClientSize( const int& width, const int& height );
 
 	void ErrorCheck( HRESULT result, LPCTSTR info );
 };

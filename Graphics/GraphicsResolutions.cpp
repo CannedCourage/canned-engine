@@ -5,13 +5,13 @@ void Graphics::SelectAspect( int index )
 {
 	switch( index )
 	{
-		case 1:
+		case 0:
 			SelectAspect43();
 			break;
-		case 2:
+		case 1:
 			SelectAspect169();
 			break;
-		case 3:
+		case 2:
 			SelectAspect1610();
 			break;
 		default:
@@ -28,11 +28,10 @@ void Graphics::GetMode( void )
 
 	if( modes != NULL )
 	{
-		delete modes;
+		delete[] modes;
+		mode = NULL;
 	}
 	
-	//window.ClearDisplayOptions();
-
 	modes = new D3DDISPLAYMODE[modeCount];
 
 	int j = 1;
@@ -50,7 +49,6 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						//window.AddDisplayOption( temp );
 						j++;
 					}
 				}
@@ -61,7 +59,6 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						//window.AddDisplayOption( temp );
 						j++;
 					}
 				}
@@ -72,7 +69,6 @@ void Graphics::GetMode( void )
 					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
 					{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
-						//window.AddDisplayOption( temp );
 						j++;
 					}
 				}
@@ -99,6 +95,5 @@ void Graphics::SelectAspect1610( void )
 void Graphics::SelectResolution( const int& index )
 {
 	refresh = modes[index].RefreshRate;
-	ChangeResolution( modes[index].Width, modes[index].Height );
-	ChangeClientSize( modes[index].Width, modes[index].Height );
+	SetResolution( modes[index].Width, modes[index].Height );
 }

@@ -3,9 +3,9 @@
 #include "Window/WindowMS.h"
 
 Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
-	showCursorFullscreen( false ), forceClientToRes( true ), adapter( 0 )
+	showCursorFullscreen( false ), forceClientToRes( true ), adapter( D3DADAPTER_DEFAULT ), adapters( NULL )
 {
-	windowed = !(settings.client.fullscreen);
+	fullscreen = settings.client.fullscreen;
 	xResolution = settings.client.xResolution;
 	yResolution = settings.client.yResolution;
 	xWindowPosition = settings.window.x;
@@ -32,6 +32,10 @@ Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system
 
 Graphics::~Graphics( void )
 {
+	settings.client.fullscreen = fullscreen;
+	settings.client.xResolution = xResolution;
+	settings.client.yResolution = yResolution;
+
 	CleanUp();
 }
 
@@ -148,24 +152,32 @@ bool Graphics::Reset( void )
 	return ( D3D_OK == result );
 }
 
+void Graphics::Refresh( void )
+{
+	SetParameters();
+
+	system.sceneManager.OnLost();
+
+	if( Reset() )
+	{
+		system.sceneManager.OnRecover();
+		SetRenderStates();
+	}
+}
+
 void Graphics::SetFullscreen( void )
 {
-	if( windowed )
+	if( !fullscreen )
 	{
-		settings.client.fullscreen = true;
-		windowed = false;
+		fullscreen = true;
 
-		SetParameters();
+		Refresh();
 
-		system.sceneManager.OnLost();
-
-		if( Reset() )
+		if( showCursorFullscreen )
 		{
-			system.sceneManager.OnRecover();
-			SetRenderStates();
+			window.CursorVisible( true );
 		}
-
-		if( !showCursorFullscreen )
+		else
 		{
 			window.CursorVisible( false );
 		}
@@ -178,20 +190,11 @@ void Graphics::SetFullscreen( void )
 
 void Graphics::SetWindowed( void )
 {
-	if( !windowed )
+	if( fullscreen )
 	{
-		settings.client.fullscreen = false;
-		windowed = true;
+		fullscreen = false;
 
-		SetParameters();
-
-		system.sceneManager.OnLost();
-
-		if( Reset() )
-		{
-			system.sceneManager.OnRecover();
-			SetRenderStates();
-		}
+		Refresh();
 
 		window.Update();
 
@@ -205,40 +208,34 @@ void Graphics::SetWindowed( void )
 
 void Graphics::SetClientSize( const int& width, const int& height )
 {
-	if( windowed )
+	if( !fullscreen )
 	{
-		settings.client.width = clientWidth = width;
-		settings.client.height = clientHeight = height;
+		clientWidth = width;
+		clientHeight = height;
+		window.SetClientSize( width, height );
+		window.Update();
 	}
 }
 
 void Graphics::SetClientPosition( const int& x, const int& y )
 {
-	if( windowed )
+	if( !fullscreen )
 	{
-		settings.client.x = xClientPos = x;
-		settings.client.y = yClientPos = y;
-	}
-}
-
-void Graphics::ForceWindowAroundClient( void )
-{
-	RECT temp = { xClientPos, yClientPos, xClientPos + clientWidth, yClientPos + clientHeight };
-	
-	//window.ForceAroundClient( temp );
-
-	if( windowed )
-	{
+		xClientPos = x;
+		yClientPos = y;
+		window.SetClientPosition( x, y );
 		window.Update();
 	}
 }
 
 void Graphics::SetResolution( const int& width, const int& height )
 {
-	settings.client.xResolution = xResolution = width;
-	settings.client.yResolution = yResolution = height;
+	xResolution = width;
+	yResolution = height;
 
-	SetParameters();
+	SetClientSize( width, height );
+
+	Refresh();
 
 	if( xResolution != xWindowSize )
 	{
@@ -265,37 +262,15 @@ void Graphics::SetResolution( const int& width, const int& height )
 	}
 }
 
-void Graphics::ChangeResolution( const int& width, const int& height )
-{
-	SetResolution( width, height );
-
-	Reset();
-
-	if( forceClientToRes )
-	{
-		SetClientSize( width, height );
-	}
-}
-
 void Graphics::ChangeView( void )
 {
-	if( windowed )
+	if( !fullscreen )
 	{
 		SetFullscreen();
 	}
 	else
 	{
 		SetWindowed();
-	}
-}
-
-void Graphics::ChangeClientSize( const int& width, const int& height )
-{
-	SetClientSize( width, height );
-
-	if( windowed )
-	{
-		ForceWindowAroundClient();
 	}
 }
 
@@ -336,8 +311,6 @@ void Graphics::ErrorCheck( HRESULT result, LPCTSTR info )
 
 	LPTSTR error = new TCHAR[256];
 	wsprintf( error, TEXT( "Graphics: %s\r\n%s" ), info, text );
-
-	//window.ErrorDialog( error );
 
 	throw( error );
 }

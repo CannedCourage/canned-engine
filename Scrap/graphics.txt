@@ -1,0 +1,7 @@
+//Menu Options
+	void SelectAdapter( int index );
+	void SelectBufferFormat( const int& index );
+	void SelectDepthFormat( const int& index );
+	void SelectMultisample( const int& n );
+	void SelectAspect( int index );
+	void SelectResolution( const int& index );

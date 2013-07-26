@@ -6,7 +6,6 @@
 #include "Logging/Log.h"
 #include "SceneManager/SceneManager.h"
 #include "Engine/Settings.h"
-#include "Window/Window.h"
 #include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"
 
@@ -21,8 +20,8 @@ protected:
 public:
 
 	//Engine
-	SceneManager sceneManager;
 	Settings settings;
+	SceneManager sceneManager;
 	WindowMS window;
 	Graphics graphics;
 	//Input input;

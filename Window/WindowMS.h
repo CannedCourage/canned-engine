@@ -12,6 +12,8 @@ protected:
 	HWND hwnd;				//Handle
 	WNDCLASSEX windowClass;	//A structure that stores information used to create the window
 	HINSTANCE hInstance;
+
+	void AdjustWindow( void );
 public:
 
 	WindowMS( System &s );

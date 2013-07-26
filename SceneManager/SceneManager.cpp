@@ -11,8 +11,8 @@ SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 	nextScene = NULL;
 	currentSceneFinished = false;
 	nextSceneReady = false;
-	update = false;
-	render = false;
+	update = true;
+	render = true;
 
 	//TO DO: determine default starting scene then initialise
 	//Temp: Use SplashScreen
@@ -46,6 +46,7 @@ bool SceneManager::Update( void )
 	if( currentSceneFinished && nextSceneReady )
 	{
 		SwapSceneBuffers();
+		log.Message( "Buffers Swapping" );
 	}
 	
 	if( currentScene != NULL )

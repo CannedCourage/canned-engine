@@ -123,6 +123,7 @@ void TestScene::OnRecover( void )
 
 void TestScene::Unload( void )
 {
+	log.Message( "Unloading", true );
 	if( cubeBuffer != NULL )
 	{
 		cubeBuffer->Release();

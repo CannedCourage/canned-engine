@@ -34,7 +34,7 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 	windowClass.hbrBackground = NULL;
 	//windowClass.hbrBackground = ( HBRUSH )( COLOR_WINDOW+1 );					//Background brush that sets the colour of the background
 	windowClass.lpszMenuName = MAKEINTRESOURCE( IDR_MENU1 );					//Name of a menu resource the windows of this class use
-	windowClass.lpszClassName = "GameWindow";								//Class identifier
+	windowClass.lpszClassName = "GameWindow";									//Class identifier
 	windowClass.hIconSm = LoadIcon( hInstance, MAKEINTRESOURCE( IDI_MYICON ) );	//Small Icon (Taskbar, etc)
 
 	if( !RegisterClassEx( &windowClass ) )
@@ -46,9 +46,8 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 
 	//Create The Window
 	DWORD style;
-	RECT adjusted = { settings.client.x, settings.client.y, ( settings.client.x + settings.client.width ), ( settings.client.y + settings.client.height ) };
 
-	if( settings.client.fullscreen )
+	if( fullscreen )
 	{
 		style = FULLSCREEN;
 
@@ -60,16 +59,11 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 
 		CursorVisible(true);
 
-		AdjustWindowRectEx( &adjusted, style, true, 0 );
-
-		settings.window.x = adjusted.left;
-		settings.window.y = adjusted.top;
-		settings.window.width = ( adjusted.right - adjusted.left );
-		settings.window.height = ( adjusted.bottom - adjusted.top );
+		AdjustWindow();
 	}
 
 	//					   Extended Window Style, class to use, title bar text, Window Style, x, y, width, height, parent window, menu handle, app instance, creation data
-	hwnd = CreateWindowEx( 0, "GameWindow", "ScottEngine", style, settings.window.x, settings.window.y, settings.window.width, settings.window.height, NULL, NULL, hInstance, NULL );
+	hwnd = CreateWindowEx( 0, "GameWindow", "ScottEngine", style, windowX, windowY, windowWidth, windowHeight, NULL, NULL, hInstance, NULL );
 
 	if( hwnd == NULL )
 	{
@@ -104,6 +98,7 @@ int WindowMS::Recreate( void )
 
 void WindowMS::Update( void )
 {
+	AdjustWindow();
 	MoveWindow( hwnd, windowX, windowY, windowWidth, windowHeight, true );
 	SetWindowLong( hwnd, GWL_STYLE, WINDOWED );
 	//Don't change position, size, and don't activate the window, but stop being topmost
@@ -154,4 +149,17 @@ void WindowMS::MoveCursor( const int& X, const int& Y )
 int WindowMS::Dialog( char* message, char* title )
 {
 	return MessageBox( hwnd, message, title, MB_ICONEXCLAMATION | MB_OK );
+}
+
+void WindowMS::AdjustWindow( void )
+{
+	DWORD style = WINDOWED;
+	RECT adjusted = { clientX, clientY, ( clientX + clientWidth ), ( clientY + clientHeight ) };
+
+	AdjustWindowRectEx( &adjusted, style, true, 0 );
+
+	windowX = adjusted.left;
+	windowY = adjusted.top;
+	windowWidth = ( adjusted.right - adjusted.left );
+	windowHeight = ( adjusted.bottom - adjusted.top );
 }

@@ -1,7 +1,7 @@
 {
 	"client" : {
 		"fullscreen" : false,
-		"height" : 700,
+		"height" : 720,
 		"width" : 1280,
 		"x" : 327,
 		"xResolution" : 1280,
@@ -9,7 +9,7 @@
 		"yResolution" : 720
 	},
 	"window" : {
-		"height" : 758,
+		"height" : 778,
 		"maximised" : false,
 		"width" : 1296,
 		"x" : 319,

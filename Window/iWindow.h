@@ -17,7 +17,7 @@ protected:
 
 	int windowX, windowY, windowWidth, windowHeight;
 	int clientX, clientY, clientWidth, clientHeight;
-	bool maximised;
+	bool fullscreen;
 public:
 
 	iWindow( System &s );
