@@ -23,7 +23,7 @@ public:
 	//Engine
 	SceneManager sceneManager;
 	Settings settings;
-	Window window;
+	WindowMS window;
 	Graphics graphics;
 	//Input input;
 	//Sound sound;

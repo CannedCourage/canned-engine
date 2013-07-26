@@ -10,11 +10,11 @@
 #pragma comment (lib, "d3dx9.lib")
 
 #include "Graphics/VertexFormats.h"
-#include "Engine/Settings.h"
-#include "Window/Window.h"
 #include "Logging/Log.h"
 
 class System;
+class Settings;
+class WindowMS;
 
 enum ASPECT { FourThree, SixteenNine, SixteenTen };
 
@@ -26,8 +26,8 @@ protected:
 	Log log;
 
 	System& system;
-	Settings &settings;
-	Window &window;
+	Settings& settings;
+	WindowMS& window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX
 	LPDIRECT3DDEVICE9 mDevice;					//the rendering device (graphics card)

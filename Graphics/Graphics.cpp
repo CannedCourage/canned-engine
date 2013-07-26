@@ -1,5 +1,6 @@
 #include "Graphics/Graphics.h"
 #include "System/System.h"
+#include "Window/WindowMS.h"
 
 Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
 	showCursorFullscreen( false ), forceClientToRes( true ), adapter( 0 )
@@ -166,7 +167,7 @@ void Graphics::SetFullscreen( void )
 
 		if( !showCursorFullscreen )
 		{
-			window.Cursor( false );
+			window.CursorVisible( false );
 		}
 	}
 	else
@@ -194,7 +195,7 @@ void Graphics::SetWindowed( void )
 
 		window.Update();
 
-		window.Cursor( true );
+		window.CursorVisible( true );
 	}
 	else
 	{
@@ -224,7 +225,7 @@ void Graphics::ForceWindowAroundClient( void )
 {
 	RECT temp = { xClientPos, yClientPos, xClientPos + clientWidth, yClientPos + clientHeight };
 	
-	window.ForceAroundClient( temp );
+	//window.ForceAroundClient( temp );
 
 	if( windowed )
 	{

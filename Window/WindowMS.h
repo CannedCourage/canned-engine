@@ -4,7 +4,7 @@
 #include "Window/iWindow.h"
 #include <Windows.h>
 
-class WindowMS : iWindow
+class WindowMS : public iWindow
 {
 private:
 protected:

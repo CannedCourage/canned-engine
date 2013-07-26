@@ -1,4 +1,5 @@
 #include "Graphics/Graphics.h"
+#include "Window/WindowMS.h"
 
 void Graphics::CreateInterface( void )
 {
@@ -18,7 +19,7 @@ void Graphics::GetAdapters( void )
 
 	if( adapterCount > 0 )
 	{
-		window.AdapterDialog();
+		//window.AdapterDialog();
 	}
 	else
 	{
@@ -30,7 +31,7 @@ void Graphics::GetAdapters( void )
 	for( UINT i = 0; i < adapterCount; i++ )
 	{
 		mInterface->GetAdapterIdentifier( i, 0, &( adapters[i] ) );
-		window.AddAdapterOption( adapters[i].Description );
+		//window.AddAdapterOption( adapters[i].Description );
 	}
 }
 

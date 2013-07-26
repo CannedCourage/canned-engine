@@ -65,7 +65,7 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 		case WM_MOVING:	//Remember new position //WINDOW AREA
 			{
 				RECT* temp = (RECT*)lParam;
-				window.SetPosition( temp->left, temp->top );
+				window.SetWindowPosition( temp->left, temp->top );
 				return true;
 			}
 		case WM_SIZE:	//Remember new size //THIS IS THE CLIENT AREA
@@ -80,7 +80,7 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				RECT* temp = (RECT*)lParam;
 				int width = temp->right - temp->left;
 				int height = temp->bottom - temp->top;
-				window.SetSize( width, height );
+				window.SetWindowSize( width, height );
 			}
 		case WM_COMMAND:	//Sent by command items, e.g. menu options
 			switch( LOWORD( wParam ) )
@@ -90,71 +90,6 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 					break;
 				case ID_VIEW_FULLSCREEN:
 					graphics.SetFullscreen();
-					break;
-				case ID_ADAPTERSCOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectAdapter( index );
-							break;
-					}
-					break;
-				case ID_COLOURCOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectBufferFormat( index );
-							break;
-					}
-					break;
-				case ID_DEPTHCOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectDepthFormat( index );
-							break;
-					}
-					break;
-				case ID_SAMPLECOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectMultisample( index );
-							break;
-					}
-					break;
-				case ID_DISPLAYCOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectResolution( index );
-							break;
-					}
-					break;
-				case ID_ASPECTCOMBO:
-					switch( HIWORD( wParam ) )
-					{
-						case CBN_SELCHANGE:
-							int index = SendMessage( (HWND)lParam, (UINT)CB_GETCURSEL, 0, 0 );
-							graphics.SelectAspect( index );
-							break;
-					}
-					break;
-				case ID_GOBUTTON:
-					switch( HIWORD( wParam ) )
-					{
-						case BN_CLICKED:
-							window.DestroyDialogs();
-							graphics.Reset();
-							sceneManager.SetUpdate( true );
-							sceneManager.SetRender( true );
-							break;
-					}
 					break;
 			}
 			return DefWindowProc( hWnd, msg, wParam, lParam );
