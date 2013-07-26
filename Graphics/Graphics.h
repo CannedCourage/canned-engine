@@ -63,7 +63,7 @@ protected:
 	int clientWidth, clientHeight;
 	
 	bool showCursorFullscreen;
-	bool forceClientToRes;
+	
 	void CheckDeviceCaps( void );
 	void GetAdapters( void );
 	void GetMode( void );

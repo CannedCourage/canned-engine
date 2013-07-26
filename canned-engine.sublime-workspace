@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"dev",
+				"deviceType"
+			],
+			[
+				"ad",
+				"adapters"
+			],
+			[
+				"SetC",
+				"SetClientSize"
+			],
+			[
+				"Wind",
+				"WindowMS"
+			],
+			[
+				"Curs",
+				"CursorVisible"
+			],
+			[
 				"cl",
 				"clientHeight"
 			],
@@ -20,50 +40,18 @@
 	"buffers":
 	[
 		{
-			"file": "Window/Window.h",
+			"file": "Engine/Timer.h",
 			"settings":
 			{
-				"buffer_size": 1311,
+				"buffer_size": 555,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Window/Window.cpp",
+			"file": "Engine/Timer.cpp",
 			"settings":
 			{
-				"buffer_size": 9370,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/iWindow.h",
-			"settings":
-			{
-				"buffer_size": 963,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/iWindow.cpp",
-			"settings":
-			{
-				"buffer_size": 286,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/WindowMS.h",
-			"settings":
-			{
-				"buffer_size": 685,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/WindowMS.cpp",
-			"settings":
-			{
-				"buffer_size": 4375,
+				"buffer_size": 1280,
 				"line_ending": "Windows"
 			}
 		}
@@ -136,28 +124,44 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Screen.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
+		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/graphics.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/Window.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/System.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Screen.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/Window.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.h",
@@ -177,17 +181,11 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/DefaultSettings.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/Metrics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.cpp",
@@ -230,7 +228,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/test.json",
 		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.h",
-		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Scripts/DefaultSettings.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/IScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneManager.cpp",
@@ -258,7 +255,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 90.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Lib\\x86"
@@ -269,6 +266,40 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"windowed",
+			"Windowed",
+			"windowed",
+			"Windowed",
+			"windowed",
+			"Windowed",
+			"windowed",
+			";",
+			"= ",
+			"settings.window.height",
+			"settings.window.width",
+			"settings.window.y",
+			"settings.window.x",
+			"settings.client.width",
+			"settings.client.y",
+			"settings.client.x",
+			"Cursor",
+			"cursor",
+			"window",
+			"Window",
+			"window",
+			"client",
+			"window",
+			"Window",
+			"Cursor",
+			" = 0",
+			"Window",
+			"window",
+			"Window",
+			"DefaultSettings",
+			"0",
+			")",
+			"(",
+			")",
 			"x",
 			"screen",
 			"L",
@@ -329,23 +360,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Window/Window.h",
+					"file": "Engine/Timer.h",
 					"settings":
 					{
-						"buffer_size": 1311,
+						"buffer_size": 555,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								169,
-								169
+								0,
+								0
 							]
 						],
 						"settings":
@@ -361,18 +392,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Window/Window.cpp",
+					"file": "Engine/Timer.cpp",
 					"settings":
 					{
-						"buffer_size": 9370,
+						"buffer_size": 1280,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								27,
-								27
+								292,
+								292
 							]
 						],
 						"settings":
@@ -381,113 +412,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Window/iWindow.h",
-					"settings":
-					{
-						"buffer_size": 963,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								280,
-								280
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Window/iWindow.cpp",
-					"settings":
-					{
-						"buffer_size": 286,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								205,
-								205
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Window/WindowMS.h",
-					"settings":
-					{
-						"buffer_size": 685,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								579,
-								579
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "Window/WindowMS.cpp",
-					"settings":
-					{
-						"buffer_size": 4375,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4002,
-								4002
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 216.0,
+						"translation.y": 486.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

@@ -2,8 +2,11 @@
 #include "System/System.h"
 #include "Window/WindowMS.h"
 
-Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
-	showCursorFullscreen( false ), forceClientToRes( true ), adapter( D3DADAPTER_DEFAULT ), adapters( NULL )
+Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
+									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ), adapters( NULL ),
+									deviceType( D3DDEVTYPE_HAL ), backbufferFormat( D3DFMT_A8R8G8B8 ), depthFormat( D3DFMT_D16 ),
+									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
+									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false )
 {
 	fullscreen = settings.client.fullscreen;
 	xResolution = settings.client.xResolution;
@@ -16,18 +19,6 @@ Graphics::Graphics( System &s ) : log("Graphics"), system( s ), settings( system
 	clientHeight = yResolution; //Plus one?
 	xClientPos = settings.client.x;
 	yClientPos = settings.client.y;
-
-	deviceType = D3DDEVTYPE_HAL;
-	behaviourFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-	backbufferFormat = D3DFMT_A8R8G8B8;
-	depthFormat = D3DFMT_D16;
-	bufferCount = 1;
-	qualityAA = 0;
-	AA = D3DMULTISAMPLE_NONE;
-	refresh = 0;
-	aspect = FourThree;
-	mode = 0;
-	modes = NULL;
 }
 
 Graphics::~Graphics( void )
