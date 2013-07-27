@@ -23,26 +23,10 @@ SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 	nextSceneReady = false;
 }
 
-void SceneManager::Run( void )
-{
-	if( update )
-		{
-			if( !Update() )
-			{
-				return;
-			}
-			else
-			{
-				if( render )
-				{
-					Render();
-				}
-			}
-		}
-}
-
 bool SceneManager::Update( void )
 {
+	if( !update ){ return false; }
+
 	if( currentSceneFinished && nextSceneReady )
 	{
 		SwapSceneBuffers();
@@ -64,8 +48,16 @@ bool SceneManager::Update( void )
 	return true;
 }
 
+bool SceneManager::FixedUpdate( void )
+{
+	if( !update ){ return false; }
+	return true;
+}
+
 void SceneManager::Render()
 {
+	if( !render ){ return; }
+
 	system.graphics.DoChecks();
 	//TODO: Create game object manager to handle Lost and Recover events, etc.
 	if( system.graphics.IsDeviceLost() )	//Device is lost

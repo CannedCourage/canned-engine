@@ -32,14 +32,14 @@ protected:
 
 	void SwapSceneBuffers( void );
 
-	bool Update( void );
-	void Render( void );
 public:
 
 	SceneManager( System &s );
 	~SceneManager( void );
 
-	void Run( void );
+	bool Update( void );
+	bool FixedUpdate( void );
+	void Render( void );
 
 	void SetUpdate( const bool& b );
 	void SetRender( const bool& b );

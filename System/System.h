@@ -17,7 +17,6 @@ private:
 protected:
 
 	Log log;
-
 public:
 
 	Time time;
@@ -35,6 +34,7 @@ public:
 
 	int Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow );
 	int Run( void );
+	int GameLoop( void );
 	void Shutdown( void );
 	void Quit( void );
 

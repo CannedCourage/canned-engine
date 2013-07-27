@@ -36,13 +36,31 @@ int System::Run( void )
         if( msg.message == WM_QUIT )
             break;
 
-		sceneManager.Run();	//Game Loop?
+		GameLoop();
 
 		time.frameEnd();
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
 	//~The Message Loop
+}
+
+int System::GameLoop( void )
+{
+	time.AddToAcc( time.deltaTimeS() );
+
+	sceneManager.Update();
+
+	while( time.Acc() > time.fixedStepS() )
+	{
+		if( time.fixedStepS() == 0 ){ break; }
+		sceneManager.FixedUpdate();
+		time.SubFromAcc( time.fixedStepS() );
+	}
+
+	sceneManager.Render();
+
+	return 0;
 }
 
 //If the System is shutting down, that means end of program, time to do cleanup
