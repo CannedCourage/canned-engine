@@ -8,6 +8,7 @@
 #include "Engine/Settings.h"
 #include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"
+#include "Engine/Time.h"
 
 class System
 {
@@ -18,6 +19,8 @@ protected:
 	Log log;
 
 public:
+
+	Time time;
 
 	//Engine
 	Settings settings;

@@ -22,6 +22,8 @@ int System::Run( void )
 
 	while( TRUE )
     {
+    	time.frameBegin();
+
         while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	//Get message from queue
         {
             TranslateMessage( &msg );	//Additional Processing
@@ -35,6 +37,8 @@ int System::Run( void )
             break;
 
 		sceneManager.Run();	//Game Loop?
+
+		time.frameEnd();
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
