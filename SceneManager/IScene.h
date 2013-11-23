@@ -10,10 +10,22 @@ class System;
 
 enum sceneStates { init = 0 , update = 1, out = 2, };
 
-class IScene : public IEngine
+class IScene
 {
 private:
 protected:
+
+	//Constant interface to engine modules
+	System &system;
+	SceneManager &manager;
+	Settings &settings;
+
+	//Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
+	Graphics &graphics;
+
+	//Input &input;
+	//Sound &sound;
+	//Physics* const physics;
 
 	Log log;
 
@@ -39,6 +51,8 @@ public:
 	virtual void Unload( void ) = 0;
 	virtual const bool IsLoaded( void ) const;
 	virtual void SetState( sceneStates s );
+	virtual void OnLost( void ) = 0;
+	virtual void OnRecover( void ) = 0;
 };
 
 #endif //_ISCENE_H_

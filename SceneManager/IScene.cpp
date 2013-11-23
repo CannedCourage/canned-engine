@@ -2,7 +2,15 @@
 #include "SceneManager/IScene.h"
 #include "System/System.h"
 
-IScene::IScene( System &sys, const char* n, sceneStates s ) : IEngine( sys ), log( n ), name( n ), state( s ), loaded( false ), lost( false )
+IScene::IScene( System &sys, const char* n, sceneStates s ) : 	system( sys ),
+																manager( sys.sceneManager ),
+																settings( sys.settings ),
+																graphics( sys.graphics ),
+																log( n ),
+																name( n ),
+																state( s ),
+																loaded( false ),
+																lost( false )
 {
 }
 

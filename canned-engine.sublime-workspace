@@ -71,62 +71,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "System/System.h",
-			"settings":
-			{
-				"buffer_size": 929,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "System/System.cpp",
-			"settings":
-			{
-				"buffer_size": 3058,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Windows/WinMain.cpp",
-			"settings":
-			{
-				"buffer_size": 2460,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Engine/Time.h",
-			"settings":
-			{
-				"buffer_size": 1095,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Engine/Time.cpp",
-			"settings":
-			{
-				"buffer_size": 1870,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SceneManager.cpp",
-			"settings":
-			{
-				"buffer_size": 2339,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SceneManager.h",
-			"settings":
-			{
-				"buffer_size": 1114,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -196,8 +140,34 @@
 	},
 	"file_history":
 	[
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/PIXGameDebugging/PIXGameDebugging.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.fx",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut02_Vertices/Vertices.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut01_CreateDevice/CreateDevice.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/resource.h",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/User/C++.sublime-settings",
+		"/C/Users/Scott/Downloads/boost_1_55_0.7z",
+		"/C/Users/Scott/Downloads/boost_1_55_0/INSTALL",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/PostProcess/PP_ColorBrightPass.fx",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/PostProcess/PostProcess.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/MeshFromOBJ/MeshFromObj.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/CompiledEffect/CompiledEffect.fx",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/ConfigSystem/main.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D10/ContentStreaming/ContentLoaders.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D10/ContentStreaming/AsyncLoader.cpp",
+		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/功夫NG片断.rmvb",
+		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/Kung.Fu.Hustle.2004.DVDRip.XViD.RETAiL-TLF.nfo",
+		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/Kung.Fu.Hustle.2004.DVDRip.XViD.RETAiL-TLF.idx",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.h",
 		"/C/Users/Scott/AppData/Local/Temp/7zOCE4C77E3/Timestep.cpp",
@@ -208,14 +178,10 @@
 		"/C/Users/Scott/AppData/Local/Temp/7zO0655F137/Windows.h",
 		"/C/Users/Scott/AppData/Local/Temp/7zO0652F3F6/Timestep.cpp",
 		"/C/Users/Scott/AppData/Local/Temp/7zO06566EB6/Apple.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
@@ -244,7 +210,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
@@ -302,28 +267,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Components/Transform.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/ILoggable.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/timer2.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/timer2.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scripts/test.json",
-		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.h",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Scripts/DefaultSettings.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/IScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneManager_Windows.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SceneSwapping.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scene Manager/SplashScreen.cpp",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logging/Log.cpp",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/",
-		"/C/Users/Scott/Programming/install-tl/install-tl-20120511/README",
-		"/C/Users/Scott/Programming/OpenGL/Lesson01/Lesson1.cpp",
-		"/C/Users/Scott/Programming/enet-1.3.1/README",
-		"/C/Users/Scott/Programming/enet-1.3.1/docs/FAQ.dox",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Github Tools/README.md",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/SideBarEnhancements/messages/11.13.2012.1305.0.txt"
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/ILoggable.h"
 	],
 	"find":
 	{
@@ -456,198 +400,8 @@
 	"groups":
 	[
 		{
-			"selected": 5,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "System/System.h",
-					"settings":
-					{
-						"buffer_size": 929,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								286,
-								286
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 108.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "System/System.cpp",
-					"settings":
-					{
-						"buffer_size": 3058,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1092,
-								1092
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 378.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Windows/WinMain.cpp",
-					"settings":
-					{
-						"buffer_size": 2460,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 378.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Engine/Time.h",
-					"settings":
-					{
-						"buffer_size": 1095,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								246,
-								246
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Engine/Time.cpp",
-					"settings":
-					{
-						"buffer_size": 1870,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								208,
-								208
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "SceneManager/SceneManager.cpp",
-					"settings":
-					{
-						"buffer_size": 2339,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1903,
-								1903
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "SceneManager/SceneManager.h",
-					"settings":
-					{
-						"buffer_size": 1114,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								559,
-								559
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 108.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
