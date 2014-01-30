@@ -1,8 +1,14 @@
+#include "Logging/Log.h"
 #include "Engine/Settings.h"
 
-#define SETTINGS "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json"
-#define COPY "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/copy.json"
-#define TEST "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+#define SETTINGS 	"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/DefaultSettings.json"
+#define COPY 		"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/copy.json"
+#define TEST 		"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/test.json"
 
 Settings::Settings( void ) : log("Settings"), filename( SETTINGS ), copy( COPY ), test( TEST )
 {
@@ -25,6 +31,35 @@ Settings::Settings( void ) : log("Settings"), filename( SETTINGS ), copy( COPY )
 			ParseClientDefaults( objItr->second );
 		}
 	}
+/*
+const wchar_t* EXAMPLE = L"\
+{ \
+	\"string_name\" : \"string\tvalue and a \\\"quote\\\" and a unicode char \\u00BE and a c:\\\\path\\\\ or a \\/unix\\/path\\/ :D\", \
+	\"bool_name\" : true, \
+	\"bool_second\" : FaLsE, \
+	\"null_name\" : nULl, \
+	\"negative\" : -34.276, \
+	\"sub_object\" : { \
+						\"foo\" : \"abc\", \
+						 \"bar\" : 1.35e2, \
+						 \"blah\" : { \"a\" : \"A\", \"b\" : \"B\", \"c\" : \"C\" } \
+					}, \
+	\"array_letters\" : [ \"a\", \"b\", \"c\", [ 1, 2, 3  ]  ] \
+}    ";
+
+	JSONValue *value = JSON::Parse(EXAMPLE);
+
+	JSONObject root;
+
+	root = value->AsObject();
+
+	if ( root.find(L"client") != root.end() && root[L"client"]->IsString() )
+	{
+		log.Message( "client is object.", true );
+		//print_out(root[L"client"]->AsString().c_str());
+		//print_out(L"\r\n\r\n");
+	}
+	//*/
 }
 
 Settings::~Settings( void )
@@ -141,4 +176,36 @@ void Settings::Save( void )
 
 	out.writeToFile( test );	//Preserve the results
 	out.writeToFile( filename );	//Remember any changes
+}
+
+void SetValue( char* settingName, int value )
+{
+	//Parse settingName
+	//
+	//Add value
+}
+
+void SetValue( char* settingName, float value )
+{
+
+}
+
+void SetValue( char* settingName, char* value )
+{
+
+}
+
+int GetInt( void )
+{
+	return 0;
+}
+
+float GetFloat( void )
+{
+	return 0.0f;
+}
+
+char* GetString( void )
+{
+	return (char*)0;
 }

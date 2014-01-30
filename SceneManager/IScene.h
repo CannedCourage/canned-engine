@@ -3,10 +3,12 @@
 #ifndef _ISCENE_H_
 #define _ISCENE_H_
 
-#include "Engine/IEngine.h"
 #include "Logging/Log.h"
 
 class System;
+class SceneManager;
+class Settings;
+class Graphics;
 
 enum sceneStates { init = 0 , update = 1, out = 2, };
 

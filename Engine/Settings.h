@@ -1,10 +1,12 @@
 #ifndef _DEFAULTSETTINGS_H_
 #define _DEFAULTSETTINGS_H_
 
-#include "Logging/Log.h"
-
 #include <JsonBox.h>
 using namespace JsonBox;
+
+#include <JSONValue.h>
+
+class Log;
 
 class Settings
 {
@@ -48,6 +50,14 @@ public:
 
 	Settings( void );
 	~Settings( void );
+
+	//New style settings methods
+	void SetValue( char* settingName, int value );
+	void SetValue( char* settingName, float value );
+	void SetValue( char* settingName, char* value );
+	int GetInt( void );
+	float GetFloat( void );
+	char* GetString( void );
 
 	void Save( void );
 };
