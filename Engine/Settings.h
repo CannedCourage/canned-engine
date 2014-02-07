@@ -1,65 +1,57 @@
-#ifndef _DEFAULTSETTINGS_H_
-#define _DEFAULTSETTINGS_H_
+//Settings class
 
+#ifndef _SETTINGS_H_
+#define _SETTINGS_H_
+
+#include <iostream>
 #include <JsonBox.h>
-using namespace JsonBox;
-
-#include <JSONValue.h>
-
-class Log;
 
 class Settings
 {
-private:
-protected:
-
-	Log log;
-
-	Value in;
-
-	Object root;
-	Object::iterator objItr;
-
-	Array arr;
-	Array::iterator arrItr;
-
-	Value out;
-
-	const char* filename;
-	const char* copy;
-	const char* test;
-
-	void ParseWindowDefaults( Value v );
-	void ParseClientDefaults( Value v );
-	void PrepareOutValue( void );
 public:
 
-	struct Window
-	{
-		//window
-		int x, y, width, height;
-		bool maximised;
-	} window;
-
-	struct Client
-	{
-		//client
-		int x, y, xResolution, yResolution, width, height;
-		bool fullscreen;
-	} client;
-
-	Settings( void );
+	Settings( const char* _filename = "", const char* _delimiter = "/" );
 	~Settings( void );
+	
+	void SetDouble( std::string name, const double& value );
+	void SetInteger( std::string name, const int& value );
+	void SetString( std::string name, const std::string& value );
+	void SetBool( std::string name, const bool value );
 
-	//New style settings methods
-	void SetValue( char* settingName, int value );
-	void SetValue( char* settingName, float value );
-	void SetValue( char* settingName, char* value );
-	int GetInt( void );
-	float GetFloat( void );
-	char* GetString( void );
+	void SetDouble( const char* name, const double& value );
+	void SetInteger( const char* name, const int& value );
+	void SetString( const char* name, const std::string& value );
+	void SetBool( const char* name, const bool value );
 
-	void Save( void );
+	double GetDouble( std::string name );
+	int GetInteger( std::string name );
+	std::string GetString( std::string name );
+	bool GetBool( std::string name );
+
+	double GetDouble( const char* name );
+	int GetInteger( const char* name );
+	std::string GetString( const char* name );
+	bool GetBool( const char* name );
+	
+	void WriteFile( void );
+	void ReadFile( void );
+protected:
+
+	const char* filename;
+	JsonBox::Object root;
+	std::string delimiter;
+	
+	void SetDoubleInObject( std::string& name, const double& value, JsonBox::Value& object );
+	void SetIntegerInObject( std::string& name, const int& value, JsonBox::Value& object );
+	void SetStringInObject( std::string& name, const std::string& value, JsonBox::Value& object );
+	void SetBoolInObject( std::string& name, const bool value, JsonBox::Value& object );
+	
+	double GetDoubleFromObject( std::string& name, const JsonBox::Value& object );
+	int GetIntegerFromObject( std::string& name, const JsonBox::Value& object );
+	std::string GetStringFromObject( std::string& name, const JsonBox::Value& object );
+	bool GetBoolFromObject( std::string& name, const JsonBox::Value& object );
+private:
+
 };
 
-#endif //_DEFAULTSETTINGS_H_
+#endif //_SETTINGS_H_

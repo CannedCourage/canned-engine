@@ -27,9 +27,9 @@ void SplashScreen::Load( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings.client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings.client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings.client.xResolution, (float)settings.client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMax, tvMax },
 		};
 
 		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
@@ -98,9 +98,9 @@ void SplashScreen::OnRecover( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings.client.xResolution, 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings.client.yResolution, 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings.client.xResolution, (float)settings.client.yResolution, 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMax, tvMax },
 		};
 
 		VOID* pVoid;

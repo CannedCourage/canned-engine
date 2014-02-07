@@ -1,6 +1,10 @@
 #include "Graphics/Graphics.h"
 #include "Window/WindowMS.h"
 
+#include <iostream>
+
+using std::cout;
+
 void Graphics::CreateInterface( void )
 {
 	HWND hWnd = window.getHandle();
@@ -356,6 +360,14 @@ void Graphics::SetMultisample16( void )
 void Graphics::CreateDevice( void )
 {
 	HWND hWnd = window.getHandle();
+
+	char buffer [100];
+
+	sprintf (buffer, "%d, %d, %d, %d", mInterface, adapter, deviceType, hWnd );
+
+	log.Message( buffer );
+
+	mDevice = NULL;
 
 	ErrorCheck( mInterface->CreateDevice(adapter,
                       deviceType,

@@ -1,211 +1,837 @@
-#include "Logging/Log.h"
-#include "Engine/Settings.h"
-
 #include <iostream>
-#include <fstream>
 
-using namespace std;
+#include "Settings.h"
+#include "StringFunctions.h"
 
-#define SETTINGS 	"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/DefaultSettings.json"
-#define COPY 		"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/copy.json"
-#define TEST 		"C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/test.json"
+using std::string;
+using JsonBox::Value;
+using JsonBox::Object;
 
-Settings::Settings( void ) : log("Settings"), filename( SETTINGS ), copy( COPY ), test( TEST )
+Settings::Settings( const char* _filename, const char* _delimiter ) : filename( _filename ), root(), delimiter( _delimiter )
 {
-	in.loadFromFile( filename );
-	in.writeToFile( copy );	//Preserve the original
-
-	root = in.getObject();
-
-	for( objItr = root.begin(); objItr != root.end(); objItr++ )
-	{
-		log.Message( objItr->first.data() );
-		
-		if( strcmp( objItr->first.data(), "window" ) == 0 )
-		{
-			ParseWindowDefaults( objItr->second );
-		}
-
-		if( strcmp( objItr->first.data(), "client" ) == 0 )
-		{
-			ParseClientDefaults( objItr->second );
-		}
-	}
-/*
-const wchar_t* EXAMPLE = L"\
-{ \
-	\"string_name\" : \"string\tvalue and a \\\"quote\\\" and a unicode char \\u00BE and a c:\\\\path\\\\ or a \\/unix\\/path\\/ :D\", \
-	\"bool_name\" : true, \
-	\"bool_second\" : FaLsE, \
-	\"null_name\" : nULl, \
-	\"negative\" : -34.276, \
-	\"sub_object\" : { \
-						\"foo\" : \"abc\", \
-						 \"bar\" : 1.35e2, \
-						 \"blah\" : { \"a\" : \"A\", \"b\" : \"B\", \"c\" : \"C\" } \
-					}, \
-	\"array_letters\" : [ \"a\", \"b\", \"c\", [ 1, 2, 3  ]  ] \
-}    ";
-
-	JSONValue *value = JSON::Parse(EXAMPLE);
-
-	JSONObject root;
-
-	root = value->AsObject();
-
-	if ( root.find(L"client") != root.end() && root[L"client"]->IsString() )
-	{
-		log.Message( "client is object.", true );
-		//print_out(root[L"client"]->AsString().c_str());
-		//print_out(L"\r\n\r\n");
-	}
-	//*/
+	ReadFile();
 }
 
 Settings::~Settings( void )
 {
-	Save(); //Save the defaults
+	WriteFile();
 }
 
-void Settings::ParseWindowDefaults( Value v )
+void Settings::WriteFile( void )
 {
-	Object _window;
-	Object::iterator itr;
+	Value out( root );
 
-	if( v.isObject() )
+	//out.writeToStream( cout, true, true );
+
+	out.writeToFile( filename );
+}
+
+void Settings::ReadFile( void )
+{
+	Value in;
+
+	in.loadFromFile( filename );
+
+	//string copy( filename );
+	//copy.resize( copy.length() - 5 );
+	//copy.append( "_COPY.json");
+	
+	string copy( "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/MainSettings_COPY.json" );
+
+	in.writeToFile( copy );	//Preserve the original
+
+	//in.writeToStream( cout, true, true );
+
+	if( in.isObject() )
 	{
-		_window = v.getObject();
-
-		for( itr = _window.begin(); itr != _window.end(); itr++ )
-		{
-			if( strcmp( itr->first.data(), "x" ) == 0 )
-			{
-				window.x = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "y" ) == 0 )
-			{
-				window.y = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "width" ) == 0 )
-			{
-				window.width = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "height" ) == 0 )
-			{
-				window.height = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "maximised" ) == 0 )
-			{
-				window.maximised = itr->second.getBoolean();
-			}
-		}
+		root = in.getObject();
 	}
 	else
 	{
-		log.Message( "window value is not object", true );
+		//Throw
 	}
 }
 
-void Settings::ParseClientDefaults( Value v )
+void Settings::SetDouble( string name, const double& value )
 {
-	Object _client;
-	Object::iterator itr;
+	Value v( root );
 
-	if( v.isObject() )
+	SetDoubleInObject( name, value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetInteger( string name, const int& value )
+{
+	Value v( root );
+
+	SetIntegerInObject( name, value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetString( string name, const string& value )
+{
+	Value v( root );
+
+	SetStringInObject( name, value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetBool( string name, const bool value )
+{
+	Value v( root );
+
+	SetBoolInObject( name, value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetDouble( const char* name, const double& value )
+{
+	Value v( root );
+
+	SetDoubleInObject( string( name ), value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetInteger( const char* name, const int& value )
+{
+	Value v( root );
+
+	SetIntegerInObject( string( name ), value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetString( const char* name, const string& value )
+{
+	Value v( root );
+
+	SetStringInObject( string( name ), value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetBool( const char* name, const bool value )
+{
+	Value v( root );
+
+	SetBoolInObject( string( name ), value, v );
+
+	root = v.getObject();
+}
+
+void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Value& object )
+{
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
 	{
-		_client = v.getObject();
+		//No
+			//Create Value, initialise with value
+			Value v = Value( value );
 
-		for( itr = _client.begin(); itr != _client.end(); itr++ )
-		{
-			if( strcmp( itr->first.data(), "xResolution" ) == 0 )
+			//Is there a value called first substring already?
+			if( obj.find( first.c_str() ) == obj.end() )
 			{
-				client.xResolution = itr->second.getInt();
+				//No
+					//Set object[ first substring ] equal to the new Value
+					obj[ first.c_str() ] = v;
+					object = Value( obj );
 			}
-			if( strcmp( itr->first.data(), "yResolution" ) == 0 )
+			else
 			{
-				client.yResolution = itr->second.getInt();
+				//Yes
+					//Is it a Double?
+					if( obj[ first.c_str() ].isDouble() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+				//Set object[ first substring ] equal to the new Value
+				obj[ first.c_str() ] = v;
+				object = obj;
 			}
-			if( strcmp( itr->first.data(), "fullscreen" ) == 0 )
-			{
-				client.fullscreen = itr->second.getBoolean();
-			}
-			if( strcmp( itr->first.data(), "x" ) == 0 )
-			{
-				client.x = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "y" ) == 0 )
-			{
-				client.y = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "width" ) == 0 )
-			{
-				client.width = itr->second.getInt();
-			}
-			if( strcmp( itr->first.data(), "height" ) == 0 )
-			{
-				client.height = itr->second.getInt();
-			}
-		}
 	}
 	else
 	{
-		log.Message( "client value is not object", true );
+		//Yes
+			//Does object matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Create new Object
+					Object o;
+					Value v( o );
+
+					//Call SetDoubleInObject, pass name, value and new object
+					SetDoubleInObject( name, value, v );
+
+					//Set object[ first substring ] equal to new object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj[ first.c_str() ];
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+					//Call SetDoubleInObject, pass name, value and object
+					SetDoubleInObject( name, value, v );
+
+					//Set object[ first substring ] equal to object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
 	}
 }
 
-void Settings::PrepareOutValue( void )
+void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Value& object )
 {
-	out["window"]["x"] = Value( window.x );
-	out["window"]["y"] = Value( window.y );
-	out["window"]["width"] = Value( window.width );
-	out["window"]["height"] = Value( window.height );
-	out["window"]["maximised"] = Value( window.maximised );
+	Object obj = object.getObject();
 
-	out["client"]["xResolution"] = Value( client.xResolution );
-	out["client"]["yResolution"] = Value( client.yResolution );
-	out["client"]["fullscreen"] = Value( client.fullscreen );
-	out["client"]["x"] = Value( client.x );
-	out["client"]["y"] = Value( client.y );
-	out["client"]["width"] = Value( client.width );
-	out["client"]["height"] = Value( client.height );
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Create Value, initialise with value
+			Value v = Value( value );
+
+			//Is there a value called first substring already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Set object[ first substring ] equal to the new Value
+					obj[ first.c_str() ] = v;
+					object = Value( obj );
+			}
+			else
+			{
+				//Yes
+					//Is it an Integer?
+					if( obj[ first.c_str() ].isInteger() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+				//Set object[ first substring ] equal to the new Value
+				obj[ first.c_str() ] = v;
+				object = obj;
+			}
+	}
+	else
+	{
+		//Yes
+			//Does object matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Create new Object
+					Object o;
+					Value v( o );
+
+					//Call SetIntegerInObject, pass name, value and new object
+					SetIntegerInObject( name, value, v );
+
+					//Set object[ first substring ] equal to new object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj[ first.c_str() ];
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+					//Call SetIntegerInObject, pass name, value and object
+					SetIntegerInObject( name, value, v );
+
+					//Set object[ first substring ] equal to object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+	}
 }
 
-void Settings::Save( void )
+void Settings::SetStringInObject( string& name, const string& value, JsonBox::Value& object )
 {
-	PrepareOutValue();
+	Object obj = object.getObject();
 
-	out.writeToFile( test );	//Preserve the results
-	out.writeToFile( filename );	//Remember any changes
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Create Value, initialise with value
+			Value v = Value( value );
+
+			//Is there a value called first substring already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Set object[ first substring ] equal to the new Value
+					obj[ first.c_str() ] = v;
+					object = Value( obj );
+			}
+			else
+			{
+				//Yes
+					//Is it a string?
+					if( obj[ first.c_str() ].isString() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+				//Set object[ first substring ] equal to the new Value
+				obj[ first.c_str() ] = v;
+				object = obj;
+			}
+	}
+	else
+	{
+		//Yes
+			//Does object matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Create new Object
+					Object o;
+					Value v( o );
+
+					//Call SetStringInObject, pass name, value and new object
+					SetStringInObject( name, value, v );
+
+					//Set object[ first substring ] equal to new object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj[ first.c_str() ];
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+					//Call SetStringInObject, pass name, value and object
+					SetStringInObject( name, value, v );
+
+					//Set object[ first substring ] equal to object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+	}
 }
 
-void SetValue( char* settingName, int value )
+void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& object )
 {
-	//Parse settingName
-	//
-	//Add value
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Create Value, initialise with value
+			Value v = Value( value );
+
+			//Is there a value called first substring already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Set object[ first substring ] equal to the new Value
+					obj[ first.c_str() ] = v;
+					object = Value( obj );
+			}
+			else
+			{
+				//Yes
+					//Is it a bool?
+					if( obj[ first.c_str() ].isBoolean () )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+					//Set object[ first substring ] equal to the new Value
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+	}
+	else
+	{
+		//Yes
+			//Does object matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Create new Object
+					Object o;
+					Value v( o );
+
+					//Call SetBoolInObject, pass name, value and new object
+					SetBoolInObject( name, value, v );
+
+					//Set object[ first substring ] equal to new object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj[ first.c_str() ];
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Ok
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+
+					//Call SetBoolInObject, pass name, value and object
+					SetBoolInObject( name, value, v );
+
+					//Set object[ first substring ] equal to object
+					obj[ first.c_str() ] = v;
+					object = obj;
+			}
+	}
 }
 
-void SetValue( char* settingName, float value )
+double Settings::GetDouble( string name )
 {
-
+	return GetDoubleFromObject( name, root );
 }
 
-void SetValue( char* settingName, char* value )
+int Settings::GetInteger( string name )
 {
-
+	return GetIntegerFromObject( name, root );
 }
 
-int GetInt( void )
+string Settings::GetString( string name )
 {
+	return GetStringFromObject( name, root );
+}
+
+bool Settings::GetBool( string name )
+{
+	return GetBoolFromObject( name, root );
+}
+
+double Settings::GetDouble( const char* name )
+{
+	return GetDoubleFromObject( string( name ), root );
+}
+
+int Settings::GetInteger( const char* name )
+{
+	return GetIntegerFromObject( string( name ), root );
+}
+
+string Settings::GetString( const char* name )
+{
+	return GetStringFromObject( string( name ), root );
+}
+
+bool Settings::GetBool( const char* name )
+{
+	return GetBoolFromObject( string ( name ), root );
+}
+	
+double Settings::GetDoubleFromObject( string& name, const JsonBox::Value& object )
+{
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Is there a value called <first substring> already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				Value v = obj.find( first.c_str() )->second;
+				//Yes
+					//Is it a Double?
+					if( v.isDouble() )
+					{
+						//Yes
+							//Get Double from object [ first substring ]
+							return v.getDouble();
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+			}
+	}
+	else
+	{
+		//Yes
+			//Does value matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj.find( first.c_str() )->second;
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Call GetDoubleFromObject, pass name and object
+							return GetDoubleFromObject( name, v );
+					}
+					else
+					{
+						//No
+							//Throw error, no sub object
+					}
+			}
+	}
+
+	return 0.0;
+}
+
+int Settings::GetIntegerFromObject( string& name, const JsonBox::Value& object )
+{
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Is there a value called <first substring> already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				Value v = obj.find( first.c_str() )->second;
+				//Yes
+					//Is it a Integer?
+					if( v.isInteger() )
+					{
+						//Yes
+							//Get Integer from object [ first substring ]
+							return v.getInt();
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+			}
+	}
+	else
+	{
+		//Yes
+			//Does value matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj.find( first.c_str() )->second;
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Call GetIntegerFromObject, pass name and object
+							return GetIntegerFromObject( name, v );
+					}
+					else
+					{
+						//No
+							//Throw error, no sub object
+					}
+			}
+	}
+
 	return 0;
 }
 
-float GetFloat( void )
+string Settings::GetStringFromObject( string& name, const JsonBox::Value& object )
 {
-	return 0.0f;
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Is there a value called <first substring> already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				Value v = obj.find( first.c_str() )->second;
+				//Yes
+					//Is it a string?
+					if( v.isString() )
+					{
+						//Yes
+							//Get string from object [ first substring ]
+							return v.getString();
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+			}
+	}
+	else
+	{
+		//Yes
+			//Does value matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj.find( first.c_str() )->second;
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Call GetStringFromObject, pass name and object
+							return GetStringFromObject( name, v );
+					}
+					else
+					{
+						//No
+							//Throw error, no sub object
+					}
+			}
+	}
+
+	return string( "" );
 }
 
-char* GetString( void )
+bool Settings::GetBoolFromObject( string& name, const JsonBox::Value& object )
 {
-	return (char*)0;
+	Object obj = object.getObject();
+
+	string first( "" );
+	string second( "" );
+
+	//Get first substring
+	first = StripPiece( name, delimiter, 0 );
+
+	//Get second substring
+	second = Piece( name, delimiter, 0 );
+	
+	//Is there a second substring?
+	if( second.length() == 0 )
+	{
+		//No
+			//Is there a value called <first substring> already?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				Value v = obj.find( first.c_str() )->second;
+				//Yes
+					//Is it a bool?
+					if( v.isBoolean() )
+					{
+						//Yes
+							//Get bool from object [ first substring ]
+							return v.getBoolean();
+					}
+					else
+					{
+						//No
+							//Throw error, don't change type
+					}
+			}
+	}
+	else
+	{
+		//Yes
+			//Does value matching first substring exist?
+			if( obj.find( first.c_str() ) == obj.end() )
+			{
+				//No
+					//Throw error, no such setting exists
+			}
+			else
+			{
+				//Yes
+					//Get Value
+					Value v = obj.find( first.c_str() )->second;
+
+					//Is the value an object?
+					if( v.isObject() )
+					{
+						//Yes
+							//Call GetBoolFromObject, pass name and object
+							return GetBoolFromObject( name, v );
+					}
+					else
+					{
+						//No
+							//Throw error, no sub object
+					}
+			}
+	}
+
+	return false;
 }

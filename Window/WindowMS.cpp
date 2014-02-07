@@ -4,7 +4,8 @@
 
 #define FULLSCREEN		WS_EX_TOPMOST | WS_POPUP
 #define WINDOWED2		WS_OVERLAPPEDWINDOW
-#define WINDOWED		( WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE )
+#define WINDOWED		( WS_CAPTION | WS_MINIMIZEBOX | WS_VISIBLE )
+//WS_SYSMENU
 
 WindowMS::WindowMS( System &s ) : iWindow( s )
 {
@@ -33,13 +34,15 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 	windowClass.hCursor = LoadCursor( hInstance, IDC_ARROW );					//Cursor displayed when over the window
 	windowClass.hbrBackground = NULL;
 	//windowClass.hbrBackground = ( HBRUSH )( COLOR_WINDOW+1 );					//Background brush that sets the colour of the background
-	windowClass.lpszMenuName = MAKEINTRESOURCE( IDR_MENU1 );					//Name of a menu resource the windows of this class use
+	windowClass.lpszMenuName = NULL;
+	//windowClass.lpszMenuName = MAKEINTRESOURCE( IDR_MENU1 );					//Name of a menu resource the windows of this class use
 	windowClass.lpszClassName = "GameWindow";									//Class identifier
 	windowClass.hIconSm = LoadIcon( hInstance, MAKEINTRESOURCE( IDI_MYICON ) );	//Small Icon (Taskbar, etc)
 
 	if( !RegisterClassEx( &windowClass ) )
 	{
 		MessageBox( NULL, TEXT( "Window Registration Failed :(" ), TEXT( "Error!" ), MB_ICONEXCLAMATION | MB_OK );
+
 		return 0;
 	}
 	//~Register the window class
@@ -51,7 +54,11 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 	{
 		style = FULLSCREEN;
 
-		CursorVisible(false);
+		CursorVisible( false );
+
+		SetWindowPosition( 0, 0 );
+
+		SetWindowSize( clientWidth, clientHeight );
 	}
 	else
 	{
@@ -77,16 +84,16 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 	//~Create The Window
 	return 1;
 
-	WindowMS::hInstance = hInstance;
+	WindowMS::hInstance = hInstance; //Huh? What is this...I don't even...
 }
 
 void WindowMS::Destroy( void )
 {
-	UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
+	UnregisterClass( windowClass.lpszClassName, windowClass.hInstance );
 
 	if( hwnd != NULL )
 	{
-		DestroyWindow(hwnd);
+		DestroyWindow( hwnd );
 		hwnd = NULL;
 	}
 }
@@ -99,8 +106,11 @@ int WindowMS::Recreate( void )
 void WindowMS::Update( void )
 {
 	AdjustWindow();
+
 	MoveWindow( hwnd, windowX, windowY, windowWidth, windowHeight, true );
+
 	SetWindowLong( hwnd, GWL_STYLE, WINDOWED );
+
 	//Don't change position, size, and don't activate the window, but stop being topmost
 	SetWindowPos( hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_DRAWFRAME );
 }
@@ -121,6 +131,9 @@ void WindowMS::SetClientPosition( const int& X, const int& Y )
 {
 	clientX = X;
 	clientY = Y;
+
+	settings.SetInteger( "client/x", clientX );
+	settings.SetInteger( "client/y", clientY );
 }
 
 void WindowMS::SetClientSize( const int& Width, const int& Height )
@@ -154,12 +167,12 @@ int WindowMS::Dialog( char* message, char* title )
 void WindowMS::AdjustWindow( void )
 {
 	DWORD style = WINDOWED;
+
 	RECT adjusted = { clientX, clientY, ( clientX + clientWidth ), ( clientY + clientHeight ) };
 
 	AdjustWindowRectEx( &adjusted, style, true, 0 );
 
-	windowX = adjusted.left;
-	windowY = adjusted.top;
-	windowWidth = ( adjusted.right - adjusted.left );
-	windowHeight = ( adjusted.bottom - adjusted.top );
+	SetWindowPosition( adjusted.left, adjusted.top );
+
+	SetWindowSize( ( adjusted.right - adjusted.left ), ( adjusted.bottom - adjusted.top ) );
 }

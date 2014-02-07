@@ -8,24 +8,16 @@ Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( syste
 									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
 									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false )
 {
-	fullscreen = settings.client.fullscreen;
-	xResolution = settings.client.xResolution;
-	yResolution = settings.client.yResolution;
-	xWindowPosition = settings.window.x;
-	yWindowPosition = settings.window.y;
-	xWindowSize = settings.window.width;
-	yWindowSize = settings.window.height;
-	clientWidth = xResolution; //Plus one?
-	clientHeight = yResolution; //Plus one?
-	xClientPos = settings.client.x;
-	yClientPos = settings.client.y;
+	fullscreen = settings.GetBool( "client/fullscreen" );
+	xResolution = settings.GetInteger( "client/xResolution" );
+	yResolution = settings.GetInteger( "client/yResolution" );
 }
 
 Graphics::~Graphics( void )
 {
-	settings.client.fullscreen = fullscreen;
-	settings.client.xResolution = xResolution;
-	settings.client.yResolution = yResolution;
+	settings.SetBool( "client/fullscreen", fullscreen );
+	settings.SetInteger( "client/xResolution", xResolution );
+	settings.SetInteger( "client/yResolution", yResolution );
 
 	CleanUp();
 }
@@ -201,8 +193,6 @@ void Graphics::SetClientSize( const int& width, const int& height )
 {
 	if( !fullscreen )
 	{
-		clientWidth = width;
-		clientHeight = height;
 		window.SetClientSize( width, height );
 		window.Update();
 	}
@@ -212,8 +202,6 @@ void Graphics::SetClientPosition( const int& x, const int& y )
 {
 	if( !fullscreen )
 	{
-		xClientPos = x;
-		yClientPos = y;
 		window.SetClientPosition( x, y );
 		window.Update();
 	}
@@ -227,30 +215,6 @@ void Graphics::SetResolution( const int& width, const int& height )
 	SetClientSize( width, height );
 
 	Refresh();
-
-	if( xResolution != xWindowSize )
-	{
-		if( xResolution < xWindowSize )
-		{
-			log.Message( "WARNING: Stretching image on x-axis", true );
-		}
-		if( xResolution > xWindowSize )
-		{
-			log.Message( "WARNING: Shrinking image on x-axis", true );
-		}
-	}
-
-	if( yResolution != yWindowSize )
-	{
-		if( yResolution < yWindowSize )
-		{
-			log.Message( "WARNING: Stretching image on y-axis", true );
-		}
-		if( yResolution > yWindowSize )
-		{
-			log.Message( "WARNING: Shrinking image on y-axis", true );
-		}
-	}
 }
 
 void Graphics::ChangeView( void )

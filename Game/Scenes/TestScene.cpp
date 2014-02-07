@@ -5,12 +5,14 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
-	D3DXMatrixPerspectiveFovLH( &matProj, D3DXToRadian( 90.0f ), (float)settings.client.xResolution/(float)settings.client.yResolution, 1.0f, 100.0f );
+	D3DXMatrixPerspectiveFovLH( &matProj, D3DXToRadian( 90.0f ), 
+		(float)settings.GetInteger( std::string( "client/xResolution" ) )/(float)settings.GetInteger( std::string( "client/yResolution" ) ), 
+		1.0f, 100.0f );
 
 	FontPosition.top = 0;
 	FontPosition.left = 0;
-	FontPosition.right = settings.client.xResolution;
-	FontPosition.bottom = settings.client.yResolution;
+	FontPosition.right = settings.GetInteger( std::string( "client/xResolution" ) );
+	FontPosition.bottom = settings.GetInteger( std::string( "client/yResolution" ) );
 }
 
 TestScene::~TestScene( void )

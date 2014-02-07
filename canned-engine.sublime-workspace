@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"clien",
+				"clientWidth"
+			],
+			[
+				"width",
+				"width"
+			],
+			[
+				"Set",
+				"SetWindowSize"
+			],
+			[
+				"SetWind",
+				"SetWindowPosition"
+			],
+			[
+				"SetWindow",
+				"SetWindowPosition"
+			],
+			[
+				"sett",
+				"settingsFile"
+			],
+			[
 				"SetNum",
 				"SetNumberInObject"
 			],
@@ -34,10 +58,6 @@
 			[
 				"Pa",
 				"ParseJSON"
-			],
-			[
-				"Set",
-				"Settings"
 			],
 			[
 				"timesc",
@@ -108,69 +128,42 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/main.cpp",
+			"file": "Window/iWindow.h",
 			"settings":
 			{
-				"buffer_size": 1586,
+				"buffer_size": 955,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.h",
+			"file": "Window/iWindow.cpp",
 			"settings":
 			{
-				"buffer_size": 1535,
+				"buffer_size": 783,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "#include <iostream>\n#include <fstream>\n\n#include \"Settings.h\"\n#include \"StringFunctions.h\"\n\nusing std::ifstream;\nusing std::ofstream;\nusing std::string;\nusing std::ios;\n\nSettings::Settings( char* _filename, char* _delimiter ) : filename( _filename ), root(), delimiter( _delimiter )\n{\n	//it = root.find(\"bool_second\");\n\n	//if( it != root.end() )\n	//	std::cout << it->first << std::endl << it->second;\n\n	/*\n	for( objItr = root.begin(); objItr != root.end(); objItr++ )\n	{\n		log.Message( objItr->first.data() );\n		\n		if( strcmp( objItr->first.data(), \"window\" ) == 0 )\n		{\n			ParseWindowDefaults( objItr->second );\n		}\n\n		if( strcmp( objItr->first.data(), \"client\" ) == 0 )\n		{\n			ParseClientDefaults( objItr->second );\n		}\n	}\n	//*/\n}\n\nSettings::~Settings( void )\n{\n}\n\nvoid Settings::WriteFile( void )\n{\n	Value out( root );\n\n	out.writeToStream( std::cout, true, true );\n\n	out.writeToFile( OUTPUT );\n}\n\nvoid Settings::ReadFile( void )\n{\n	Value in;\n\n	in.loadFromFile( filename );\n\n	//in.writeToFile( COPY );	//Preserve the original\n\n	in.writeToStream( std::cout, true, true );\n\n	Object::iterator it;\n\n	if( in.isObject() )\n	{\n		root = in.getObject();\n	}\n/*\n	if( root.find( \"negative\" ) != root.end() )\n	{\n		std::cout << std::endl << ( root.find( \"negative\" )->first ) << std::endl;\n	}\n	else\n	{\n		std::cout << std::endl << \"JSON element not found.\" << std::endl;\n	}\n//*/\n}\n\nvoid Settings::SetNumber( string name, double value )\n{\n	Value v( root );\n\n	SetNumberInObject( name, value, v );\n\n	root = v.getObject();\n}\n\nvoid Settings::SetString( string name, string value )\n{\n	Value v( root );\n\n	SetStringInObject( name, value, v );\n\n	root = v.getObject();\n}\n\nvoid Settings::SetBool( string name, bool value )\n{\n	Value v( root );\n\n	SetBoolInObject( name, value, v );\n\n	root = v.getObject();\n}\n\nvoid Settings::SetNumberInObject( string name, double value, Value& object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Create Value, initialise with value\n			Value v = Value( value );\n\n			//Is there a value called first substring already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Set object[ first substring ] equal to the new Value\n					obj[ first.c_str() ] = v;\n					object = Value( obj );\n			}\n			else\n			{\n				//Yes\n					//Is it a number?\n					if( obj[ first.c_str() ].isDouble() )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n				//Set object[ first substring ] equal to the new Value\n				obj[ first.c_str() ] = v;\n				object = obj;\n			}\n	}\n	else\n	{\n		//Yes\n			//Does object matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Create new Object\n					Object o;\n					Value v( o );\n\n					//Call SetNumberInObject, pass name, value and new object\n					SetNumberInObject( name, value, v );\n\n					//Set object[ first substring ] equal to new object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj[ first.c_str() ];\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n					//Call SetNumberInObject, pass name, value and object\n					SetNumberInObject( name, value, v );\n\n					//Set object[ first substring ] equal to object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n	}\n}\n\nvoid Settings::SetStringInObject( string name, string value, Value& object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Create Value, initialise with value\n			Value v = Value( value );\n\n			//Is there a value called first substring already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Set object[ first substring ] equal to the new Value\n					obj[ first.c_str() ] = v;\n					object = Value( obj );\n			}\n			else\n			{\n				//Yes\n					//Is it a string?\n					if( obj[ first.c_str() ].isString() )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n				//Set object[ first substring ] equal to the new Value\n				obj[ first.c_str() ] = v;\n				object = obj;\n			}\n	}\n	else\n	{\n		//Yes\n			//Does object matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Create new Object\n					Object o;\n					Value v( o );\n\n					//Call SetStringInObject, pass name, value and new object\n					SetStringInObject( name, value, v );\n\n					//Set object[ first substring ] equal to new object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj[ first.c_str() ];\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n					//Call SetStringInObject, pass name, value and object\n					SetStringInObject( name, value, v );\n\n					//Set object[ first substring ] equal to object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n	}\n}\n\nvoid Settings::SetBoolInObject( string name, bool value, Value& object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Create Value, initialise with value\n			Value v = Value( value );\n\n			//Is there a value called first substring already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Set object[ first substring ] equal to the new Value\n					obj[ first.c_str() ] = v;\n					object = Value( obj );\n			}\n			else\n			{\n				//Yes\n					//Is it a bool?\n					if( obj[ first.c_str() ].isBoolean () )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n					//Set object[ first substring ] equal to the new Value\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n	}\n	else\n	{\n		//Yes\n			//Does object matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Create new Object\n					Object o;\n					Value v( o );\n\n					//Call SetBoolInObject, pass name, value and new object\n					SetBoolInObject( name, value, v );\n\n					//Set object[ first substring ] equal to new object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj[ first.c_str() ];\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Ok\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n\n					//Call SetBoolInObject, pass name, value and object\n					SetBoolInObject( name, value, v );\n\n					//Set object[ first substring ] equal to object\n					obj[ first.c_str() ] = v;\n					object = obj;\n			}\n	}\n}\n\ndouble Settings::GetNumber( string name )\n{\n	return GetNumberFromObject( name, root );\n}\n\nstring Settings::GetString( string name )\n{\n	return GetStringFromObject( name, root );\n}\n\nbool Settings::GetBool( string name )\n{\n	return GetBoolFromObject( name, root );\n}\n	\ndouble Settings::GetNumberFromObject( string name, Value object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Is there a value called <first substring> already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				Value v = obj.find( first.c_str() )->second;\n				//Yes\n					//Is it a number?\n					if( v.isDouble() )\n					{\n						//Yes\n							//Get number from object [ first substring ]\n							return v.getDouble();\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n			}\n	}\n	else\n	{\n		//Yes\n			//Does value matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj.find( first.c_str() )->second;\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Call GetNumberFromObject, pass name and object\n							return GetNumberFromObject( name, v );\n					}\n					else\n					{\n						//No\n							//Throw error, no sub object\n					}\n			}\n	}\n\n	return 0.0;\n}\n\nstring Settings::GetStringFromObject( string name, Value object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Is there a value called <first substring> already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				Value v = obj.find( first.c_str() )->second;\n				//Yes\n					//Is it a string?\n					if( v.isString() )\n					{\n						//Yes\n							//Get string from object [ first substring ]\n							return v.getString();\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n			}\n	}\n	else\n	{\n		//Yes\n			//Does value matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj.find( first.c_str() )->second;\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Call GetStringFromObject, pass name and object\n							return GetStringFromObject( name, v );\n					}\n					else\n					{\n						//No\n							//Throw error, no sub object\n					}\n			}\n	}\n\n	return string( \"\" );\n}\n\nbool Settings::GetBoolFromObject( string name, Value object )\n{\n	Object obj = object.getObject();\n\n	string d( \"/\" );\n	string first( \"\" );\n	string second( \"\" );\n\n	//Get first substring\n	first = StripPiece( name, d, 0 );\n\n	//Get second substring\n	second = Piece( name, d, 0 );\n	\n	//Is there a second substring?\n	if( second.length() == 0 )\n	{\n		//No\n			//Is there a value called <first substring> already?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				Value v = obj.find( first.c_str() )->second;\n				//Yes\n					//Is it a bool?\n					if( v.isBoolean() )\n					{\n						//Yes\n							//Get bool from object [ first substring ]\n							return v.getBoolean();\n					}\n					else\n					{\n						//No\n							//Throw error, don't change type\n					}\n			}\n	}\n	else\n	{\n		//Yes\n			//Does value matching first substring exist?\n			if( obj.find( first.c_str() ) == obj.end() )\n			{\n				//No\n					//Throw error, no such setting exists\n			}\n			else\n			{\n				//Yes\n					//Get Value\n					Value v = obj.find( first.c_str() )->second;\n\n					//Is the value an object?\n					if( v.isObject() )\n					{\n						//Yes\n							//Call GetBoolFromObject, pass name and object\n							return GetBoolFromObject( name, v );\n					}\n					else\n					{\n						//No\n							//Throw error, no sub object\n					}\n			}\n	}\n\n	return false;\n}",
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.cpp",
-			"file_size": 12356,
-			"file_write_time": 130353644671932990,
+			"file": "Window/WindowMS.h",
 			"settings":
 			{
-				"buffer_size": 11730,
+				"buffer_size": 1101,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.h",
+			"file": "Window/WindowMS.cpp",
 			"settings":
 			{
-				"buffer_size": 273,
+				"buffer_size": 4896,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.cpp",
+			"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 			"settings":
 			{
-				"buffer_size": 1235,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/examples/main.cpp",
-			"settings":
-			{
-				"buffer_size": 737,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test.json",
-			"settings":
-			{
-				"buffer_size": 433,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/output.json",
-			"settings":
-			{
-				"buffer_size": 455,
+				"buffer_size": 151,
 				"line_ending": "Windows"
 			}
 		}
@@ -243,15 +236,39 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/main.cpp",
-		"/C/Users/Scott/Desktop/oldsettings",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/mainSettings.json",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/StandardResources/resource.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.h",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.cpp",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test.json",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/copy.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/test.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/copy.json",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/DefaultSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/copy.json",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/main.cpp",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/output.json",
 		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/examples/main.cpp",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.cpp",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.h",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.h",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.cpp",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test_COPY.json",
+		"/C/Users/Scott/Desktop/oldsettings",
+		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/copy.json",
 		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/include/JsonBox.h",
 		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/TestSuite.h",
 		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/main.cpp",
@@ -265,14 +282,8 @@
 		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSONValue.h",
 		"/C/Users/Scott/Programming/Libraries/tinyxml_2_6_2/tinyxml/xmltest.cpp",
 		"/C/Users/Scott/Programming/Libraries/tinyxml_2_6_2/tinyxml/readme.txt",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/output.json",
 		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSON.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/DefaultSettings.json",
 		"/C/Users/Scott/.gimp-2.8/menurc.txt",
 		"/C/Users/Scott/.gimp-2.8/menurc",
 		"/C/Users/Scott/Desktop/Settings.h",
@@ -284,12 +295,10 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.h",
 		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Github Tools/README.md",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/PIXGameDebugging/PIXGameDebugging.cpp",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.cpp",
@@ -326,13 +335,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
 		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/graphics.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/Window.cpp",
@@ -360,17 +363,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Texture.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Font.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/Metrics.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/CV_Camera.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Camera/ControlConstants.h"
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp"
 	],
 	"find":
 	{
@@ -389,6 +382,42 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"clientHeight",
+			"xClientPos",
+			"clientWidth",
+			"xWindowPosition",
+			"xWindowSize",
+			"xWindowPosition",
+			"\\",
+			"xWindowSize",
+			"string name",
+			"\")",
+			"std::string(",
+			"d",
+			"\")",
+			"std::string(",
+			"std::",
+			"std::string",
+			"Number",
+			"GetNumber",
+			"Number",
+			"GetIntFromObject",
+			"SetIntInObject",
+			"Int",
+			"Double",
+			"int",
+			"Double",
+			"Number",
+			"number",
+			"Number",
+			"number",
+			"Number",
+			"window",
+			"settings",
+			"Get",
+			"\\",
+			"d",
+			"string",
 			"Number",
 			"Object",
 			"void",
@@ -480,43 +509,7 @@
 			"window",
 			"client",
 			"window",
-			"Window",
-			"Cursor",
-			" = 0",
-			"Window",
-			"window",
-			"Window",
-			"DefaultSettings",
-			"0",
-			")",
-			"(",
-			")",
-			"x",
-			"screen",
-			"L",
-			"Scripts",
-			"\\",
-			"system",
-			"System",
-			"system",
-			"manager",
-			"system",
-			"SceneManager",
-			"this",
-			"\"\n",
-			"settings->",
-			"manager->",
-			"settings->",
-			"device->",
-			"device",
-			"graphics->",
-			"window->",
-			"System::",
-			"settings->",
-			"device",
-			"manager->",
-			"device",
-			"graphics->"
+			"Window"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -535,30 +528,29 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/main.cpp",
+					"file": "Window/iWindow.h",
 					"settings":
 					{
-						"buffer_size": 1586,
+						"buffer_size": 955,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								564,
-								564
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -568,18 +560,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.h",
+					"file": "Window/iWindow.cpp",
 					"settings":
 					{
-						"buffer_size": 1535,
+						"buffer_size": 783,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								38,
-								38
+								781,
+								781
 							]
 						],
 						"settings":
@@ -595,18 +587,18 @@
 				},
 				{
 					"buffer": 2,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.cpp",
+					"file": "Window/WindowMS.h",
 					"settings":
 					{
-						"buffer_size": 11730,
+						"buffer_size": 1101,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6255,
-								6255
+								0,
+								0
 							]
 						],
 						"settings":
@@ -615,132 +607,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1415.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.h",
+					"file": "Window/WindowMS.cpp",
 					"settings":
 					{
-						"buffer_size": 273,
+						"buffer_size": 4896,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								273,
-								273
+								4169,
+								4169
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1984.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.cpp",
+					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 					"settings":
 					{
-						"buffer_size": 1235,
+						"buffer_size": 151,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								32,
-								32
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/examples/main.cpp",
-					"settings":
-					{
-						"buffer_size": 737,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test.json",
-					"settings":
-					{
-						"buffer_size": 433,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								193,
-								200
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/output.json",
-					"settings":
-					{
-						"buffer_size": 455,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								151,
+								151
 							]
 						],
 						"settings":

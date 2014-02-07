@@ -57,10 +57,6 @@ protected:
 
 	bool fullscreen;
 	int xResolution, yResolution;
-	int xWindowPosition, yWindowPosition;
-	int xWindowSize, yWindowSize;
-	int xClientPos, yClientPos;
-	int clientWidth, clientHeight;
 	
 	bool showCursorFullscreen;
 	
