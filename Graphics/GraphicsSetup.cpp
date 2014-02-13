@@ -1,10 +1,6 @@
 #include "Graphics/Graphics.h"
 #include "Window/WindowMS.h"
 
-#include <iostream>
-
-using std::cout;
-
 void Graphics::CreateInterface( void )
 {
 	HWND hWnd = window.getHandle();
@@ -23,6 +19,7 @@ void Graphics::GetAdapters( void )
 
 	if( adapterCount > 0 )
 	{
+		//OK
 	}
 	else
 	{
@@ -40,10 +37,11 @@ void Graphics::GetAdapters( void )
 	for( UINT i = 0; i < adapterCount; i++ )
 	{
 		mInterface->GetAdapterIdentifier( i, 0, &( adapters[i] ) );
+		log.Message( adapters[i].Description );
 	}
 }
 
-void Graphics::SelectAdapter( int index )
+void Graphics::SelectAdapter( const int& index )
 {
 	if( index >= 0 )
 	{
@@ -360,12 +358,6 @@ void Graphics::SetMultisample16( void )
 void Graphics::CreateDevice( void )
 {
 	HWND hWnd = window.getHandle();
-
-	char buffer [100];
-
-	sprintf (buffer, "%d, %d, %d, %d", mInterface, adapter, deviceType, hWnd );
-
-	log.Message( buffer );
 
 	mDevice = NULL;
 

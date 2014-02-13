@@ -1,7 +1,7 @@
 #include "Graphics/Graphics.h"
 #include "Window/WindowMS.h"
 
-void Graphics::SelectAspect( int index )
+void Graphics::SelectAspect( const int& index )
 {
 	switch( index )
 	{
@@ -19,10 +19,10 @@ void Graphics::SelectAspect( int index )
 			break;
 	}
 
-	GetMode();
+	GetModesFromDevice();
 }
 
-void Graphics::GetMode( void )
+void Graphics::GetModesFromDevice( void )
 {
 	modeCount = mInterface->GetAdapterModeCount( adapter, backbufferFormat );
 
@@ -38,39 +38,46 @@ void Graphics::GetMode( void )
 
 	char temp[256];
 
+	log.Message( "Checking Modes" );
+
 	for( UINT i = 0; i < modeCount; i++ )
 	{
 		ErrorCheck( mInterface->EnumAdapterModes( adapter, backbufferFormat, i, &modes[j] ), TEXT( "Enumerating Display Modes Failed" ) );
+		sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
+		log.Message( temp );
 		switch( aspect )
 		{
 			case FourThree:
 				if( ( (float)modes[j].Width / (float)modes[j].Height ) == ( 4.0f / 3.0f ) )
 				{
-					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
-					{
+					//if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
+					//{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
+						log.Message( temp );
 						j++;
-					}
+					//}
 				}
 				break;
 			case SixteenNine:
 				if( ( (float)modes[j].Width / (float)modes[j].Height ) == ( 16.0f / 9.0f ) )
 				{
-					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
-					{
+					//if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
+					//{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
+						log.Message( temp );
 						j++;
-					}
+					//}
 				}
 				break;
 			case SixteenTen:
 				if( ( (float)modes[j].Width / (float)modes[j].Height ) == ( 16.0f / 10.0f ) )
 				{
-					if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
-					{
+					//if( modes[j-1].Width != modes[j].Width || modes[j-1].Width != modes[j].Width || modes[j-1].RefreshRate != modes[j].RefreshRate )
+					//{
 						sprintf( temp, "%u x %u, %uhz", modes[j].Width, modes[j].Height, modes[j].RefreshRate );
+						log.Message( temp );
 						j++;
-					}
+					//}
 				}
 				break;
 		}

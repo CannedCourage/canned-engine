@@ -58,7 +58,7 @@ void SceneManager::Render()
 {
 	if( !render ){ return; }
 
-	system.graphics.DoChecks();
+	system.graphics.CheckDevice();
 	//TODO: Create game object manager to handle Lost and Recover events, etc.
 	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{

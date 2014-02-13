@@ -27,20 +27,20 @@ void SplashScreen::Load( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.GetInteger( "display/xResolution" ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.GetInteger( "display/yResolution" ), 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.GetInteger( "display/xResolution" ), (float)settings.GetInteger( "display/yResolution" ), 0.0f, 1.0f, tuMax, tvMax },
 		};
 
-		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
+		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), "SplashScreen: Vertex Buffer creation FAILED" );
 
-		graphics.ErrorCheck( D3DXCreateTextureFromFile( graphics.Device(), TEXT( "StandardResources/SplashScreen.png" ), &texture ), TEXT( "SplashScreen: Texture creation FAILED" ) );
+		graphics.ErrorCheck( D3DXCreateTextureFromFile( graphics.Device(), TEXT( "StandardResources/SplashScreen.png" ), &texture ), "SplashScreen: Texture creation FAILED" );
 
 		VOID* pVoid;
 
-		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer" ) );
+		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), "SplashScreen: Error locking vertex buffer" );
 		memcpy( pVoid, vertices, sizeof(vertices) );
-		graphics.ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer" ) );
+		graphics.ErrorCheck( vertexBuffer->Unlock(), "SplashScreen: Error unlocking vertex buffer" );
 	}
 
 	//Always set state and report
@@ -90,7 +90,7 @@ void SplashScreen::OnRecover( void )
 {
 	if( lost )
 	{
-		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), TEXT( "SplashScreen: Vertex Buffer creation FAILED" ) );
+		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), "SplashScreen: Vertex Buffer creation FAILED" );
 
 		//Textures are in MANAGED pool
 
@@ -98,16 +98,16 @@ void SplashScreen::OnRecover( void )
 		{
 			//Hey dumbass, these are SCREEN SPACE COORDINATES, ORIGIN IS TOP-LEFT >:|
 			{ 0.0f, 0.0f, 0.0f, 1.0f, tuMin, tvMin },
-			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
-			{ 0.0f, (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMin, tvMax },
-			{ (float)settings.GetInteger( std::string( "client/xResolution" ) ), (float)settings.GetInteger( std::string( "client/yResolution" ) ), 0.0f, 1.0f, tuMax, tvMax },
+			{ (float)settings.GetInteger( "client/xResolution" ), 0.0f, 0.0f, 1.0f, tuMax, tvMin },
+			{ 0.0f, (float)settings.GetInteger( "client/yResolution" ), 0.0f, 1.0f, tuMin, tvMax },
+			{ (float)settings.GetInteger( "client/xResolution" ), (float)settings.GetInteger( "client/yResolution" ), 0.0f, 1.0f, tuMax, tvMax },
 		};
 
 		VOID* pVoid;
 
-		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking vertex buffer again" ) );
+		graphics.ErrorCheck( vertexBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), "SplashScreen: Error locking vertex buffer again" );
 		memcpy( pVoid, vertices, sizeof(vertices) );
-		graphics.ErrorCheck( vertexBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking vertex buffer again" ) );
+		graphics.ErrorCheck( vertexBuffer->Unlock(), "SplashScreen: Error unlocking vertex buffer again" );
 	}
 	lost = false;
 }
@@ -146,6 +146,11 @@ void SplashScreen::RenderMain( void )
 {
 	// clear the window to a deep blue
 	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting State Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), "Setting Culling Mode Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), "Enabling Depth Testing" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
 
     graphics.Device()->BeginScene();    // begins the 3D scene
 

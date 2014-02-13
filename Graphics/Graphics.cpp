@@ -2,24 +2,26 @@
 #include "System/System.h"
 #include "Window/WindowMS.h"
 
+#include <iostream>
+#include <sstream>
+
+using std::string;
+using std::ostringstream;
+
+//TODO: Replace window references with message system
+
 Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
 									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ), adapters( NULL ),
 									deviceType( D3DDEVTYPE_HAL ), backbufferFormat( D3DFMT_A8R8G8B8 ), depthFormat( D3DFMT_D16 ),
 									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
 									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false )
 {
-	fullscreen = settings.GetBool( "client/fullscreen" );
-	xResolution = settings.GetInteger( "client/xResolution" );
-	yResolution = settings.GetInteger( "client/yResolution" );
+	ReadSettings();
 }
 
 Graphics::~Graphics( void )
 {
-	settings.SetBool( "client/fullscreen", fullscreen );
-	settings.SetInteger( "client/xResolution", xResolution );
-	settings.SetInteger( "client/yResolution", yResolution );
-
-	CleanUp();
+	WriteSettings();
 }
 
 LPDIRECT3D9 const Graphics::Interface( void ) const
@@ -41,21 +43,11 @@ void Graphics::Initialise( void )
 {
 	CreateInterface();
 
-	GetAdapters();
+	ReadSettings();
 
 	SetParameters();
 
 	CreateDevice();
-
-	SetRenderStates();
-}
-
-void Graphics::SetRenderStates( void )
-{
-	ErrorCheck( mDevice->SetRenderState( D3DRS_LIGHTING, false ), TEXT( "Setting Lighting State Failed" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), TEXT( "Setting Culling Mode Failed" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), TEXT( "Enabling Depth Testing" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_COLORVERTEX, TRUE ), TEXT( "Enabling Vertex Colours" ) );
 }
 
 void Graphics::SetDebugStates( void )
@@ -63,14 +55,6 @@ void Graphics::SetDebugStates( void )
 	ErrorCheck( mDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME ), TEXT( "Setting Wireframe mode" ) );
 	ErrorCheck( mDevice->SetRenderState( D3DRS_LIGHTING, false ), TEXT( "Setting Lighting State Failed" ) );
 	ErrorCheck( mDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE ), TEXT( "Setting Culling Mode Failed" ) );
-}
-
-void Graphics::SetStandardStates( void )
-{
-	ErrorCheck( mDevice->SetRenderState( D3DRS_LIGHTING, false ), TEXT( "Setting Lighting State Failed" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), TEXT( "Setting Culling Mode Failed" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), TEXT( "Enabling Depth Testing" ) );
-	ErrorCheck( mDevice->SetRenderState( D3DRS_COLORVERTEX, TRUE ), TEXT( "Enabling Vertex Colours" ) );
 }
 
 void Graphics::CleanUp( void )
@@ -96,11 +80,6 @@ void Graphics::CleanUp( void )
 		mInterface->Release();
 		mInterface = NULL;
 	}
-}
-
-void Graphics::DoChecks( void )
-{
-	CheckDevice();
 }
 
 void Graphics::CheckDevice( void )
@@ -137,15 +116,44 @@ bool Graphics::Reset( void )
 
 void Graphics::Refresh( void )
 {
+	ReadSettings();
+
 	SetParameters();
 
+	//TODO: Replace with message system?
 	system.sceneManager.OnLost();
 
 	if( Reset() )
 	{
 		system.sceneManager.OnRecover();
-		SetRenderStates();
 	}
+}
+
+void Graphics::ReadSettings( void )
+{
+	fullscreen = settings.GetBool( "display/fullscreen" );
+	xResolution = settings.GetInteger( "display/xResolution" );
+	yResolution = settings.GetInteger( "display/yResolution" );
+	aspect = (ASPECT)settings.GetInteger( "display/aspect" );
+	refresh = settings.GetInteger( "display/refresh" );
+	AA = (D3DMULTISAMPLE_TYPE)settings.GetInteger( "display/multisample" );
+	mode = settings.GetInteger( "display/displayMode" );
+	backbufferFormat = (D3DFORMAT)settings.GetInteger( "display/bufferFormat" );
+	depthFormat = (D3DFORMAT)settings.GetInteger( "display/depthFormat" );
+}
+
+void Graphics::WriteSettings( void )
+{
+	settings.SetBool( "display/fullscreen", fullscreen );
+	settings.SetInteger( "display/xResolution", xResolution );
+	settings.SetInteger( "display/yResolution", yResolution );
+	settings.SetInteger( "display/aspect", aspect );
+	settings.SetInteger( "display/refresh", refresh );
+	settings.SetInteger( "display/multisample", AA );
+	settings.SetInteger( "display/displayMode", mode );
+	settings.SetInteger( "display/bufferFormat", backbufferFormat );
+	settings.SetInteger( "display/depthFormat", depthFormat );
+	settings.SetInteger( "display/bufferCount", bufferCount );
 }
 
 void Graphics::SetFullscreen( void )
@@ -153,6 +161,8 @@ void Graphics::SetFullscreen( void )
 	if( !fullscreen )
 	{
 		fullscreen = true;
+
+		WriteSettings();
 
 		Refresh();
 
@@ -176,6 +186,8 @@ void Graphics::SetWindowed( void )
 	if( fullscreen )
 	{
 		fullscreen = false;
+
+		WriteSettings();
 
 		Refresh();
 
@@ -217,7 +229,7 @@ void Graphics::SetResolution( const int& width, const int& height )
 	Refresh();
 }
 
-void Graphics::ChangeView( void )
+void Graphics::ToggleFullscreen( void )
 {
 	if( !fullscreen )
 	{
@@ -229,43 +241,47 @@ void Graphics::ChangeView( void )
 	}
 }
 
-void Graphics::ErrorCheck( HRESULT result, LPCTSTR info )
+void Graphics::ErrorCheck( HRESULT result, const char* const info )
 {
 	if( result == D3D_OK )
 		return;
 	
-	LPTSTR text;
+	string text("");
 
 	switch( result )
 	{
 		case D3DERR_INVALIDCALL:
-			text = TEXT( "D3DERR_INVALIDCALL: Invalid Call or Parameter!" );
+			text = "D3DERR_INVALIDCALL: Invalid Call or Parameter!";
 			break;
 		case D3DERR_NOTAVAILABLE:
-			text = TEXT( "D3DERR_NOTAVAILABLE: Parameter not supported!" );
+			text = "D3DERR_NOTAVAILABLE: Parameter not supported!";
 			break;
 		case D3DERR_OUTOFVIDEOMEMORY:
-			text = TEXT( "D3DERR_OUTOFVIDEOMEMORY: Out of Video Memory!" );
+			text = "D3DERR_OUTOFVIDEOMEMORY: Out of Video Memory!";
 			break;
 		case  D3DXERR_INVALIDDATA:
-			text = TEXT( "D3DXERR_INVALIDDATA: Invalid data passed to D3DX function!" );
+			text = "D3DXERR_INVALIDDATA: Invalid data passed to D3DX function!";
 			break;
 		case D3DERR_DEVICELOST:
-			text = TEXT( "D3DERR_DEVICELOST: The device is lost!" );
+			text = "D3DERR_DEVICELOST: The device is lost!";
 			break;
 		case D3DERR_DRIVERINTERNALERROR:
-			text = TEXT( "D3DERR_DRIVERINTERNALERROR: Internal Driver Error!" );
+			text = "D3DERR_DRIVERINTERNALERROR: Internal Driver Error!";
 			break;
 		case E_OUTOFMEMORY:
-			text = TEXT( "E_OUTOFMEMORY: Out of Memory" );
+			text = "E_OUTOFMEMORY: Out of Memory";
 		default:
-			text = new TCHAR[128];
-			wsprintf( text, TEXT("Unknown Error: %X"), result );
+			ostringstream s;
+			s << "Unknown Error: " << result;
+			text = s.str();
 			break;
 	}
 
-	LPTSTR error = new TCHAR[256];
-	wsprintf( error, TEXT( "Graphics: %s\r\n%s" ), info, text );
+	ostringstream e;
+
+	e << "Graphics: " << info << "\r\n" << text;
+
+	string error = e.str();
 
 	throw( error );
 }

@@ -128,42 +128,34 @@
 	"buffers":
 	[
 		{
-			"file": "Window/iWindow.h",
-			"settings":
-			{
-				"buffer_size": 955,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/iWindow.cpp",
-			"settings":
-			{
-				"buffer_size": 783,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/WindowMS.h",
-			"settings":
-			{
-				"buffer_size": 1101,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Window/WindowMS.cpp",
-			"settings":
-			{
-				"buffer_size": 4896,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 			"settings":
 			{
-				"buffer_size": 151,
+				"buffer_size": 296,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Graphics/Graphics.h",
+			"settings":
+			{
+				"buffer_size": 3030,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Graphics/GraphicsResolutions.cpp",
+			"settings":
+			{
+				"buffer_size": 2493,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Graphics/GraphicsSetup.cpp",
+			"settings":
+			{
+				"buffer_size": 8485,
 				"line_ending": "Windows"
 			}
 		}
@@ -236,22 +228,29 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
+		"/C/Users/Scott/Pictures/Project Files/Talented Ball/woodFloor.php",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Ideas.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/mainSettings.json",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/StandardResources/resource.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/test.json",
@@ -299,16 +298,13 @@
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/PIXGameDebugging/PIXGameDebugging.cpp",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.fx",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut02_Vertices/Vertices.cpp",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut01_CreateDevice/CreateDevice.cpp",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/resource.h",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
 		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/User/C++.sublime-settings",
 		"/C/Users/Scott/Downloads/boost_1_55_0.7z",
 		"/C/Users/Scott/Downloads/boost_1_55_0/INSTALL",
@@ -334,8 +330,6 @@
 		"/C/Users/Scott/AppData/Local/Temp/7zO06566EB6/Apple.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Timer.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
 		"/C/Users/Scott/Documents/Visual Studio 2010/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/graphics.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Scrap/Window.cpp",
@@ -361,9 +355,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp"
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp"
 	],
 	"find":
 	{
@@ -382,6 +374,21 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"std::string( ",
+			"TEXT( ",
+			"ErrorCheck( ",
+			"mDevice",
+			" )",
+			"TEXT( ",
+			",  ",
+			"SetInteger",
+			"set",
+			"Set",
+			"set",
+			"Set",
+			"refresh",
+			"client",
+			"cout",
 			"clientHeight",
 			"xClientPos",
 			"clientWidth",
@@ -494,22 +501,7 @@
 			"Windowed",
 			"windowed",
 			";",
-			"= ",
-			"settings.window.height",
-			"settings.window.width",
-			"settings.window.y",
-			"settings.window.x",
-			"settings.client.width",
-			"settings.client.y",
-			"settings.client.x",
-			"Cursor",
-			"cursor",
-			"window",
-			"Window",
-			"window",
-			"client",
-			"window",
-			"Window"
+			"= "
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -528,28 +520,28 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Window/iWindow.h",
+					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 					"settings":
 					{
-						"buffer_size": 955,
+						"buffer_size": 296,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								296,
+								296
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
@@ -560,18 +552,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Window/iWindow.cpp",
+					"file": "Graphics/Graphics.h",
 					"settings":
 					{
-						"buffer_size": 783,
+						"buffer_size": 3030,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								781,
-								781
+								2030,
+								2030
 							]
 						],
 						"settings":
@@ -587,18 +579,18 @@
 				},
 				{
 					"buffer": 2,
-					"file": "Window/WindowMS.h",
+					"file": "Graphics/GraphicsResolutions.cpp",
 					"settings":
 					{
-						"buffer_size": 1101,
+						"buffer_size": 2493,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								877,
+								877
 							]
 						],
 						"settings":
@@ -607,57 +599,30 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "Window/WindowMS.cpp",
+					"file": "Graphics/GraphicsSetup.cpp",
 					"settings":
 					{
-						"buffer_size": 4896,
+						"buffer_size": 8485,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4169,
-								4169
+								4819,
+								4819
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1984.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
-					"settings":
-					{
-						"buffer_size": 151,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								151,
-								151
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,

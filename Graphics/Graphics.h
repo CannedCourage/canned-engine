@@ -16,7 +16,7 @@ class System;
 class Settings;
 class WindowMS;
 
-enum ASPECT { FourThree, SixteenNine, SixteenTen };
+enum ASPECT { FourThree = 43, SixteenNine = 169, SixteenTen = 1610 };
 enum BUFFER { ThirtyTwo, TwentyFour, Sixteen };
 enum DEPTH { D32, D24S8, D15S1, D16 };
 enum SAMPLE { Off, TwoSamples, FourSamples, EightSamples, SixteenSamples };
@@ -62,7 +62,7 @@ protected:
 	
 	void CheckDeviceCaps( void );
 	void GetAdapters( void );
-	void GetMode( void );
+	void GetModesFromDevice( void );
 	void SetParameters( void );
 	void SetBufferFormat16( void );
 	void SetBufferFormat24( void );
@@ -82,8 +82,9 @@ protected:
 	void SelectAspect169( void );
 	void SelectAspect1610( void );
 
-	void CheckDevice( void );
 	void ForceWindowAroundClient( void );
+
+	void CreateInterface( void );
 public:
 
 	Graphics( System& s );
@@ -95,34 +96,34 @@ public:
 	bool IsDeviceLost( void ) const;
 
 	void Initialise( void );
-	void CreateInterface( void );
 
 	//Menu Options
-	void SelectAdapter( int index );
+	void SelectAdapter( const int& index );
 	void SelectBufferFormat( const int& index );
 	void SelectDepthFormat( const int& index );
 	void SelectMultisample( const int& n );
-	void SelectAspect( int index );
+	void SelectAspect( const int& index );
 	void SelectResolution( const int& index );
 
 	void CreateDevice( void );
-	void SetRenderStates( void );
 	void SetDebugStates( void );
-	void SetStandardStates( void );
 	void CleanUp( void );
 
-	void DoChecks( void );
+	void CheckDevice( void );
 	bool Reset( void );
 	void Refresh( void );
+
+	void ReadSettings( void );
+	void WriteSettings( void );
 
 	void SetResolution( const int& width, const int& height );
 	void SetClientSize( const int& width, const int& height );
 	void SetClientPosition( const int& x, const int& y );
 	void SetFullscreen( void );
 	void SetWindowed( void );
-	void ChangeView( void ); //Toggle Fullscreen
+	void ToggleFullscreen( void );
 
-	void ErrorCheck( HRESULT result, LPCTSTR info );
+	void ErrorCheck( HRESULT result, const char* const info );
 };
 
 #endif //_BALL_H_

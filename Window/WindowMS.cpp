@@ -64,7 +64,7 @@ int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const in
 	{
 		style = WINDOWED;
 
-		CursorVisible(true);
+		CursorVisible( true );
 
 		AdjustWindow();
 	}
@@ -132,8 +132,8 @@ void WindowMS::SetClientPosition( const int& X, const int& Y )
 	clientX = X;
 	clientY = Y;
 
-	settings.SetInteger( "client/x", clientX );
-	settings.SetInteger( "client/y", clientY );
+	settings.SetInteger( "display/x", clientX );
+	settings.SetInteger( "display/y", clientY );
 }
 
 void WindowMS::SetClientSize( const int& Width, const int& Height )
@@ -146,11 +146,11 @@ void WindowMS::CursorVisible( const bool& show )
 {
 	if( show )
 	{
-		while ( (ShowCursor(true) < 0) );
+		while ( ( ShowCursor( true ) < 0 ) );
 	}
 	else
 	{
-		while ( (ShowCursor(false) >= 0) );
+		while ( ( ShowCursor( false ) >= 0 ) );
 	}
 }
 
@@ -168,9 +168,25 @@ void WindowMS::AdjustWindow( void )
 {
 	DWORD style = WINDOWED;
 
+	clientX = settings.GetInteger( "display/x" );
+	clientY = settings.GetInteger( "display/y" );
+	clientWidth = settings.GetInteger( "display/xResolution" );
+	clientHeight = settings.GetInteger( "display/yResolution" );
+
 	RECT adjusted = { clientX, clientY, ( clientX + clientWidth ), ( clientY + clientHeight ) };
 
-	AdjustWindowRectEx( &adjusted, style, true, 0 );
+	AdjustWindowRectEx( &adjusted, style, false, 0 );
+
+	//Sanity Check Window Position
+	if( adjusted.left < 0 )
+	{
+		adjusted.left = 0;
+	}
+
+	if( adjusted.top < 0 )
+	{
+		adjusted.top = 0;
+	}
 
 	SetWindowPosition( adjusted.left, adjusted.top );
 

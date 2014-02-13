@@ -1,9 +1,18 @@
 {
-	"client" : {
+	"display" : {
+		"adapter" : 0,
+		"aspect" : 169,
+		"bufferCount" : 1,
+		"bufferFormat" : 22,
+		"depthFormat" : 80,
+		"displayMode" : 0,
 		"fullscreen" : false,
-		"x" : 329,
+		"multisample" : 8,
+		"refresh" : 0,
+		"texFilter" : 0,
+		"x" : 189,
 		"xResolution" : 1280,
-		"y" : 114,
+		"y" : 155,
 		"yResolution" : 720
 	}
 }

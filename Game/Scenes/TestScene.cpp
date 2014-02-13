@@ -6,13 +6,13 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL )
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
 	D3DXMatrixPerspectiveFovLH( &matProj, D3DXToRadian( 90.0f ), 
-		(float)settings.GetInteger( std::string( "client/xResolution" ) )/(float)settings.GetInteger( std::string( "client/yResolution" ) ), 
+		(float)settings.GetInteger( "display/xResolution" )/(float)settings.GetInteger( "display/yResolution" ), 
 		1.0f, 100.0f );
 
 	FontPosition.top = 0;
 	FontPosition.left = 0;
-	FontPosition.right = settings.GetInteger( std::string( "client/xResolution" ) );
-	FontPosition.bottom = settings.GetInteger( std::string( "client/yResolution" ) );
+	FontPosition.right = settings.GetInteger( "display/xResolution" );
+	FontPosition.bottom = settings.GetInteger( "display/yResolution" );
 }
 
 TestScene::~TestScene( void )
@@ -88,7 +88,7 @@ void TestScene::OnRecover( void )
 	if( lost )
 	{
 		log.Message( "ReLoading", true );
-		graphics.SetRenderStates();
+		//graphics.SetRenderStates();
 		Vertex3dTx verts[] = { 
 		// Front Face (1-2-3-4)
 		{ -1.0f, 1.0f, -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, -1.0f, 1.0f, 0.0f }, { -1.0f, -1.0f, -1.0f, 0.0f, 1.0f }, { 1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
@@ -168,9 +168,14 @@ void TestScene::RenderMain( void )
 {
 	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 150, 150, 150 ), 1.0f, 0 );
 
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting State Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), "Setting Culling Mode Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), "Enabling Depth Testing" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
+
 	graphics.Device()->BeginScene();
 
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), TEXT( "Setting Lighting False" ) );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting False" );
 
 	graphics.Device()->SetFVF(Vertex3dTx::format);
 
@@ -178,15 +183,15 @@ void TestScene::RenderMain( void )
 	graphics.Device()->SetTransform( D3DTS_VIEW, &matView );
 	graphics.Device()->SetTransform( D3DTS_PROJECTION, &matProj );
 
-	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, cubeBuffer, 0, sizeof(Vertex3dTx) ), TEXT( "Setting stream source" ) );
+	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, cubeBuffer, 0, sizeof(Vertex3dTx) ), "Setting stream source" );
 	graphics.Device()->SetTexture( 0, cubeTex );
 
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), TEXT( "Drawing cube" ) );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 4, 2 ), TEXT( "Drawing cube" ) );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 8, 2 ), TEXT( "Drawing cube" ) );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 12, 2 ), TEXT( "Drawing cube" ) );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), TEXT( "Drawing cube" ) );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), TEXT( "Drawing cube" ) );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing cube" );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 4, 2 ), "Drawing cube" );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 8, 2 ), "Drawing cube" );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 12, 2 ), "Drawing cube" );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
+	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
 	font->DrawText( NULL, TEXT( "Text Sample Using D3DXFont" ), -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
 

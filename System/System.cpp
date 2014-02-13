@@ -7,6 +7,10 @@ System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneMa
 {
 }
 
+System::~System( void )
+{
+}
+
 int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
 	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
@@ -93,29 +97,14 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				window.SetWindowPosition( ( temp->left ), ( temp->top ) );
 				return true;
 			}
-		/*case WM_SIZE:	//Remember new size //THIS IS THE CLIENT AREA
-			{
-				int width = ( int )LOWORD( lParam );
-				int height = ( int )HIWORD( lParam );
-				//graphics.SetClientSize( width, height );
-				break;
-			}
-		case WM_SIZING:	//Remember new size //WINDOW AREA
-			{
-				RECT* temp = (RECT*)lParam;
-				int width = ( temp->right ) - ( temp->left );
-				int height = ( temp->bottom ) - ( temp->top );
-				window.SetWindowSize( width, height );
-			}*/
 		case WM_COMMAND:	//Sent by command items, e.g. menu options
 			switch( LOWORD( wParam ) )
 			{
-				/*case ID_FILE_EXIT:
+				/*
+				case ID_FILE_EXIT:
 					Quit();
 					break;
-				case ID_VIEW_FULLSCREEN:
-					graphics.SetFullscreen();
-					break;*/
+				//*/
 			}
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 			break;
@@ -125,7 +114,7 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				{
 					case VK_UP:
 						log.Message( "Up received" );
-						graphics.ChangeView();
+						graphics.ToggleFullscreen();
 						break;
 				}
 				break;
@@ -134,11 +123,4 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 	}
 	return 0;
-}
-
-System::~System( void )
-{
-	graphics.CleanUp();
-
-	window.Destroy();
 }
