@@ -3,7 +3,7 @@
 #include "System/System.h"
 #include "StandardResources/resource.h"
 
-System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneManager( *this ), window( *this ), graphics( *this )
+System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneManager( *this ), window( *this ), graphics( *this ), input( *this )
 {
 }
 
@@ -105,6 +105,10 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 					Quit();
 					break;
 				//*/
+					default:
+					{
+						return DefWindowProc( hWnd, msg, wParam, lParam );
+					}
 			}
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 			break;

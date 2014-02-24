@@ -7,3 +7,14 @@ Create new scene
 
 
 The upshot of this is that it means scene can be a generic class
+
+Message queue loop?
+
+while(running) {
+     //Read in all the events from the queue
+     while(eventQueue.hasNext()) { //While there are more events on the queue..
+          Event e = eventQueue.pop(); //Get the event
+          if(e.type == mouseClick) { //Check the event
+               //Whatever logic here
+          }
+     }

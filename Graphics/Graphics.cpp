@@ -11,10 +11,10 @@ using std::ostringstream;
 //TODO: Replace window references with message system
 
 Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
-									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ), adapters( NULL ),
+									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ),
 									deviceType( D3DDEVTYPE_HAL ), backbufferFormat( D3DFMT_A8R8G8B8 ), depthFormat( D3DFMT_D16 ),
 									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
-									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false )
+									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false ), dModes(), adapterList()
 {
 	ReadSettings();
 }
@@ -34,8 +34,10 @@ LPDIRECT3DDEVICE9 const Graphics::Device( void ) const
 	return mDevice;
 }
 
-bool Graphics::IsDeviceLost( void ) const
+bool Graphics::IsDeviceLost( void )
 {
+	CheckDevice();
+
 	return ( deviceState != D3D_OK );
 }
 
@@ -43,7 +45,13 @@ void Graphics::Initialise( void )
 {
 	CreateInterface();
 
+	GetAdaptersFromInterface();
+
+	GetModesFromInterface();
+
 	ReadSettings();
+
+	ApplySettings();
 
 	SetParameters();
 
@@ -59,16 +67,12 @@ void Graphics::SetDebugStates( void )
 
 void Graphics::CleanUp( void )
 {
-	if( adapters != NULL )
-	{
-		delete[] adapters;
-		adapters = NULL;
-	}
 	if( modes !=  NULL )
 	{
 		delete[] modes;
 		modes = NULL;
 	}
+
     if( mDevice != NULL )
 	{
 		mDevice->Release();
@@ -118,6 +122,8 @@ void Graphics::Refresh( void )
 {
 	ReadSettings();
 
+	ApplySettings();
+
 	SetParameters();
 
 	//TODO: Replace with message system?
@@ -125,6 +131,7 @@ void Graphics::Refresh( void )
 
 	if( Reset() )
 	{
+		log.Message( "Recovering", true );
 		system.sceneManager.OnRecover();
 	}
 }
@@ -140,6 +147,7 @@ void Graphics::ReadSettings( void )
 	mode = settings.GetInteger( "display/displayMode" );
 	backbufferFormat = (D3DFORMAT)settings.GetInteger( "display/bufferFormat" );
 	depthFormat = (D3DFORMAT)settings.GetInteger( "display/depthFormat" );
+	adapter = settings.GetInteger( "display/adapter" );
 }
 
 void Graphics::WriteSettings( void )
@@ -154,6 +162,20 @@ void Graphics::WriteSettings( void )
 	settings.SetInteger( "display/bufferFormat", backbufferFormat );
 	settings.SetInteger( "display/depthFormat", depthFormat );
 	settings.SetInteger( "display/bufferCount", bufferCount );
+	settings.SetInteger( "display/adapter", adapter );
+}
+
+void Graphics::ApplySettings( void )
+{
+	SelectAdapter( adapter );
+
+	if( bufferCount < 0 || bufferCount > 2 ){ DoubleBuffer(); }
+
+	SelectBufferFormat( backbufferFormat );
+
+	SelectDepthFormat( depthFormat );
+
+	SelectMultisample( AA );
 }
 
 void Graphics::SetFullscreen( void )
@@ -210,25 +232,6 @@ void Graphics::SetClientSize( const int& width, const int& height )
 	}
 }
 
-void Graphics::SetClientPosition( const int& x, const int& y )
-{
-	if( !fullscreen )
-	{
-		window.SetClientPosition( x, y );
-		window.Update();
-	}
-}
-
-void Graphics::SetResolution( const int& width, const int& height )
-{
-	xResolution = width;
-	yResolution = height;
-
-	SetClientSize( width, height );
-
-	Refresh();
-}
-
 void Graphics::ToggleFullscreen( void )
 {
 	if( !fullscreen )
@@ -283,5 +286,5 @@ void Graphics::ErrorCheck( HRESULT result, const char* const info )
 
 	string error = e.str();
 
-	throw( error );
+	throw( error.c_str() );
 }

@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"In",
+				"Input"
+			],
+			[
+				"adap",
+				"adapterList"
+			],
+			[
 				"clien",
 				"clientWidth"
 			],
@@ -128,10 +136,34 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
+			"file": "System/System.h",
 			"settings":
 			{
-				"buffer_size": 296,
+				"buffer_size": 952,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/System.cpp",
+			"settings":
+			{
+				"buffer_size": 2802,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Input/Input.h",
+			"settings":
+			{
+				"buffer_size": 496,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Input/Input.cpp",
+			"settings":
+			{
+				"buffer_size": 1009,
 				"line_ending": "Windows"
 			}
 		},
@@ -139,23 +171,23 @@
 			"file": "Graphics/Graphics.h",
 			"settings":
 			{
-				"buffer_size": 3030,
+				"buffer_size": 3150,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Graphics/GraphicsResolutions.cpp",
+			"file": "Graphics/Graphics.cpp",
 			"settings":
 			{
-				"buffer_size": 2493,
+				"buffer_size": 6189,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Graphics/GraphicsSetup.cpp",
+			"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Input.txt",
 			"settings":
 			{
-				"buffer_size": 8485,
+				"buffer_size": 159,
 				"line_ending": "Windows"
 			}
 		}
@@ -228,26 +260,36 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Pictures/Project Files/Talented Ball/woodFloor.php",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Ideas.txt",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/guiIdeas.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/adapter.h",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Graphics.txt",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/dMode.h",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Settings.txt",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/DefaultSettings.txt",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/GreatestCommonDivisor.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/GreatestCommonDivisor.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.h",
+		"/C/Users/Scott/Pictures/Project Files/Talented Ball/woodFloor.php",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/mainSettings.json",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/StandardResources/resource.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.h",
@@ -342,20 +384,10 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Mesh.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionTests.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorDX.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorDX.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Rect.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp"
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/CollisionAreas.h"
 	],
 	"find":
 	{
@@ -374,6 +406,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"state",
+			"anyAvailable",
+			"adapters",
+			"D3DFMT_A8R8G8B8",
+			"D15S",
+			"TwoSamples",
+			"a",
+			"b",
+			"a",
+			"ForceWindowAroundClient",
 			"std::string( ",
 			"TEXT( ",
 			"ErrorCheck( ",
@@ -491,17 +533,7 @@
 			";",
 			"stored",
 			"stop",
-			"start",
-			"Timer",
-			"windowed",
-			"Windowed",
-			"windowed",
-			"Windowed",
-			"windowed",
-			"Windowed",
-			"windowed",
-			";",
-			"= "
+			"start"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -525,23 +557,23 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
+					"file": "System/System.h",
 					"settings":
 					{
-						"buffer_size": 296,
+						"buffer_size": 952,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								296,
-								296
+								443,
+								443
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
@@ -552,18 +584,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Graphics/Graphics.h",
+					"file": "System/System.cpp",
 					"settings":
 					{
-						"buffer_size": 3030,
+						"buffer_size": 2802,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2030,
-								2030
+								2470,
+								2470
 							]
 						],
 						"settings":
@@ -579,18 +611,70 @@
 				},
 				{
 					"buffer": 2,
-					"file": "Graphics/GraphicsResolutions.cpp",
+					"file": "Input/Input.h",
 					"settings":
 					{
-						"buffer_size": 2493,
+						"buffer_size": 496,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								877,
-								877
+								400,
+								426
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Input/Input.cpp",
+					"settings":
+					{
+						"buffer_size": 1009,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								714,
+								714
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 108.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Graphics/Graphics.h",
+					"settings":
+					{
+						"buffer_size": 3150,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								305,
+								329
 							]
 						],
 						"settings":
@@ -599,31 +683,57 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "Graphics/GraphicsSetup.cpp",
+					"buffer": 5,
+					"file": "Graphics/Graphics.cpp",
 					"settings":
 					{
-						"buffer_size": 8485,
+						"buffer_size": 6189,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4819,
-								4819
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4457.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Input.txt",
+					"settings":
+					{
+						"buffer_size": 159,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

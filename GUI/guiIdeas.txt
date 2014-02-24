@@ -136,3 +136,5 @@ Widget::Widget( void )
 Widget::~Widget( void )
 {
 }
+
+//Use fullscreen GUI element to do screen fades? Get rid of "state" methods in game scenes

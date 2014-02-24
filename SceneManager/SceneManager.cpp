@@ -30,7 +30,6 @@ bool SceneManager::Update( void )
 	if( currentSceneFinished && nextSceneReady )
 	{
 		SwapSceneBuffers();
-		log.Message( "Buffers Swapping" );
 	}
 	
 	if( currentScene != NULL )
@@ -58,17 +57,11 @@ void SceneManager::Render()
 {
 	if( !render ){ return; }
 
-	system.graphics.CheckDevice();
 	//TODO: Create game object manager to handle Lost and Recover events, etc.
 	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{
-		OnLost();	//Destroy existing resources
 		log.Message( "Device Lost", true );
-		if( system.graphics.Reset() )	//Reset() will return true if the device was successfully 'found'
-		{
-			log.Message( "Recovering", true );
-			OnRecover();	//Recreate resources that existed before the device was lost
-		}
+		system.graphics.Refresh();
 	}
 	else	//Draw
 	{

@@ -9,6 +9,7 @@
 #include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"
 #include "Engine/Time.h"
+#include "Input/Input.h"
 
 class System
 {
@@ -26,7 +27,7 @@ public:
 	SceneManager sceneManager;
 	WindowMS window;
 	Graphics graphics;
-	//Input input;
+	Input input;
 	//Sound sound;
 
 	System( void );

@@ -105,6 +105,8 @@ int WindowMS::Recreate( void )
 
 void WindowMS::Update( void )
 {
+	if( fullscreen ){ return; }
+	
 	AdjustWindow();
 
 	MoveWindow( hwnd, windowX, windowY, windowWidth, windowHeight, true );

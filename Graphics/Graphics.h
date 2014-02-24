@@ -10,16 +10,19 @@
 #pragma comment (lib, "d3dx9.lib")
 
 #include "Graphics/VertexFormats.h"
+#include "Graphics/dMode.h"
+#include "Graphics/adapter.h"
 #include "Logging/Log.h"
+
+#include <vector>
 
 class System;
 class Settings;
-class WindowMS;
+class iWindow;
 
 enum ASPECT { FourThree = 43, SixteenNine = 169, SixteenTen = 1610 };
-enum BUFFER { ThirtyTwo, TwentyFour, Sixteen };
-enum DEPTH { D32, D24S8, D15S1, D16 };
-enum SAMPLE { Off, TwoSamples, FourSamples, EightSamples, SixteenSamples };
+enum BUFFER { ThirtyTwo = 21, TwentyFour = 22, Sixteen = 23 };
+enum DEPTH { D32 = 71, D24S8 = 75, D15S1 = 73, D16 = 80 };
 
 class Graphics
 {
@@ -30,7 +33,7 @@ protected:
 
 	System& system;
 	Settings& settings;
-	WindowMS& window;
+	iWindow& window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX
 	LPDIRECT3DDEVICE9 mDevice;					//the rendering device (graphics card)
@@ -43,13 +46,14 @@ protected:
 	//Setup
 	UINT adapterCount, modeCount;
 	UINT adapter, mode;
-	D3DADAPTER_IDENTIFIER9* adapters;
 	D3DDEVTYPE deviceType;
 	D3DFORMAT backbufferFormat, depthFormat;
 	DWORD behaviourFlags, qualityAA;
 	int bufferCount;
 	D3DMULTISAMPLE_TYPE AA;
 	D3DDISPLAYMODE* modes;
+	std::vector<dMode> dModes;
+	std::vector<adapterDesc> adapterList;
 	UINT refresh;
 	ASPECT aspect;
 
@@ -61,8 +65,8 @@ protected:
 	bool showCursorFullscreen;
 	
 	void CheckDeviceCaps( void );
-	void GetAdapters( void );
-	void GetModesFromDevice( void );
+	void GetAdaptersFromInterface( void );
+	void GetModesFromInterface( void );
 	void SetParameters( void );
 	void SetBufferFormat16( void );
 	void SetBufferFormat24( void );
@@ -78,13 +82,28 @@ protected:
 	void SetMultisample4( void );
 	void SetMultisample8( void );
 	void SetMultisample16( void );
-	void SelectAspect43( void );
-	void SelectAspect169( void );
-	void SelectAspect1610( void );
 
-	void ForceWindowAroundClient( void );
+	void SelectAdapter( const int& index );
+	void SelectBufferFormat( const int& index );
+	void SelectDepthFormat( const int& index );
+	void SelectMultisample( const int& samples );
+	void SelectAspect( const int& index );
+	void SelectResolution( const int& index );
+
+	void SetClientSize( const int& width, const int& height );
 
 	void CreateInterface( void );
+	void CreateDevice( void );
+
+	void CheckDevice( void );
+	bool Reset( void );
+
+	void ReadSettings( void );
+	void WriteSettings( void );
+	void ApplySettings( void );
+
+	void SetFullscreen( void );
+	void SetWindowed( void );
 public:
 
 	Graphics( System& s );
@@ -93,37 +112,23 @@ public:
 	LPDIRECT3D9 const Interface( void ) const;
 	LPDIRECT3DDEVICE9 const Device( void ) const;
 
-	bool IsDeviceLost( void ) const;
+	bool IsDeviceLost( void );
 
 	void Initialise( void );
-
-	//Menu Options
-	void SelectAdapter( const int& index );
-	void SelectBufferFormat( const int& index );
-	void SelectDepthFormat( const int& index );
-	void SelectMultisample( const int& n );
-	void SelectAspect( const int& index );
-	void SelectResolution( const int& index );
-
-	void CreateDevice( void );
-	void SetDebugStates( void );
 	void CleanUp( void );
 
-	void CheckDevice( void );
-	bool Reset( void );
+	void SetDebugStates( void );
+
 	void Refresh( void );
 
-	void ReadSettings( void );
-	void WriteSettings( void );
+	//Menu Options
+	const std::vector<adapterDesc>& GetAdapters( void );
+	const std::vector<dMode>& GetDisplayModes( void );
 
 	void SetResolution( const int& width, const int& height );
-	void SetClientSize( const int& width, const int& height );
-	void SetClientPosition( const int& x, const int& y );
-	void SetFullscreen( void );
-	void SetWindowed( void );
 	void ToggleFullscreen( void );
 
 	void ErrorCheck( HRESULT result, const char* const info );
 };
 
-#endif //_BALL_H_
+#endif //_GRAPHICS_H_

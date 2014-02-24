@@ -33,6 +33,7 @@ void SceneManager::PreloadScene( IScene* const newScene )
 
 void SceneManager::SwapSceneBuffers( void )
 {
+	log.Message( "Buffers Swapping" );
 	currentScene = nextScene;
 	nextScene = 0;
 	currentSceneFinished = false;

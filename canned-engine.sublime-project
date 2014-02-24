@@ -1,11 +1,16 @@
 {
- "folders": [
-  {
-   "path": "/C/Users/Scott/Programming/Projects/GitHub/canned-engine", 
-   "file_exclude_patterns": [
-    "Engine/timer2.cpp", 
-    "Engine/timer2.h"
-   ]
-  }
- ]
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"Engine/timer2.cpp",
+				"Engine/timer2.h"
+			],
+			"path": "/C/Users/Scott/Programming/Projects/GitHub/canned-engine"
+		},
+		{
+			"path": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine"
+		}
+	]
 }
