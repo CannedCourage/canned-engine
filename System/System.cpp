@@ -15,8 +15,8 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 {
 	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
 	
-	graphics.Initialise();
-	//input;
+	input.Init();
+	graphics.Init();
 	//sound;
 
 	return result;
@@ -56,6 +56,7 @@ int System::GameLoop( void )
 {
 	time.AddToAcc( time.deltaTimeS() );
 
+	input.Update();
 	sceneManager.Update();
 
 	while( time.Acc() > time.fixedStepS() )
@@ -123,7 +124,22 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				}
 				break;
 			}
-		default: 
+		case WM_INPUT:
+		{
+			UINT dwSize = 40;
+			static BYTE lpb[40];
+
+			GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof( RAWINPUTHEADER ) );
+
+			RAWINPUT* raw = (RAWINPUT*)lpb;
+
+			if (raw->header.dwType == RIM_TYPEMOUSE)
+			{
+				input.ReceiveRawMouseInput( raw->data.mouse );
+			}
+			break;
+		}
+		default:
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 	}
 	return 0;

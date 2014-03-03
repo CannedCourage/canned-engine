@@ -4,11 +4,13 @@
 #define _ISCENE_H_
 
 #include "Logging/Log.h"
+#include "Mesh/MeshManager.h"
 
 class System;
 class SceneManager;
 class Settings;
 class Graphics;
+class Input;
 
 enum sceneStates { init = 0 , update = 1, out = 2, };
 
@@ -24,10 +26,11 @@ protected:
 
 	//Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
 	Graphics &graphics;
-
-	//Input &input;
+	Input &input;
 	//Sound &sound;
 	//Physics* const physics;
+	
+	MeshManager meshes;
 
 	Log log;
 

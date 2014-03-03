@@ -153,6 +153,10 @@ void TestScene::FadeIn( void )
 
 void TestScene::MainLoop( void )
 {
+	if( input.A( 0 ) )
+	{
+		log.Message( "A button detected!", true );
+	}
 }
 
 void TestScene::FadeOut( void )
@@ -193,7 +197,7 @@ void TestScene::RenderMain( void )
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
-	font->DrawText( NULL, TEXT( "Text Sample Using D3DXFont" ), -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
+	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
 
 	graphics.Device()->EndScene();
 

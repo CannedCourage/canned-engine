@@ -41,7 +41,7 @@ bool Graphics::IsDeviceLost( void )
 	return ( deviceState != D3D_OK );
 }
 
-void Graphics::Initialise( void )
+void Graphics::Init( void )
 {
 	CreateInterface();
 

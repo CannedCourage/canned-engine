@@ -114,7 +114,7 @@ public:
 
 	bool IsDeviceLost( void );
 
-	void Initialise( void );
+	void Init( void );
 	void CleanUp( void );
 
 	void SetDebugStates( void );

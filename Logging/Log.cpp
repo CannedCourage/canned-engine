@@ -23,7 +23,7 @@ Log::Log( void )
 		globalFile = fopen( temp, "a" );						//Create master file
 		if( globalFile == NULL )
 		{
-			throw( TEXT( "Log: globalFile creation failed" ) );
+			throw( "Log: globalFile creation failed" );
 		}
 		fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp
 	}
@@ -41,7 +41,7 @@ Log::Log( const char* scope_ )
 		globalFile = fopen( temp, "a" );						//Create master file
 		if( globalFile == NULL )
 		{
-			throw( TEXT( "Log: globalFile creation failed" ) );
+			throw( "Log: globalFile creation failed" );
 		}
 		fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp to master file
 	}
@@ -53,7 +53,7 @@ Log::Log( const char* scope_ )
 	localFile = fopen( tempscope, "w" );						//Open log file for "scope.txt"
 	if( localFile == NULL )
 	{
-		throw( TEXT( "Log: localFile creation failed" ) );
+		throw( "Log: localFile creation failed" );
 	}
 	fprintf( localFile, "%s\t%s", tempscope, asctime( time_GMT ) );	//Print local filename - tab - timestamp to local file
 	counter++;
