@@ -57,6 +57,9 @@ void TestScene::Load( void )
 	D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Arial" ) };
 	D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
 
+	//Meshes
+	meshes.LoadMesh( "tiger.x" );
+
 	//Always set state and report
 	loaded = true;
 	system.sceneManager.ReportFinishedLoading( this );
@@ -75,7 +78,7 @@ void TestScene::OnLost( void )
 		}
 		if( font != NULL )
 		{
-			graphics.ErrorCheck( font->OnLostDevice(), TEXT( "Error Font, lost device" ) );
+			graphics.ErrorCheck( font->OnLostDevice(), "Error Font, lost device" );
 		
 		}
 
@@ -153,7 +156,7 @@ void TestScene::FadeIn( void )
 
 void TestScene::MainLoop( void )
 {
-	if( input.A( 0 ) )
+	if( input.Controller().AButton() )
 	{
 		log.Message( "A button detected!", true );
 	}
@@ -198,6 +201,9 @@ void TestScene::RenderMain( void )
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
 	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
+
+	//Mesh manager stuff here
+	meshes.Render();
 
 	graphics.Device()->EndScene();
 

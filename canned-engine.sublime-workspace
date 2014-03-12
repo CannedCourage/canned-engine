@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"mesh",
+				"meshComponents"
+			],
+			[
+				"D",
+				"DPadRight"
+			],
+			[
+				"Xb",
+				"XboxController"
+			],
+			[
+				"tr",
+				"mTriangleCount"
+			],
+			[
+				"ver",
+				"vertexCount"
+			],
+			[
+				"size",
+				"sizeof"
+			],
+			[
+				"of",
+				"offset"
+			],
+			[
+				"Get",
+				"GetVertexInformation"
+			],
+			[
+				"RAW",
+				"RAWKEYBOARD"
+			],
+			[
 				"yPo",
 				"yPosRelative"
 			],
@@ -156,18 +192,26 @@
 	"buffers":
 	[
 		{
-			"file": "Mesh/Mesh.h",
+			"file": "Mesh/MeshManager.cpp",
 			"settings":
 			{
-				"buffer_size": 189,
+				"buffer_size": 10655,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Mesh/Mesh.cpp",
+			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 83,
+				"buffer_size": 8519,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "SceneManager/IScene.h",
+			"settings":
+			{
+				"buffer_size": 1336,
 				"line_ending": "Windows"
 			}
 		},
@@ -175,39 +219,7 @@
 			"file": "Mesh/MeshManager.h",
 			"settings":
 			{
-				"buffer_size": 423,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/MeshManager.cpp",
-			"settings":
-			{
-				"buffer_size": 549,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/DataConverter.h",
-			"settings":
-			{
-				"buffer_size": 574,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/ArrayDataConverter.h",
-			"settings":
-			{
-				"buffer_size": 685,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/aiVectorToFloat.h",
-			"settings":
-			{
-				"buffer_size": 1065,
+				"buffer_size": 803,
 				"line_ending": "Windows"
 			}
 		}
@@ -280,10 +292,58 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Input.txt",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
+		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Shaders/Model.fx",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/UI.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/stdafx.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/TestEnvironment.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360ControllerButtons.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360ControllerAnalogInputs.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/InputSamples/Samples/SampleController.cpp",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Core/Traits/FunctionSignatureTraits.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Core/Traits/MemberFunctionTraits.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/LogicalDevices/Controller.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360Controller.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360Controller.inl",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/LogicalDevices/Xbox360ControllerSequence.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/LogicalDevices/KeyboardSequence.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Keyboard.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/InputModule.h",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/InputSamples/Main.cpp",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/InputSamples/InputSamples.cpp",
+		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.h",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/MeshBuilder.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Model.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Model.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Component/iComponentManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/aiVectorToFloat.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/ArrayDataConverter.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/DataConverter.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshData.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse",
+		"/C/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/savegames/6837df50-888a-4003-9f44-a0cbed12badd/449/1.save",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.cpp",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/README.md",
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/Default (Windows).sublime-keymap",
+		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Input.txt",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/System.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsSetup.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/MeshBuilder.h",
@@ -292,24 +352,11 @@
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Camera.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/TestScene.txt",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
-		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Model.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Ideas.txt",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Animation.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/aiVectorToFloat.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/ArrayDataConverter.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/DataConverter.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.h",
-		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/TestEnvironment.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/TestEnvironment.h",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Debug.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Source/DataConverters.h",
@@ -317,8 +364,6 @@
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Shaders/Debug.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshImporter.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshImporter.h",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/Default (Windows).sublime-keymap",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/README.md",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/guiIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input",
@@ -374,40 +419,7 @@
 		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSONValue.h",
 		"/C/Users/Scott/Programming/Libraries/tinyxml_2_6_2/tinyxml/xmltest.cpp",
 		"/C/Users/Scott/Programming/Libraries/tinyxml_2_6_2/tinyxml/readme.txt",
-		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSON.h",
-		"/C/Users/Scott/.gimp-2.8/menurc.txt",
-		"/C/Users/Scott/.gimp-2.8/menurc",
-		"/C/Users/Scott/Desktop/Settings.h",
-		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSON.cpp",
-		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/src/Object.cpp",
-		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/src/Value.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.h",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/Github Tools/README.md",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/IEngine.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/DefaultSettings.json",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/PIXGameDebugging/PIXGameDebugging.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.fx",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut02_Vertices/Vertices.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut01_CreateDevice/CreateDevice.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/resource.h",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/BasicHLSL/BasicHLSL.cpp",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/User/C++.sublime-settings",
-		"/C/Users/Scott/Downloads/boost_1_55_0.7z",
-		"/C/Users/Scott/Downloads/boost_1_55_0/INSTALL",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/PostProcess/PP_ColorBrightPass.fx",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/PostProcess/PostProcess.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/MeshFromOBJ/MeshFromObj.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/CompiledEffect/CompiledEffect.fx",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/ConfigSystem/main.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D10/ContentStreaming/ContentLoaders.cpp",
-		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D10/ContentStreaming/AsyncLoader.cpp",
-		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/功夫NG片断.rmvb",
-		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/Kung.Fu.Hustle.2004.DVDRip.XViD.RETAiL-TLF.nfo",
-		"/G/Downloads/Chow Movies/周星驰全集[全粤语]/2004 Kung Fu Hustle [DVD-avi]/Kung.Fu.Hustle.2004.DVDRip.XViD.RETAiL-TLF.idx"
+		"/C/Users/Scott/Programming/Libraries/SimpleJSON-master/src/JSON.h"
 	],
 	"find":
 	{
@@ -426,6 +438,54 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"/",
+			"\\",
+			"Data",
+			"mEffect",
+			"DX_CHECK",
+			"context->",
+			"SAM_COUNT",
+			"DX_CHECK",
+			"mMeshes",
+			"context->",
+			"mV",
+			"mI",
+			"mMeshes",
+			"mI",
+			"DX_CHECK(",
+			"context->",
+			"mV",
+			"Data",
+			"ENTER",
+			"button",
+			"Button",
+			"button",
+			"Button",
+			"button",
+			"Button",
+			"XboxController",
+			"Input",
+			"GetPadStates",
+			";",
+			");\n",
+			"Button",
+			";",
+			"unsigned short player",
+			"XXboxController",
+			"[player]",
+			"Input",
+			"i",
+			"data",
+			"meshData",
+			"_data",
+			"meshData",
+			"MOUSE",
+			"0",
+			"aiScene",
+			"mEffect",
+			"mIndexBuffer",
+			"mVertexDeclaration",
+			"mVertexBuffer",
 			"A",
 			"XINPUT_GAMEPAD_DPAD_UP",
 			"XINPUT_GAMEPAD_LEFT_THUMB",
@@ -505,55 +565,7 @@
 			"JSON",
 			"s",
 			"Result",
-			"result",
-			"Result",
-			"result",
-			"bool",
-			"Bool",
-			"bool",
-			"object",
-			"root",
-			"string",
-			"counter",
-			"endl",
-			"std::",
-			"name",
-			"s",
-			"negative",
-			"\\",
-			"JSONNode",
-			"JSONValue",
-			"JSONNode",
-			"JSONObject",
-			"\\",
-			"const ",
-			"&",
-			"const ",
-			"std::",
-			"string",
-			"String",
-			"string",
-			"String",
-			"string",
-			"String",
-			"string",
-			"std::",
-			"static",
-			"string_name",
-			"Client",
-			"client",
-			"string_name",
-			"Set",
-			"\\",
-			"s",
-			";",
-			"min",
-			"most",
-			"max",
-			"min",
-			"max",
-			"min",
-			"max"
+			"result"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -572,93 +584,69 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Mesh/Mesh.h",
+					"file": "Mesh/MeshManager.cpp",
 					"settings":
 					{
-						"buffer_size": 189,
+						"buffer_size": 10655,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								8628,
+								8628
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4347.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "Mesh/Mesh.cpp",
+					"file": "Game/Scenes/TestScene.cpp",
 					"settings":
 					{
-						"buffer_size": 83,
+						"buffer_size": 8519,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2826,
+								2826
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 594.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "Mesh/MeshManager.h",
+					"file": "SceneManager/IScene.h",
 					"settings":
 					{
-						"buffer_size": 423,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Mesh/MeshManager.cpp",
-					"settings":
-					{
-						"buffer_size": 549,
+						"buffer_size": 1336,
 						"regions":
 						{
 						},
@@ -681,82 +669,25 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "Mesh/DataConverter.h",
+					"buffer": 3,
+					"file": "Mesh/MeshManager.h",
 					"settings":
 					{
-						"buffer_size": 574,
+						"buffer_size": 803,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								572,
+								589
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "Mesh/ArrayDataConverter.h",
-					"settings":
-					{
-						"buffer_size": 685,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "Mesh/aiVectorToFloat.h",
-					"settings":
-					{
-						"buffer_size": 1065,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

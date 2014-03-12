@@ -135,7 +135,12 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 
 			if (raw->header.dwType == RIM_TYPEMOUSE)
 			{
-				input.ReceiveRawMouseInput( raw->data.mouse );
+				input.Mouse().ReceiveRawMouseInput( raw->data.mouse );
+			}
+			
+			if (raw->header.dwType == RIM_TYPEKEYBOARD)
+			{
+				input.Keyboard().ReceiveRawKeyboardInput( raw->data.keyboard );
 			}
 			break;
 		}

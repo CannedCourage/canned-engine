@@ -19,7 +19,7 @@ class IScene
 private:
 protected:
 
-	//Constant interface to engine modules
+	//Interface to engine modules
 	System &system;
 	SceneManager &manager;
 	Settings &settings;
