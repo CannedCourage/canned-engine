@@ -156,10 +156,10 @@ void TestScene::FadeIn( void )
 
 void TestScene::MainLoop( void )
 {
-	if( input.Controller().AButton() )
+	/*if( input.Controller().AButton() )
 	{
 		log.Message( "A button detected!", true );
-	}
+	}*/
 }
 
 void TestScene::FadeOut( void )
@@ -203,7 +203,8 @@ void TestScene::RenderMain( void )
 	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
 
 	//Mesh manager stuff here
-	meshes.Render();
+	float placeholderDeltaT = 0.0f;
+	meshes.Render( placeholderDeltaT );
 
 	graphics.Device()->EndScene();
 

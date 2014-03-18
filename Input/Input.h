@@ -6,12 +6,15 @@
 
 #include "Logging/Log.h"
 
-#include "Input\XboxController.h"
-#include "Input\Mouse.h"
-#include "Input\Keyboard.h"
+#include <vector>
+
+#include <windows.h>
 
 class System;
 class Settings;
+class Mouse;
+class Keyboard;
+class XboxController;
 
 class Input
 {
@@ -23,20 +26,22 @@ protected:
 	System& system;
 	Settings& settings;
 
-	XboxController pad1, pad2, pad3, pad4;
-	Mouse mouse;
-	Keyboard keyboard;
+	std::vector<Mouse*> mice;
+	std::vector<Keyboard*> keyboards;
+	std::vector<XboxController*> pads;
 public:
 
 	Input( System& s );
 	~Input( void );
 
-	XboxController& Controller( int number = 0 );
-	Mouse& Mouse( void );
-	Keyboard& Keyboard( void );
-
 	void Init( void );
-	void Update( void );
+	void Update( const float& dT );
+
+	void Register( Mouse* mouse );
+	void Register( Keyboard* keyboard );
+	void Register( XboxController* pad );
+
+	void ReceiveRawInput( RAWINPUT* in );
 };
 
 #endif //_INPUT_H_

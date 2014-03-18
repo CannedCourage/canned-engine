@@ -2,16 +2,30 @@
 #define _XBOXCONTROLLER_H_
 
 #include "Logging\Log.h"
+#include "Input\PhysicalDevice.h"
 
 #include <windows.h>
 #include <XInput.h>
 
-class XboxController
+class XboxController : PhysicalDevice
 {
 private:
 protected:
 
-	enum Button{ A, B, X, Y, LBUMPER, RBUMPER, LTHUMB, RTHUMB, START, BACK, DPADUP, DPADDOWN, DPADLEFT, DPADRIGHT };
+	enum Button{ 	A = XINPUT_GAMEPAD_A,
+					B = XINPUT_GAMEPAD_B,
+					X = XINPUT_GAMEPAD_X,
+					Y = XINPUT_GAMEPAD_Y,
+					LBUMPER = XINPUT_GAMEPAD_LEFT_SHOULDER,
+					RBUMPER = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+					LTHUMB = XINPUT_GAMEPAD_LEFT_THUMB,
+					RTHUMB = XINPUT_GAMEPAD_RIGHT_THUMB,
+					START = XINPUT_GAMEPAD_START,
+					BACK = XINPUT_GAMEPAD_BACK,
+					DPADUP = XINPUT_GAMEPAD_DPAD_UP,
+					DPADDOWN = XINPUT_GAMEPAD_DPAD_DOWN,
+					DPADLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+					DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT };
 
 	Log log;
 
@@ -25,6 +39,7 @@ public:
 	bool PadConnected( void );
 	void CheckForPad( void );
 	void GetPadState( void );
+	void Update( void );
 
 	bool IsPressed( Button button );
 	bool WentDown( Button button );

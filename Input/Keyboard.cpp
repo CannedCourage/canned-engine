@@ -5,12 +5,8 @@ Keyboard::Keyboard( void ) : log( "Keyboard" )
 {
 }
 
-void Keyboard::RegisterForRawInput( iWindow& win )
+void Keyboard::RegisterForRawInput( HWND hWnd )
 {
-	WindowMS& winMS = static_cast<WindowMS&>(win);
-
-	HWND hWnd = winMS.getHandle();
-
 	RAWINPUTDEVICE Rid[1];
 
 	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
@@ -21,22 +17,165 @@ void Keyboard::RegisterForRawInput( iWindow& win )
     RegisterRawInputDevices( Rid, 1, sizeof( Rid[0] ) );
 }
 
-void Keyboard::ReceiveRawKeyboardInput( const RAWKEYBOARD& input )
+void Keyboard::ReceiveRawInput( const RAWKEYBOARD& input )
 {
-	keyboard = input;
+	UINT vKey = input.VKey;
+	UINT scanCode = input.MakeCode;
+	UINT flags = input.Flags;
+
+	ProcessInput( vKey, scanCode, flags );
 }
 
-bool Keyboard::IsPressed( Keyboard::Key key )
+void Keyboard::ProcessInput( UINT& virtualKey, UINT& scanCode, UINT& flags )
+{
+	if (virtualKey == 255)
+	{
+	  //Discard "fake keys" which are part of an escaped sequence
+	  return;
+	}
+	else if (virtualKey == VK_SHIFT)
+	{
+	  //Virtual key does not distinguish left and right versions of SHIFT, determine based on scan code
+	  virtualKey = MapVirtualKey(scanCode, MAPVK_VSC_TO_VK_EX);
+	}
+	else if (virtualKey == VK_NUMLOCK)
+	{
+	  //NUMLOCK will send same scan code as PAUSE/BREAK - need to correct,
+	  //and set the extended bit (for use with GetKeyNameText)
+	  scanCode = (MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC) | 0x100);
+	}
+
+	HandleEscapedSequences( virtualKey, scanCode, flags );
+}
+
+void Keyboard::HandleEscapedSequences( UINT& virtualKey, UINT& scanCode, UINT& flags )
+{
+	// e0 and e1 are escape sequences used for certain special keys, such as PRINT and PAUSE/BREAK.
+	// see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+	const bool isE0 = ((flags & RI_KEY_E0) != 0);
+	const bool isE1 = ((flags & RI_KEY_E1) != 0);
+	 
+	if (isE1)
+	{
+	  // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
+	  // however, MapVirtualKey is unable to map VK_PAUSE (this is a known bug), hence we map that by hand.
+	  if (virtualKey == VK_PAUSE)
+	    scanCode = 0x45;
+	  else
+	    scanCode = MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
+	}
+
+	switch (virtualKey)
+	{
+	  // right-hand CONTROL and ALT have their e0 bit set
+	  case VK_CONTROL:
+	    if (isE0)
+	      virtualKey = Keys::RIGHT_CONTROL;
+	    else
+	      virtualKey = Keys::LEFT_CONTROL;
+	    break;
+	 
+	  case VK_MENU:
+	    if (isE0)
+	      virtualKey = Keys::RIGHT_ALT;
+	    else
+	      virtualKey = Keys::LEFT_ALT;
+	    break;
+	 
+	  // NUMPAD ENTER has its e0 bit set
+	  case VK_RETURN:
+	    if (isE0)
+	      virtualKey = Keys::NUMPAD_ENTER;
+	    break;
+	 
+	  // the standard INSERT, DELETE, HOME, END, PRIOR and NEXT keys will always have their e0 bit set, but the
+	  // corresponding keys on the NUMPAD will not.
+	  case VK_INSERT:
+	    if (!isE0)
+	    virtualKey = Keys::NUMPAD_0;
+	    break;
+	 
+	  case VK_DELETE:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_DECIMAL;
+	    break;
+	 
+	  case VK_HOME:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_7;
+	    break;
+	 
+	  case VK_END:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_1;
+	    break;
+	 
+	  case VK_PRIOR:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_9;
+	    break;
+	 
+	  case VK_NEXT:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_3;
+	    break;
+	 
+	  // the standard arrow keys will always have their e0 bit set, but the
+	  // corresponding keys on the NUMPAD will not.
+	  case VK_LEFT:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_4;
+	    break;
+	 
+	  case VK_RIGHT:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_6;
+	    break;
+	 
+	  case VK_UP:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_8;
+	    break;
+	 
+	  case VK_DOWN:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_2;
+	    break;
+	 
+	  // NUMPAD 5 doesn't have its e0 bit set
+	  case VK_CLEAR:
+	    if (!isE0)
+	      virtualKey = Keys::NUMPAD_5;
+	    break;
+	}
+}
+
+void Keyboard::Update( void )
+{
+}
+
+bool Keyboard::IsPressed( int key )
 {
 	return true;
 }
 
-bool Keyboard::WentDown( Keyboard::Key key )
+bool Keyboard::WentDown( int key )
 {
+	// a key can either produce a "make" or "break" scancode. this is used to differentiate between down-presses and releases
+	// see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+	//const bool wasUp = ((flags & RI_KEY_BREAK) != 0);
+	
+	/*
+	// getting a human-readable string
+UINT key = (scanCode << 16) | (isE0 << 24);
+char buffer[512] = {};
+GetKeyNameText((LONG)key, buffer, 512);
+	 */
+	
 	return true;
 }
 
-bool Keyboard::WentUp( Keyboard::Key key )
+bool Keyboard::WentUp( int key )
 {
 	return true;
 }

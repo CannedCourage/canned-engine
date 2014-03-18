@@ -1,6 +1,12 @@
 #include "Input/Input.h"
 #include "System/System.h"
 
+#include "Input/XboxController.h"
+#include "Input/Mouse.h"
+#include "Input/Keyboard.h"
+
+using std::vector;
+
 Input::Input( System& s ) : log( "Input" ), system( s ) , settings( system.settings )
 {
 }
@@ -11,41 +17,72 @@ Input::~Input( void )
 
 void Input::Init( void )
 {
-	mouse.RegisterForRawInput( system.window );
-	keyboard.RegisterForRawInput( system.window );
+	//mouse.RegisterForRawInput( system.window );
+	//keyboard.RegisterForRawInput( system.window );
 
-	pad1.CheckForPad();
-	pad2.CheckForPad();
-	pad3.CheckForPad();
-	pad4.CheckForPad();
+	//pad1.CheckForPad();
 }
 
-void Input::Update( void )
+void Input::Update( const float& dT )
 {
-	pad1.GetPadState();
-	pad2.GetPadState();
-	pad3.GetPadState();
-	pad4.GetPadState();
-}
-
-XboxController& Input::Controller( int number )
-{
-	switch( number )
+	//pad1.GetPadState();
+	
+	std::vector<Mouse*>::iterator mouseIt;
+	std::vector<Keyboard*>::iterator keyIt;
+	std::vector<XboxController*>::iterator padIt;
+	
+	for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
 	{
-		case 0: return pad1; break;
-		case 1: return pad2; break;
-		case 2: return pad3; break;
-		case 3: return pad4; break;
-		default: return pad1; break;
+		(*mouseIt)->Update();
+	}
+
+	for( keyIt = keyboards.begin(); keyIt != keyboards.end(); keyIt++ )
+	{
+		(*keyIt)->Update();
+	}
+
+	for( padIt = pads.begin(); padIt != pads.end(); padIt++ )
+	{
+		(*padIt)->Update();
 	}
 }
 
-Mouse& Input::Mouse( void )
+void Input::Register( Mouse* mouse )
 {
-	return mouse;
+	mouse->RegisterForRawInput( system.window.getHandle() );
+	
+	mice.push_back( mouse );
 }
 
-Keyboard& Input::Keyboard( void )
+void Input::Register( Keyboard* keyboard )
 {
-	return keyboard;
+	keyboards.push_back( keyboard );
+}
+
+void Input::Register( XboxController* pad )
+{
+	pads.push_back( pad );
+}
+
+void Input::ReceiveRawInput( RAWINPUT* in )
+{
+	if( in->header.dwType == RIM_TYPEMOUSE )
+	{
+		vector<Mouse*>::iterator mouseIt;
+
+		for( mouseIt = mice.begin(); mouseIt < mice.end(); mouseIt++ )
+		{
+			(*mouseIt)->ReceiveRawInput( in->data.mouse );
+		}
+	}
+	
+	if( in->header.dwType == RIM_TYPEKEYBOARD )
+	{
+		vector<Keyboard*>::iterator keyboardIt;
+
+		for( keyboardIt = keyboards.begin(); keyboardIt < keyboards.end(); keyboardIt++ )
+		{
+			(*keyboardIt)->ReceiveRawInput( in->data.keyboard );
+		}
+	}
 }

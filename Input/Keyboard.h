@@ -9,31 +9,49 @@
 #endif
 
 #include "Logging\Log.h"
+#include "Input\PhysicalDevice.h"
 
 #include <windows.h>
+#include <Winuser.h>
 
-class iWindow;
-
-class Keyboard
+class Keyboard : public PhysicalDevice
 {
 private:
 protected:
 
-	enum Key{ ENTER };
+	enum Keys{ 	RIGHT_CONTROL = VK_RCONTROL,
+				LEFT_CONTROL = VK_LCONTROL,
+				RIGHT_ALT = VK_RMENU,
+				LEFT_ALT = VK_LMENU,
+				NUMPAD_ENTER = VK_SEPARATOR,
+				NUMPAD_0 = VK_NUMPAD0,
+				NUMPAD_DECIMAL = VK_DECIMAL,
+				NUMPAD_7 = VK_NUMPAD7,
+				NUMPAD_1 = VK_NUMPAD1,
+				NUMPAD_9 = VK_NUMPAD9,
+				NUMPAD_3 = VK_NUMPAD3,
+				NUMPAD_4 = VK_NUMPAD4,
+				NUMPAD_6 = VK_NUMPAD6,
+				NUMPAD_8 = VK_NUMPAD8,
+				NUMPAD_2 = VK_NUMPAD2,
+				NUMPAD_5 = VK_NUMPAD5 };
 
 	Log log;
 
-	RAWKEYBOARD keyboard;
+	void ProcessInput( UINT& vKey, UINT& scanCode, UINT& flags );
+	void HandleEscapedSequences( UINT& vKey, UINT& scanCode, UINT& flags );
 public:
 
 	Keyboard( void );
 
-	void RegisterForRawInput( iWindow& win );
-	void ReceiveRawKeyboardInput( const RAWKEYBOARD& input );
+	void RegisterForRawInput( HWND hWnd );
+	void ReceiveRawInput( const RAWKEYBOARD& input );
 
-	bool IsPressed( Key key );
-	bool WentDown( Key key );
-	bool WentUp( Key key );
+	void Update( void );
+
+	bool IsPressed( int key );
+	bool WentDown( int key );
+	bool WentUp( int key );
 };
 
 #endif //_KEYBOARD_H_

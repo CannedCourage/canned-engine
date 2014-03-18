@@ -9,12 +9,11 @@
 #endif
 
 #include "Logging\Log.h"
+#include "Input\PhysicalDevice.h"
 
 #include <windows.h>
 
-class iWindow;
-
-class Mouse
+class Mouse : public PhysicalDevice
 {
 private:
 protected:
@@ -28,14 +27,16 @@ public:
 
 	Mouse( void );
 
-	void RegisterForRawInput( iWindow& win );
-	void ReceiveRawMouseInput( const RAWMOUSE& input );
+	void RegisterForRawInput( HWND hWnd );
+	void ReceiveRawInput( const RAWMOUSE& input );
 	int GetMouseXRelative( void );
 	int GetMouseYRelative( void );
 
-	bool IsPressed( Button button );
-	bool WentDown( Button button );
-	bool WentUp( Button button );
+	void Update();
+
+	bool IsPressed( int button );
+	bool WentDown( int button );
+	bool WentUp( int button );
 };
 
 #endif //_MOUSE_H_

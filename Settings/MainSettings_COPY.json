@@ -14,5 +14,10 @@
 		"xResolution" : 1280,
 		"y" : 155,
 		"yResolution" : 720
+	},
+	"input" : {
+		"keyboard" : {
+			"jump" : 65
+		}
 	}
 }

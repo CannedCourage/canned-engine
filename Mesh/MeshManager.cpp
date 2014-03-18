@@ -178,11 +178,11 @@ void MeshManager::AccquireResources( void )
 			memcpy( indexData, &mesh.data.indexData[0], mesh.data.indexData.size() );
 		graphics.ErrorCheck( mesh.indexBuffer->Unlock(), "Error unlocking index buffer" );
 
-		/*/ load shaders
+		// load shaders - need to genericise this
 		{
 			LPD3DXBUFFER buf;	
-			const char* shaderName = "../Shaders/Model.fx";
-			HRESULT hr = D3DXCreateEffectFromFile( graphics.Device(), shaderName, NULL, NULL, NULL, NULL, &mesh.effect, &buf );
+			const char* shaderName = "Shaders/Model.fx";
+			HRESULT hr = D3DXCreateEffectFromFile( graphics.Device(), shaderName, NULL, NULL, NULL, NULL, &(mesh.effect), &buf );
 
 			if( FAILED(hr) && buf)
 			{
@@ -193,11 +193,12 @@ void MeshManager::AccquireResources( void )
 				buf->Release();
 
 				log.Message( errorTitle );
+				log.Message( errorText );
 				throw( errorTitle );
 			}
 			else 
 			{
-				// set static shader parameters
+				/*// set static shader parameters
 				D3DXHANDLE hDiffuseMap = mesh.effect->GetParameterBySemantic( NULL, "DIFFUSE_MAP" );
 				graphics.ErrorCheck( mesh.effect->SetTexture( hDiffuseMap, mesh.diffuseMap ) );
 
@@ -216,7 +217,7 @@ void MeshManager::AccquireResources( void )
 				for( int t=0; t<SAM_COUNT; ++t )
 				{
 					mesh.EffectParameters.mTechniques[t] = mesh.effect->GetTechniqueByName( mSkeletons[t]->GetShaderTechnique() );
-				}
+				}*/
 			}
 		}
 		//*/
@@ -257,11 +258,11 @@ void MeshManager::ReleaseResources( void )
 	}
 }
 
-void MeshManager::Update( void )
+void MeshManager::Update( const float& dT )
 {
 }
 
-void MeshManager::Render( void )
+void MeshManager::Render( const float& dT )
 {
 	graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE);
@@ -275,12 +276,12 @@ void MeshManager::Render( void )
 
 	for( unsigned int m = 0; m < meshComponents.size(); ++m )
 	{
-		log.Message( "Rendering mesh" );
+		//log.Message( "Rendering mesh" );
 		
 		const Mesh& mesh = meshComponents[m];
 
-		//if( mesh.effect )
-		//{
+		if( mesh.effect != NULL )
+		{
 			/*/ set dynamic shader parameters
 			{
 				Math::Matrix viewProjection = graphics.GetViewMatrix() * graphics.GetProjectionMatrix();
@@ -314,7 +315,7 @@ void MeshManager::Render( void )
 				//}
 				//graphics.ErrorCheck( mesh.effect->End() );
 			}
-		//}
+		}
 	}
 	
 	graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, FALSE );

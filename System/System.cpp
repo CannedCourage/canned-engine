@@ -56,7 +56,7 @@ int System::GameLoop( void )
 {
 	time.AddToAcc( time.deltaTimeS() );
 
-	input.Update();
+	input.Update( time.deltaTimeActual() );
 	sceneManager.Update();
 
 	while( time.Acc() > time.fixedStepS() )
@@ -133,15 +133,7 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 
 			RAWINPUT* raw = (RAWINPUT*)lpb;
 
-			if (raw->header.dwType == RIM_TYPEMOUSE)
-			{
-				input.Mouse().ReceiveRawMouseInput( raw->data.mouse );
-			}
-			
-			if (raw->header.dwType == RIM_TYPEKEYBOARD)
-			{
-				input.Keyboard().ReceiveRawKeyboardInput( raw->data.keyboard );
-			}
+			input.ReceiveRawInput( raw );
 			break;
 		}
 		default:

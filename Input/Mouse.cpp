@@ -1,16 +1,11 @@
 #include "Input\Mouse.h"
-#include "Window\WindowMS.h"
 
 Mouse::Mouse( void ) : log( "Mouse" )
 {
 }
 
-void Mouse::RegisterForRawInput( iWindow& win )
+void Mouse::RegisterForRawInput( HWND hWnd )
 {
-	WindowMS& winMS = static_cast<WindowMS&>(win);
-
-	HWND hWnd = winMS.getHandle();
-
 	RAWINPUTDEVICE Rid[1];
 
 	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
@@ -21,9 +16,13 @@ void Mouse::RegisterForRawInput( iWindow& win )
     RegisterRawInputDevices( Rid, 1, sizeof( Rid[0] ) );
 }
 
-void Mouse::ReceiveRawMouseInput( const RAWMOUSE& input )
+void Mouse::ReceiveRawInput( const RAWMOUSE& input )
 {
 	mouse = input;
+}
+
+void Mouse::Update( void )
+{
 }
 
 int Mouse::GetMouseXRelative( void )
@@ -36,17 +35,17 @@ int Mouse::GetMouseYRelative( void )
 	return mouse.lLastY;
 }
 
-bool Mouse::IsPressed( Mouse::Button button )
+bool Mouse::IsPressed( int button )
 {
 	return true;
 }
 
-bool Mouse::WentDown( Mouse::Button button )
+bool Mouse::WentDown( int button )
 {
 	return true;
 }
 
-bool Mouse::WentUp( Mouse::Button button )
+bool Mouse::WentUp( int button )
 {
 	return true;
 }

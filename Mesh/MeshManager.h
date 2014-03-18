@@ -16,7 +16,7 @@
 
 class Graphics;
 
-class MeshManager
+class MeshManager //Rename to MeshProcessor?
 {
 private:
 protected:
@@ -38,8 +38,8 @@ public:
 
 	bool LoadMesh( const char* file );
 
-	void Update( void );
-	void Render( void );
+	void Update( const float& dT );
+	void Render( const float& dT );
 };
 
 #endif //_MESH_MANAGER_H_
