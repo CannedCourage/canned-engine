@@ -63,6 +63,13 @@ void MeshManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 		data->indexSize = data->indexFormat == D3DFMT_INDEX16 ? sizeof(UINT16) : sizeof(UINT32);
 	}
 
+	if( mesh->HasNormals() )
+	{
+		D3DVERTEXELEMENT9 decl = { 0, offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 };
+		data->vertexElements.push_back( decl );
+		offset += ( 3 * sizeof(float) );
+	}
+
 	//End vertex declaration
 	D3DVERTEXELEMENT9 endElement = D3DDECL_END();
 
