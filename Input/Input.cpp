@@ -56,6 +56,8 @@ void Input::Register( Mouse* mouse )
 
 void Input::Register( Keyboard* keyboard )
 {
+	keyboard->RegisterForRawInput( system.window.getHandle() );
+	
 	keyboards.push_back( keyboard );
 }
 
