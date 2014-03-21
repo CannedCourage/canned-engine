@@ -1,6 +1,8 @@
 #include "Input\Mouse.h"
 
-Mouse::Mouse( void ) : log( "Mouse" )
+Log Mouse::log( "Mouse" );
+
+Mouse::Mouse( void )
 {
 }
 

@@ -18,9 +18,15 @@ class Mouse : public PhysicalDevice
 private:
 protected:
 
-	enum Button{ LEFT, RIGHT, MIDDLE, MOUSE4, MOUSE5 };
+	enum Button{ 	
+					LEFT = VK_LBUTTON,
+					RIGHT = VK_RBUTTON,
+					MIDDLE = VK_MBUTTON,
+					MOUSE4 = VK_XBUTTON1,
+					MOUSE5 = VK_XBUTTON2
+				};
 
-	Log log;
+	static Log log;
 
 	RAWMOUSE mouse;
 public:
@@ -29,6 +35,7 @@ public:
 
 	void RegisterForRawInput( HWND hWnd );
 	void ReceiveRawInput( const RAWMOUSE& input );
+
 	int GetMouseXRelative( void );
 	int GetMouseYRelative( void );
 
