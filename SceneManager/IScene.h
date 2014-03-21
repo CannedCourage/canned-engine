@@ -4,7 +4,8 @@
 #define _ISCENE_H_
 
 #include "Logging/Log.h"
-#include "Mesh/MeshManager.h"
+#include "Assets/AssetManager.h"
+#include "Mesh/MeshProcessor.h"
 
 class System;
 class SceneManager;
@@ -19,18 +20,21 @@ class IScene
 private:
 protected:
 
-	//Interface to engine modules
+	//Interface to engine modules (Services)
 	System &system;
 	SceneManager &manager;
 	Settings &settings;
 
-	//Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
+	//Services //Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
 	Graphics &graphics;
 	Input &input;
 	//Sound &sound;
 	//Physics* const physics;
 	
-	MeshManager meshes;
+	AssetManager assetManager;
+
+	//Processors
+	MeshProcessor meshes;
 
 	Log log;
 

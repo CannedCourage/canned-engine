@@ -28,7 +28,7 @@ struct Mesh
 
 	MeshData data;
 
-	Mesh() : vertexBuffer(NULL), vertexDeclaration(NULL), indexBuffer(NULL), effect(NULL)/*, mDiffuseMap(NULL), mNormalMap(NULL)*/
+	Mesh() : vertexBuffer(NULL), vertexDeclaration(NULL), indexBuffer(NULL), effect(NULL), diffuseMap(NULL), normalMap(NULL)
 	{
 	}
 };

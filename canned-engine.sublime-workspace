@@ -4,6 +4,70 @@
 		"selected_items":
 		[
 			[
+				"ASs",
+				"AssetManager"
+			],
+			[
+				"mesh",
+				"meshComponents"
+			],
+			[
+				"Mesh",
+				"meshComponents"
+			],
+			[
+				"Verte",
+				"vertexDeclaration"
+			],
+			[
+				"vertexb",
+				"vertexBuffer"
+			],
+			[
+				"Asset",
+				"AssetManager"
+			],
+			[
+				"No",
+				"NormRightThumbY"
+			],
+			[
+				"N",
+				"NormRightThumbX"
+			],
+			[
+				"NormL",
+				"NormLeftThumbY"
+			],
+			[
+				"_dead",
+				"_deadLY"
+			],
+			[
+				"dead",
+				"deadLY"
+			],
+			[
+				"deadL",
+				"deadLX"
+			],
+			[
+				"_dea",
+				"_deadRY"
+			],
+			[
+				"pr",
+				"previousState"
+			],
+			[
+				"curren",
+				"currentDown"
+			],
+			[
+				"Regis",
+				"RegisterForRawInput"
+			],
+			[
 				"scan",
 				"scanCode"
 			],
@@ -26,10 +90,6 @@
 			[
 				"mo",
 				"mouseIt"
-			],
-			[
-				"mesh",
-				"meshComponents"
 			],
 			[
 				"D",
@@ -77,10 +137,6 @@
 			],
 			[
 				"MEsh",
-				"MeshManager"
-			],
-			[
-				"Mesh",
 				"MeshManager"
 			],
 			[
@@ -216,10 +272,42 @@
 	"buffers":
 	[
 		{
-			"file": "Mesh/Mesh.h",
+			"file": "Mesh/MeshProcessor.h",
 			"settings":
 			{
-				"buffer_size": 722,
+				"buffer_size": 473,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mesh/MeshProcessor.cpp",
+			"settings":
+			{
+				"buffer_size": 3344,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/AssetManager.h",
+			"settings":
+			{
+				"buffer_size": 700,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/AssetManager.cpp",
+			"settings":
+			{
+				"buffer_size": 8000,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mesh/MeshComponent.h",
+			"settings":
+			{
+				"buffer_size": 1438,
 				"line_ending": "Windows"
 			}
 		},
@@ -227,23 +315,7 @@
 			"file": "Mesh/MeshData.h",
 			"settings":
 			{
-				"buffer_size": 426,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/MeshManager.cpp",
-			"settings":
-			{
-				"buffer_size": 10958,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Mesh/MeshManager.h",
-			"settings":
-			{
-				"buffer_size": 852,
+				"buffer_size": 587,
 				"line_ending": "Windows"
 			}
 		}
@@ -316,32 +388,36 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshData.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshComponent.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshData.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/WindowMS.h",
 		"/C/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Samples/C++/Direct3D/Tutorials/Tut06_Meshes/Meshes.cpp",
@@ -349,7 +425,6 @@
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/UI.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/stdafx.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/TestEnvironment.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
 		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360ControllerButtons.h",
 		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/Input/PhysicalDevices/Xbox360ControllerAnalogInputs.h",
 		"/C/Users/Scott/Downloads/MoleculeEngineInputLibrarySDK_1_0_Eval/src/InputSamples/Samples/SampleController.cpp",
@@ -440,10 +515,7 @@
 		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/include/JsonBox.h",
 		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/TestSuite.h",
 		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/main.cpp",
-		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/makefile",
-		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/RunTestSuite2.cpp",
-		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/TestSuite/TestSuite.cpp",
-		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/_internal/Source/JSONNode.cpp"
+		"/C/Users/Scott/Programming/Libraries/libjson_7.6.1/libjson/makefile"
 	],
 	"find":
 	{
@@ -462,6 +534,35 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"vertexCount",
+			"vertextCount",
+			"viewProjection",
+			"vertexBuffer",
+			"MeshManager",
+			"ReleaseResources",
+			"AccquireResources",
+			"MeshManager",
+			"meshComponents",
+			"MeshManager",
+			" = 0.0f",
+			"LX",
+			"deadzoneX",
+			"LX",
+			" = 0.0f",
+			"0.0f",
+			"short",
+			"BYTE",
+			"short",
+			"padState",
+			"Vibration",
+			"rightVal",
+			"leftVal",
+			"Button",
+			"button",
+			"Button",
+			"button",
+			"Button",
+			"XboxController::Button",
 			"PRESSED",
 			"Mouse::Button button",
 			"Button button",
@@ -560,36 +661,7 @@
 			",  ",
 			"SetInteger",
 			"set",
-			"Set",
-			"set",
-			"Set",
-			"refresh",
-			"client",
-			"cout",
-			"clientHeight",
-			"xClientPos",
-			"clientWidth",
-			"xWindowPosition",
-			"xWindowSize",
-			"xWindowPosition",
-			"\\",
-			"xWindowSize",
-			"string name",
-			"\")",
-			"std::string(",
-			"d",
-			"\")",
-			"std::string(",
-			"std::",
-			"std::string",
-			"Number",
-			"GetNumber",
-			"Number",
-			"GetIntFromObject",
-			"SetIntInObject",
-			"Int",
-			"Double",
-			"int"
+			"Set"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -608,29 +680,29 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Mesh/Mesh.h",
+					"file": "Mesh/MeshProcessor.h",
 					"settings":
 					{
-						"buffer_size": 722,
+						"buffer_size": 473,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								248,
+								248
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"_anf_new": "",
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -640,18 +712,45 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Mesh/MeshData.h",
+					"file": "Mesh/MeshProcessor.cpp",
 					"settings":
 					{
-						"buffer_size": 426,
+						"buffer_size": 3344,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								250,
+								250
+							]
+						],
+						"settings":
+						{
+							"_anf_new": "",
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 378.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Assets/AssetManager.h",
+					"settings":
+					{
+						"buffer_size": 700,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								356,
+								356
 							]
 						],
 						"settings":
@@ -665,38 +764,37 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "Mesh/MeshManager.cpp",
+					"buffer": 3,
+					"file": "Assets/AssetManager.cpp",
 					"settings":
 					{
-						"buffer_size": 10958,
+						"buffer_size": 8000,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2051,
-								2051
+								54,
+								54
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 918.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "Mesh/MeshManager.h",
+					"buffer": 4,
+					"file": "Mesh/MeshComponent.h",
 					"settings":
 					{
-						"buffer_size": 852,
+						"buffer_size": 1438,
 						"regions":
 						{
 						},
@@ -705,6 +803,33 @@
 							[
 								0,
 								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Mesh/MeshData.h",
+					"settings":
+					{
+						"buffer_size": 587,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								561,
+								561
 							]
 						],
 						"settings":

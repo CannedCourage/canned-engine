@@ -58,7 +58,9 @@ void TestScene::Load( void )
 	D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
 
 	//Meshes
-	meshes.LoadMesh( "tiger.x" );
+	assetManager.LoadMesh( "tiger.x" );
+	
+	//meshes.LoadMesh( "tiger.x" );
 
 	//Always set state and report
 	loaded = true;

@@ -18,7 +18,17 @@ struct MeshData
 	std::vector<BYTE> indexData;
 	std::vector<D3DVERTEXELEMENT9> vertexElements;
 
-	MeshData() : vertexCount(0), vertexSize(0), triangleCount(0), indexFormat(D3DFMT_UNKNOWN) {};
+	MeshData() : vertexCount(0), vertexSize(0), triangleCount(0), indexFormat(D3DFMT_UNKNOWN) {}
+};
+
+struct MeshComponentData
+{
+	int vertexCount;
+	int vertexSize;
+
+	int triangleCount;
+
+	MeshComponentData() : vertexCount(0), vertexSize(0), triangleCount(0) {}
 };
 
 #endif //_MESHDATA_H_
