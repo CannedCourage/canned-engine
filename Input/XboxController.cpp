@@ -1,11 +1,15 @@
 #include "XboxController.h"
 #include <sstream>
+#include "Maths/Clamp.h"
+#include <cmath>
 
 using std::ostringstream;
 
-XboxController::XboxController( int playerID ) : log( "XboxController" ), PID( playerID )
+Log XboxController::log( "XboxController" );
+
+XboxController::XboxController( int playerID, float _deadLX, float _deadLY, float _deadRX, float _deadRY ) : PID( playerID ), deadLX( _deadLX ), deadLY( _deadLY ), deadRX( _deadRX ), deadRY( _deadRY )
 {
-	CheckForPad();
+	ZeroMemory( &previousState, sizeof( XINPUT_STATE ) );
 
 	ostringstream o;
 
@@ -14,36 +18,48 @@ XboxController::XboxController( int playerID ) : log( "XboxController" ), PID( p
 	log.Message( o.str().c_str() );
 }
 
-void XboxController::CheckForPad( void )
+void XboxController::GetPadState( void )
 {
-	XINPUT_STATE state;
-
-	ZeroMemory( &state, sizeof( XINPUT_STATE ) );
 	padConnected = false;
 
-	if( XInputGetState( PID, &state ) == ERROR_SUCCESS )
+	ZeroMemory( &currentState, sizeof( XINPUT_STATE ) );
+
+	if( XInputGetState( PID, &currentState ) == ERROR_SUCCESS )
 	{
 		padConnected = true;
 	}
 }
 
-void XboxController::GetPadState( void )
-{
-	if( padConnected == true )
-	{
-		ZeroMemory( &padState, sizeof( XINPUT_STATE ) );
- 
-		if( XInputGetState( PID, &padState ) == ERROR_SUCCESS )
-		{
-			padConnected = true;
-		}
-	}
-}
-
 void XboxController::Update( void )
 {
-	CheckForPad();
+	previousState = currentState;
+
 	GetPadState();
+
+	normLX = NormLeftThumbX();
+	normLY = NormLeftThumbY();
+	normRX = NormRightThumbX();
+	normRY = NormRightThumbY();
+}
+
+void XboxController::Vibrate( int left, int right )
+{
+	XINPUT_VIBRATION vibration;
+    ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+
+    vibration.wLeftMotorSpeed = left;
+    vibration.wRightMotorSpeed = right;
+
+    // Vibrate the controller
+    XInputSetState( PID, &vibration );
+}
+
+void XboxController::SetDeadzone( float _deadLX, float _deadLY, float _deadRX, float _deadRY )
+{
+	deadLX = _deadLX;
+	deadLY = _deadLY;
+	deadRX = _deadRX;
+	deadRY = _deadRY;
 }
 
 bool XboxController::PadConnected( void )
@@ -51,47 +67,136 @@ bool XboxController::PadConnected( void )
 	return padConnected;
 }
 
-bool XboxController::IsPressed( XboxController::Button button )
+bool XboxController::IsPressed( int button )
 {
-	return ( ( padState.Gamepad.wButtons & button ) == button );
+	if( PadConnected() )
+	{
+		return ( ( currentState.Gamepad.wButtons & button ) == button );
+	}
+	else
+	{
+		false;
+	}
 }
 
-bool XboxController::WentDown( XboxController::Button button )
+bool XboxController::WentDown( int button )
 {
-	return true;
+	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
+	bool currentDown = IsPressed( button );
+
+	return ( ( previousDown = false ) && ( currentDown = true ) );
 }
 
-bool XboxController::WentUp( XboxController::Button button )
+bool XboxController::WentUp( int button )
 {
-	return true;
+	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
+	bool currentDown = IsPressed( button );
+
+	return ( ( previousDown = true ) && ( currentDown = false ) );
 }
 
-short XboxController::LeftThumbX( void )
+float XboxController::NormLeftThumbX( void )
 {
-	return padState.Gamepad.sThumbLX;
+	return clamp( ( (float)currentState.Gamepad.sThumbLX / 32767 ), -1.0f, 1.0f );
 }
 
-short XboxController::LeftThumbY( void )
+float XboxController::NormLeftThumbY( void )
 {
-	return padState.Gamepad.sThumbLY;
+	return clamp( ( (float)currentState.Gamepad.sThumbLY / 32767 ), -1.0f, 1.0f );
 }
 
-short XboxController::RightThumbX( void )
+float XboxController::NormRightThumbX( void )
 {
-	return padState.Gamepad.sThumbRX;
+	return clamp( ( (float)currentState.Gamepad.sThumbRX / 32767 ), -1.0f, 1.0f );
 }
 
-short XboxController::RightThumbY( void )
+float XboxController::NormRightThumbY( void )
 {
-	return padState.Gamepad.sThumbRY;
+	return clamp( ( (float)currentState.Gamepad.sThumbRY / 32767 ), -1.0f, 1.0f );
 }
 
-BYTE XboxController::LeftTrigger( void )
+float XboxController::LeftThumbX( void )
 {
-	return padState.Gamepad.bLeftTrigger;
+	float result = 0.0f;
+
+	if( abs( normLX ) < deadLX )
+	{
+		//Within deadzone
+		result = 0.0f;
+	}
+	else
+	{
+		//Treat non-dead area as range from 0 - 1 
+		//Adjust movement as if deadzone is beginning of range//Restore sign
+		result = ( abs( normLX ) - deadLX ) * ( normLX / abs( normLX ) );
+
+		//Normalise for non-dead range (i.e. adjusted movement / non-dead range)
+		result /= ( 1 - deadLX );
+	}
+
+	return result;
 }
 
-BYTE XboxController::RightTrigger( void )
+float XboxController::LeftThumbY( void )
 {
-	return padState.Gamepad.bRightTrigger;
+	float result = 0.0f;
+
+	if( abs( normLY ) < deadLY )
+	{
+		result = 0.0f;
+	}
+	else
+	{
+		result = ( abs( normLY ) - deadLY ) * ( normLY / abs( normLY ) );
+
+		result /= ( 1 - deadLY );
+	}
+
+	return result;
+}
+
+float XboxController::RightThumbX( void )
+{
+	float result = 0.0f;
+
+	if( abs( normRX ) < deadRX )
+	{
+		result = 0.0f;
+	}
+	else
+	{
+		result = ( abs( normRX ) - deadRX ) * ( normRX / abs( normRX ) );
+
+		result /= ( 1 - deadRX );
+	}
+
+	return result;
+}
+
+float XboxController::RightThumbY( void )
+{
+	float result = 0.0f;
+
+	if( abs( normRY ) < deadRY )
+	{
+		result = 0.0f;
+	}
+	else
+	{
+		result = ( abs( normRY ) - deadRY ) * ( normRY / abs( normRY ) );
+
+		result /= ( 1 - deadRY );
+	}
+
+	return result;
+}
+
+float XboxController::LeftTrigger( void )
+{
+	return clamp( ( (float)currentState.Gamepad.bLeftTrigger / 255 ), 0.0f, 1.0f );
+}
+
+float XboxController::RightTrigger( void )
+{
+	return clamp( ( (float)currentState.Gamepad.bRightTrigger / 255 ), 0.0f, 1.0f );
 }

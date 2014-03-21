@@ -27,48 +27,45 @@ protected:
 					DPADLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
 					DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT };
 
-	Log log;
+	static Log log;
 
 	int PID;
 	bool padConnected;
-	XINPUT_STATE padState;
+	XINPUT_STATE currentState, previousState;
+	float deadLX, deadLY, deadRX, deadRY;
+	float normLX, normLY, normRX, normRY;
+
+	float NormLeftThumbX( void );
+	float NormLeftThumbY( void );
+	float NormRightThumbX( void );
+	float NormRightThumbY( void );
 public:
 
-	XboxController( int playerID = 0 );
+	XboxController( int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
 
 	bool PadConnected( void );
-	void CheckForPad( void );
 	void GetPadState( void );
 	void Update( void );
 
-	bool IsPressed( Button button );
-	bool WentDown( Button button );
-	bool WentUp( Button button );
+	void Vibrate( int leftVal = 0, int rightVal = 0 );
 
-	//Xbox Controller
+	void SetDeadzone( float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
 
-	short LeftThumbX( void );
-	short LeftThumbY( void );
-	short RightThumbX( void );
-	short RightThumbY( void );
+	//Digital
 
-	BYTE LeftTrigger( void );
-	BYTE RightTrigger( void );
+	bool IsPressed( int button );
+	bool WentDown( int button );
+	bool WentUp( int button );
 
-	bool DPadUp( void );
-	bool DPadDown( void );
-	bool DPadLeft( void );
-	bool DPadRight( void );
-	bool Start( void );
-	bool Back( void );
-	bool LeftThumbButton( void );
-	bool RightThumbButton( void );
-	bool LeftBumper( void );
-	bool RightBumper( void );
-	bool AButton( void );
-	bool BButton( void );
-	bool XButton( void );
-	bool YButton( void );
+	//Analogue
+
+	float LeftThumbX( void );
+	float LeftThumbY( void );
+	float RightThumbX( void );
+	float RightThumbY( void );
+
+	float LeftTrigger( void );
+	float RightTrigger( void );
 };
 
 #endif //_XBOXCONTROLLER_H_
