@@ -1,7 +1,11 @@
 #include "Keyboard.h"
 #include "Window\WindowMS.h"
 
-Keyboard::Keyboard( void ) : log( "Keyboard" )
+using std::map;
+
+Log Keyboard::log( "Keyboard" );
+
+Keyboard::Keyboard( void )
 {
 }
 
@@ -24,6 +28,35 @@ void Keyboard::ReceiveRawInput( const RAWKEYBOARD& input )
 	UINT flags = input.Flags;
 
 	ProcessInput( vKey, scanCode, flags );
+
+	KeyState state;
+
+	// a key can either produce a "make" or "break" scancode. this is used to differentiate between down-presses and releases
+	// see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+	if( ( flags & RI_KEY_BREAK ) == RI_KEY_BREAK )
+	{
+		state = UP;
+	}
+	else
+	{
+		state = DOWN;
+	}
+
+	if( ( keyPresses[vKey] != DOWN ) && ( state == DOWN ) )
+	{
+		keyPresses[vKey] = DOWN;
+	}
+
+	if( ( keyPresses[vKey] == DOWN ) && ( state == DOWN ) )
+	{
+		keyPresses[vKey] = HELD;
+	}
+
+	//if( ( ( keyPresses[vKey] == DOWN ) || ( keyPresses[vKey] == HELD ) ) && ( state == UP ) )
+	if( state == UP )
+	{
+		keyPresses[vKey] = UP;
+	}
 }
 
 void Keyboard::ProcessInput( UINT& virtualKey, UINT& scanCode, UINT& flags )
@@ -150,6 +183,16 @@ void Keyboard::HandleEscapedSequences( UINT& virtualKey, UINT& scanCode, UINT& f
 	}
 }
 
+void Keyboard::CleanKeyPresses( void )
+{
+	map<UINT, KeyState>::iterator mapIt;
+
+	for( mapIt = keyPresses.begin(); mapIt != keyPresses.end(); mapIt++ )
+	{
+		//if( ( (*mapIt) == 0 )
+	}
+}
+
 void Keyboard::Update( void )
 {
 }
@@ -160,11 +203,7 @@ bool Keyboard::IsPressed( int key )
 }
 
 bool Keyboard::WentDown( int key )
-{
-	// a key can either produce a "make" or "break" scancode. this is used to differentiate between down-presses and releases
-	// see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
-	//const bool wasUp = ((flags & RI_KEY_BREAK) != 0);
-	
+{	
 	/*
 	// getting a human-readable string
 UINT key = (scanCode << 16) | (isE0 << 24);

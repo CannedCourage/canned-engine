@@ -14,6 +14,8 @@
 #include <windows.h>
 #include <Winuser.h>
 
+#include <map>
+
 class Keyboard : public PhysicalDevice
 {
 private:
@@ -36,10 +38,16 @@ protected:
 				NUMPAD_2 = VK_NUMPAD2,
 				NUMPAD_5 = VK_NUMPAD5 };
 
-	Log log;
+	enum KeyState{ DOWN = 1, UP = 2, HELD = 3 };
+
+	static Log log;
+
+	std::map<UINT, KeyState> keyPresses;
 
 	void ProcessInput( UINT& vKey, UINT& scanCode, UINT& flags );
 	void HandleEscapedSequences( UINT& vKey, UINT& scanCode, UINT& flags );
+
+	void CleanKeyPresses( void );
 public:
 
 	Keyboard( void );
