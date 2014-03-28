@@ -10,6 +10,7 @@
 #include "Graphics/Graphics.h"
 #include "Engine/Time.h"
 #include "Input/Input.h"
+#include "Assets/AssetManager.h"
 
 class System
 {
@@ -29,6 +30,9 @@ public:
 	Graphics graphics;
 	Input input;
 	//Sound sound;
+	
+	AssetManager assets;
+	//EntityManager entityManager;?
 
 	System( void );
 	~System( void );

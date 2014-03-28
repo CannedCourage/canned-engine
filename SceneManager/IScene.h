@@ -5,6 +5,7 @@
 
 #include "Logging/Log.h"
 #include "Assets/AssetManager.h"
+#include "Entity/EntityManager.h"
 #include "Mesh/MeshProcessor.h"
 
 class System;
@@ -31,7 +32,8 @@ protected:
 	//Sound &sound;
 	//Physics* const physics;
 	
-	AssetManager assetManager;
+	AssetManager& assets;
+	EntityManager entityManager;
 
 	//Processors
 	MeshProcessor meshes;

@@ -9,7 +9,12 @@ MeshProcessor::~MeshProcessor( void )
 {
 }
 
-MeshComponent& MeshProcessor::GetMeshComponent( int entityID )
+void MeshProcessor::AddMeshComponent( const unsigned int entityID, const Mesh& meshAsset )
+{
+	meshComponents[ entityID ] = meshAsset;
+}
+
+MeshComponent& MeshProcessor::GetMeshComponent( const unsigned int entityID )
 {
 	return meshComponents[ entityID ];
 }

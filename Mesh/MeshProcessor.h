@@ -24,7 +24,8 @@ public:
 	MeshProcessor( Graphics& g );
 	~MeshProcessor( void );
 
-	MeshComponent& GetMeshComponent( int entityID );
+	void AddMeshComponent( const unsigned int entityID, const Mesh& meshAsset );
+	MeshComponent& GetMeshComponent( const unsigned int entityID );
 
 	void Update( const float& dT );
 	void Render( const float& dT );

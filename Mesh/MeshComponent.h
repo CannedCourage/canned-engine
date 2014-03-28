@@ -32,7 +32,7 @@ struct MeshComponent
 	{
 	}
 
-	MeshComponent& operator=( Mesh& rhs )
+	MeshComponent& operator=( const Mesh& rhs )
 	{
 		this->vertexBuffer = rhs.vertexBuffer;
 		this->vertexDeclaration = rhs.vertexDeclaration;
@@ -48,6 +48,8 @@ struct MeshComponent
 		this->data.vertexCount = rhs.data.vertexCount;
 		this->data.vertexSize = rhs.data.vertexSize;
 		this->data.triangleCount = rhs.data.triangleCount;
+
+		return (*this);
 	}
 };
 

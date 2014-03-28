@@ -13,6 +13,7 @@
 
 #include "Logging\Log.h"
 
+class System;
 class Graphics;
 
 class AssetManager
@@ -28,15 +29,16 @@ protected:
 
 	void GetVertexInformation( const aiMesh* mesh, MeshData* data );
 	void BuildMesh( const aiScene* sc );
-
-	void AccquireMeshResources( void );
-	void ReleaseMeshResources( void );
 public:
 
-	AssetManager( Graphics& g );
+	AssetManager( System& sys );
 	~AssetManager( void );
 
 	bool LoadMesh( const char* file );
+	const Mesh& GetMesh( const unsigned int meshID );
+
+	void AccquireMeshResources( Mesh& mesh );
+	void ReleaseMeshResources( Mesh& mesh );
 };
 
 #endif //_ASSETMANAGER_H_

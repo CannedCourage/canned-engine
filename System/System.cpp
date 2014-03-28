@@ -3,7 +3,7 @@
 #include "System/System.h"
 #include "StandardResources/resource.h"
 
-System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneManager( *this ), window( *this ), graphics( *this ), input( *this )
+System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneManager( *this ), window( *this ), graphics( *this ), input( *this ), assets( *this )
 {
 }
 
@@ -56,7 +56,7 @@ int System::GameLoop( void )
 {
 	time.AddToAcc( time.deltaTimeS() );
 
-	input.Update( time.deltaTimeActual() );
+	input.Update();
 	sceneManager.Update();
 
 	while( time.Acc() > time.fixedStepS() )
@@ -65,6 +65,8 @@ int System::GameLoop( void )
 		sceneManager.FixedUpdate();
 		time.SubFromAcc( time.fixedStepS() );
 	}
+
+	input.PostUpdate();
 
 	sceneManager.Render();
 
