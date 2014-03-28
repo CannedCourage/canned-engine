@@ -36,15 +36,26 @@ void XboxController::Update( void )
 
 	GetPadState();
 
-	normLX = NormLeftThumbX();
-	normLY = NormLeftThumbY();
-	normRX = NormRightThumbX();
-	normRY = NormRightThumbY();
+	trigL = NormaliseTrigger( currentState.Gamepad.bLeftTrigger );
+	trigR = NormaliseTrigger( currentState.Gamepad.bRightTrigger );
+
+	float normLX, normLY, normRX, normRY;
+
+	normLX = NormaliseStick( currentState.Gamepad.sThumbLX );
+	normLY = NormaliseStick( currentState.Gamepad.sThumbLY );
+	normRX = NormaliseStick( currentState.Gamepad.sThumbRX );
+	normRY = NormaliseStick( currentState.Gamepad.sThumbRY );
+
+	adjLX = AdjustNormOutput( normLX, deadLX );
+	adjLY = AdjustNormOutput( normLY, deadLY );
+	adjRX = AdjustNormOutput( normRX, deadRX );
+	adjRY = AdjustNormOutput( normRY, deadRY );
 }
 
 void XboxController::Vibrate( int left, int right )
 {
 	XINPUT_VIBRATION vibration;
+
     ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 
     vibration.wLeftMotorSpeed = left;
@@ -56,10 +67,10 @@ void XboxController::Vibrate( int left, int right )
 
 void XboxController::SetDeadzone( float _deadLX, float _deadLY, float _deadRX, float _deadRY )
 {
-	deadLX = _deadLX;
-	deadLY = _deadLY;
-	deadRX = _deadRX;
-	deadRY = _deadRY;
+	deadLX = clamp( _deadLX, 0.0f, 1.0f );
+	deadLY = clamp( _deadLY, 0.0f, 1.0f );
+	deadRX = clamp( _deadRX, 0.0f, 1.0f );
+	deadRY = clamp( _deadRY, 0.0f, 1.0f );
 }
 
 bool XboxController::PadConnected( void )
@@ -69,18 +80,15 @@ bool XboxController::PadConnected( void )
 
 bool XboxController::IsPressed( int button )
 {
-	if( PadConnected() )
-	{
-		return ( ( currentState.Gamepad.wButtons & button ) == button );
-	}
-	else
-	{
-		false;
-	}
+	if( !PadConnected() ){ return false; }
+
+	return ( ( currentState.Gamepad.wButtons & button ) == button );
 }
 
 bool XboxController::WentDown( int button )
 {
+	if( !PadConnected() ){ return false; }
+
 	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
 	bool currentDown = IsPressed( button );
 
@@ -89,37 +97,24 @@ bool XboxController::WentDown( int button )
 
 bool XboxController::WentUp( int button )
 {
+	if( !PadConnected() ){ return false; }
+	
 	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
 	bool currentDown = IsPressed( button );
 
 	return ( ( previousDown = true ) && ( currentDown = false ) );
 }
 
-float XboxController::NormLeftThumbX( void )
+float XboxController::NormaliseStick( int stickOutput )
 {
-	return clamp( ( (float)currentState.Gamepad.sThumbLX / 32767 ), -1.0f, 1.0f );
+	return clamp( ( (float)stickOutput / 32767 ), -1.0f, 1.0f );
 }
 
-float XboxController::NormLeftThumbY( void )
-{
-	return clamp( ( (float)currentState.Gamepad.sThumbLY / 32767 ), -1.0f, 1.0f );
-}
-
-float XboxController::NormRightThumbX( void )
-{
-	return clamp( ( (float)currentState.Gamepad.sThumbRX / 32767 ), -1.0f, 1.0f );
-}
-
-float XboxController::NormRightThumbY( void )
-{
-	return clamp( ( (float)currentState.Gamepad.sThumbRY / 32767 ), -1.0f, 1.0f );
-}
-
-float XboxController::LeftThumbX( void )
+float XboxController::AdjustNormOutput( float normalisedOutput, float deadzone )
 {
 	float result = 0.0f;
 
-	if( abs( normLX ) < deadLX )
+	if( abs( normalisedOutput ) < deadzone )
 	{
 		//Within deadzone
 		result = 0.0f;
@@ -127,76 +122,47 @@ float XboxController::LeftThumbX( void )
 	else
 	{
 		//Treat non-dead area as range from 0 - 1 
-		//Adjust movement as if deadzone is beginning of range//Restore sign
-		result = ( abs( normLX ) - deadLX ) * ( normLX / abs( normLX ) );
+		//Adjust movement as if deadzone is beginning of range          //Restore sign
+		result = ( abs( normalisedOutput ) - deadzone ) * ( normalisedOutput / abs( normalisedOutput ) );
 
 		//Normalise for non-dead range (i.e. adjusted movement / non-dead range)
-		result /= ( 1 - deadLX );
+		result /= ( 1 - deadzone );
 	}
 
 	return result;
+}
+
+float XboxController::NormaliseTrigger( int trigOutput )
+{
+	return clamp( ( (float)trigOutput / 255 ), 0.0f, 1.0f );
+}
+
+float XboxController::LeftThumbX( void )
+{
+	return adjLX;
 }
 
 float XboxController::LeftThumbY( void )
 {
-	float result = 0.0f;
-
-	if( abs( normLY ) < deadLY )
-	{
-		result = 0.0f;
-	}
-	else
-	{
-		result = ( abs( normLY ) - deadLY ) * ( normLY / abs( normLY ) );
-
-		result /= ( 1 - deadLY );
-	}
-
-	return result;
+	return adjLY;
 }
 
 float XboxController::RightThumbX( void )
 {
-	float result = 0.0f;
-
-	if( abs( normRX ) < deadRX )
-	{
-		result = 0.0f;
-	}
-	else
-	{
-		result = ( abs( normRX ) - deadRX ) * ( normRX / abs( normRX ) );
-
-		result /= ( 1 - deadRX );
-	}
-
-	return result;
+	return adjRX;
 }
 
 float XboxController::RightThumbY( void )
 {
-	float result = 0.0f;
-
-	if( abs( normRY ) < deadRY )
-	{
-		result = 0.0f;
-	}
-	else
-	{
-		result = ( abs( normRY ) - deadRY ) * ( normRY / abs( normRY ) );
-
-		result /= ( 1 - deadRY );
-	}
-
-	return result;
+	return adjRY;
 }
 
 float XboxController::LeftTrigger( void )
 {
-	return clamp( ( (float)currentState.Gamepad.bLeftTrigger / 255 ), 0.0f, 1.0f );
+	return trigL;
 }
 
 float XboxController::RightTrigger( void )
 {
-	return clamp( ( (float)currentState.Gamepad.bRightTrigger / 255 ), 0.0f, 1.0f );
+	return trigR;
 }

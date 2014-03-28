@@ -35,7 +35,9 @@ public:
 	~Input( void );
 
 	void Init( void );
-	void Update( const float& dT );
+
+	void Update( void );
+	void PostUpdate( void );
 
 	void Register( Mouse* mouse );
 	void Register( Keyboard* keyboard );

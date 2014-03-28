@@ -15,6 +15,7 @@
 #include <Winuser.h>
 
 #include <map>
+#include <string>
 
 class Keyboard : public PhysicalDevice
 {
@@ -38,16 +39,14 @@ protected:
 				NUMPAD_2 = VK_NUMPAD2,
 				NUMPAD_5 = VK_NUMPAD5 };
 
-	enum KeyState{ DOWN = 1, UP = 2, HELD = 3 };
+	enum KeyState{ DOWN = 1, UP = 2 };
 
 	static Log log;
 
-	std::map<UINT, KeyState> keyPresses;
+	std::map<UINT, KeyState> currentPresses, previousPresses;
 
 	void ProcessInput( UINT& vKey, UINT& scanCode, UINT& flags );
 	void HandleEscapedSequences( UINT& vKey, UINT& scanCode, UINT& flags );
-
-	void CleanKeyPresses( void );
 public:
 
 	Keyboard( void );
@@ -56,10 +55,13 @@ public:
 	void ReceiveRawInput( const RAWKEYBOARD& input );
 
 	void Update( void );
+	void PostUpdate( void );
 
 	bool IsPressed( int key );
 	bool WentDown( int key );
 	bool WentUp( int key );
+
+	std::string GetKeyName( UINT virtualKey, UINT scanCode, UINT flags );
 };
 
 #endif //_KEYBOARD_H_

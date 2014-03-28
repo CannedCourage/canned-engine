@@ -42,20 +42,14 @@ void Keyboard::ReceiveRawInput( const RAWKEYBOARD& input )
 		state = DOWN;
 	}
 
-	if( ( keyPresses[vKey] != DOWN ) && ( state == DOWN ) )
+	if( state == DOWN )
 	{
-		keyPresses[vKey] = DOWN;
+		currentPresses[vKey] = DOWN;
 	}
 
-	if( ( keyPresses[vKey] == DOWN ) && ( state == DOWN ) )
-	{
-		keyPresses[vKey] = HELD;
-	}
-
-	//if( ( ( keyPresses[vKey] == DOWN ) || ( keyPresses[vKey] == HELD ) ) && ( state == UP ) )
 	if( state == UP )
 	{
-		keyPresses[vKey] = UP;
+		currentPresses[vKey] = UP;
 	}
 }
 
@@ -183,38 +177,42 @@ void Keyboard::HandleEscapedSequences( UINT& virtualKey, UINT& scanCode, UINT& f
 	}
 }
 
-void Keyboard::CleanKeyPresses( void )
-{
-	map<UINT, KeyState>::iterator mapIt;
-
-	for( mapIt = keyPresses.begin(); mapIt != keyPresses.end(); mapIt++ )
-	{
-		//if( ( (*mapIt) == 0 )
-	}
-}
-
 void Keyboard::Update( void )
 {
 }
 
+void Keyboard::PostUpdate( void )
+{
+	previousPresses = currentPresses;
+
+	currentPresses.clear();
+}
+
 bool Keyboard::IsPressed( int key )
 {
-	return true;
+	return ( currentPresses[ key ] == DOWN );
 }
 
 bool Keyboard::WentDown( int key )
-{	
-	/*
-	// getting a human-readable string
-UINT key = (scanCode << 16) | (isE0 << 24);
-char buffer[512] = {};
-GetKeyNameText((LONG)key, buffer, 512);
-	 */
-	
-	return true;
+{
+	return ( ( currentPresses[ key ] == DOWN ) && ( previousPresses[ key ] != DOWN ) );
 }
 
 bool Keyboard::WentUp( int key )
 {
-	return true;
+	return ( currentPresses[ key ] == UP );
+}
+
+std::string GetKeyName( UINT virtualKey, UINT scanCode, UINT flags )
+{
+	// getting a human-readable string
+	const bool isE0 = ((flags & RI_KEY_E0) != 0);
+
+	UINT key = (scanCode << 16) | (isE0 << 24);
+
+	char buffer[512] = {};
+
+	GetKeyNameText((LONG)key, buffer, 512);
+	
+	return std::string( buffer );
 }

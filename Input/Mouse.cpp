@@ -27,27 +27,41 @@ void Mouse::Update( void )
 {
 }
 
-int Mouse::GetMouseXRelative( void )
+long Mouse::GetMouseXRelative( void )
 {
 	return mouse.lLastX;
 }
 
-int Mouse::GetMouseYRelative( void )
+long Mouse::GetMouseYRelative( void )
 {
 	return mouse.lLastY;
 }
 
+short Mouse::GetWheelDelta( void )
+{
+	if( ( mouse.usButtonFlags & RI_MOUSE_WHEEL ) == RI_MOUSE_WHEEL )
+	{
+		return (short)mouse.usButtonData;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 bool Mouse::IsPressed( int button )
 {
-	return true;
+	return ( ( mouse.usButtonFlags & button ) == button );
 }
 
 bool Mouse::WentDown( int button )
 {
-	return true;
+	return ( ( mouse.usButtonFlags & button ) == button );
 }
 
 bool Mouse::WentUp( int button )
 {
-	return true;
+	button *= 2; //Up constant is 2x Down constant
+
+	return ( ( mouse.usButtonFlags & button ) == button );
 }

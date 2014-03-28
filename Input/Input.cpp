@@ -23,7 +23,7 @@ void Input::Init( void )
 	//pad1.CheckForPad();
 }
 
-void Input::Update( const float& dT )
+void Input::Update( void )
 {
 	//pad1.GetPadState();
 	
@@ -45,6 +45,28 @@ void Input::Update( const float& dT )
 	{
 		(*padIt)->Update();
 	}
+}
+
+void Input::PostUpdate( void )
+{
+	std::vector<Mouse*>::iterator mouseIt;
+	std::vector<Keyboard*>::iterator keyIt;
+	std::vector<XboxController*>::iterator padIt;
+
+	/*for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
+	{
+		(*mouseIt)->PreUpdate();
+	}*/
+
+	for( keyIt = keyboards.begin(); keyIt != keyboards.end(); keyIt++ )
+	{
+		(*keyIt)->PostUpdate();
+	}
+
+	/*for( padIt = pads.begin(); padIt != pads.end(); padIt++ )
+	{
+		(*padIt)->PreUpdate();
+	}*/
 }
 
 void Input::Register( Mouse* mouse )

@@ -19,12 +19,14 @@ private:
 protected:
 
 	enum Button{ 	
-					LEFT = VK_LBUTTON,
-					RIGHT = VK_RBUTTON,
-					MIDDLE = VK_MBUTTON,
-					MOUSE4 = VK_XBUTTON1,
-					MOUSE5 = VK_XBUTTON2
+					LEFT = RI_MOUSE_BUTTON_1_DOWN,
+					RIGHT = RI_MOUSE_BUTTON_2_DOWN,
+					MIDDLE = RI_MOUSE_BUTTON_3_DOWN,
+					MOUSE4 = RI_MOUSE_BUTTON_4_DOWN,
+					MOUSE5 = RI_MOUSE_BUTTON_5_DOWN
 				};
+
+	enum KeyState{ DOWN = 1, UP = 2 };
 
 	static Log log;
 
@@ -36,8 +38,10 @@ public:
 	void RegisterForRawInput( HWND hWnd );
 	void ReceiveRawInput( const RAWMOUSE& input );
 
-	int GetMouseXRelative( void );
-	int GetMouseYRelative( void );
+	long GetMouseXRelative( void );
+	long GetMouseYRelative( void );
+
+	short GetWheelDelta( void );
 
 	void Update();
 

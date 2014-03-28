@@ -33,12 +33,12 @@ protected:
 	bool padConnected;
 	XINPUT_STATE currentState, previousState;
 	float deadLX, deadLY, deadRX, deadRY;
-	float normLX, normLY, normRX, normRY;
+	float adjLX, adjLY, adjRX, adjRY;
+	float trigL, trigR;
 
-	float NormLeftThumbX( void );
-	float NormLeftThumbY( void );
-	float NormRightThumbX( void );
-	float NormRightThumbY( void );
+	float NormaliseStick( int stickOutput );
+	float AdjustNormOutput( float normalisedOutput, float deadzone );
+	float NormaliseTrigger( int trigOutput );
 public:
 
 	XboxController( int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
