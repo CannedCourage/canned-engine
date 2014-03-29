@@ -128,14 +128,12 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 			}
 		case WM_INPUT:
 		{
-			UINT dwSize = 40;
-			static BYTE lpb[40];
+			RAWINPUT raw;
+			UINT dwSize = sizeof( raw );
 
-			GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof( RAWINPUTHEADER ) );
+			GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, &raw, &dwSize, sizeof( RAWINPUTHEADER ) );
 
-			RAWINPUT* raw = (RAWINPUT*)lpb;
-
-			input.ReceiveRawInput( raw );
+			input.ReceiveRawInput( &raw );
 			break;
 		}
 		default:

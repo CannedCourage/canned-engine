@@ -22,6 +22,16 @@ class Keyboard : public PhysicalDevice
 private:
 protected:
 
+	enum KeyState{ DOWN = 1, UP = 2 };
+
+	static Log log;
+
+	std::map<UINT, KeyState> currentPresses, previousPresses;
+
+	void ProcessInput( UINT& vKey, UINT& scanCode, UINT& flags );
+	void HandleEscapedSequences( UINT& vKey, UINT& scanCode, UINT& flags );
+public:
+
 	enum Keys{ 	RIGHT_CONTROL = VK_RCONTROL,
 				LEFT_CONTROL = VK_LCONTROL,
 				RIGHT_ALT = VK_RMENU,
@@ -38,16 +48,6 @@ protected:
 				NUMPAD_8 = VK_NUMPAD8,
 				NUMPAD_2 = VK_NUMPAD2,
 				NUMPAD_5 = VK_NUMPAD5 };
-
-	enum KeyState{ DOWN = 1, UP = 2 };
-
-	static Log log;
-
-	std::map<UINT, KeyState> currentPresses, previousPresses;
-
-	void ProcessInput( UINT& vKey, UINT& scanCode, UINT& flags );
-	void HandleEscapedSequences( UINT& vKey, UINT& scanCode, UINT& flags );
-public:
 
 	Keyboard( void );
 

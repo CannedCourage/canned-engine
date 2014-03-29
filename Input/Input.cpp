@@ -53,10 +53,10 @@ void Input::PostUpdate( void )
 	std::vector<Keyboard*>::iterator keyIt;
 	std::vector<XboxController*>::iterator padIt;
 
-	/*for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
+	for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
 	{
-		(*mouseIt)->PreUpdate();
-	}*/
+		(*mouseIt)->PostUpdate();
+	}
 
 	for( keyIt = keyboards.begin(); keyIt != keyboards.end(); keyIt++ )
 	{

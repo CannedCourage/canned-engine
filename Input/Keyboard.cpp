@@ -183,6 +183,8 @@ void Keyboard::Update( void )
 
 void Keyboard::PostUpdate( void )
 {
+	previousPresses.clear();
+
 	previousPresses = currentPresses;
 
 	currentPresses.clear();
@@ -195,7 +197,7 @@ bool Keyboard::IsPressed( int key )
 
 bool Keyboard::WentDown( int key )
 {
-	return ( ( currentPresses[ key ] == DOWN ) && ( previousPresses[ key ] != DOWN ) );
+	return ( IsPressed( key ) && ( previousPresses[ key ] != DOWN ) );
 }
 
 bool Keyboard::WentUp( int key )

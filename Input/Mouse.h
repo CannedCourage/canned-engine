@@ -12,11 +12,19 @@
 #include "Input\PhysicalDevice.h"
 
 #include <windows.h>
+#include <map>
 
 class Mouse : public PhysicalDevice
 {
 private:
 protected:
+
+	std::map<int, bool> buttonStates;
+
+	static Log log;
+
+	RAWMOUSE currentMouse;
+public:
 
 	enum Button{ 	
 					LEFT = RI_MOUSE_BUTTON_1_DOWN,
@@ -25,13 +33,6 @@ protected:
 					MOUSE4 = RI_MOUSE_BUTTON_4_DOWN,
 					MOUSE5 = RI_MOUSE_BUTTON_5_DOWN
 				};
-
-	enum KeyState{ DOWN = 1, UP = 2 };
-
-	static Log log;
-
-	RAWMOUSE mouse;
-public:
 
 	Mouse( void );
 
@@ -43,7 +44,8 @@ public:
 
 	short GetWheelDelta( void );
 
-	void Update();
+	void Update( void );
+	void PostUpdate( void );
 
 	bool IsPressed( int button );
 	bool WentDown( int button );

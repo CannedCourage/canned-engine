@@ -4,6 +4,10 @@
 #include "SceneManager/IScene.h"
 #include "Graphics/VertexBuffer.h"
 
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
+#include "Input/XboxController.h"
+
 class System;
 
 class TestScene : public IScene
@@ -20,6 +24,10 @@ protected:
 
 	LPD3DXFONT font;
 	RECT FontPosition;
+
+	Keyboard keys;
+	Mouse logiMouse;
+	XboxController player1;
 
 	VertexBuffer<Vertex3dTx> buffer;
 

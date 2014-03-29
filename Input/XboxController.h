@@ -12,6 +12,20 @@ class XboxController : PhysicalDevice
 private:
 protected:
 
+	static Log log;
+
+	int PID;
+	bool padConnected;
+	XINPUT_STATE currentState, previousState;
+	float deadLX, deadLY, deadRX, deadRY;
+	float adjLX, adjLY, adjRX, adjRY;
+	float trigL, trigR;
+
+	float NormaliseStick( int stickOutput );
+	float AdjustNormOutput( float normalisedOutput, float deadzone );
+	float NormaliseTrigger( int trigOutput );
+public:
+
 	enum Button{ 	A = XINPUT_GAMEPAD_A,
 					B = XINPUT_GAMEPAD_B,
 					X = XINPUT_GAMEPAD_X,
@@ -26,20 +40,6 @@ protected:
 					DPADDOWN = XINPUT_GAMEPAD_DPAD_DOWN,
 					DPADLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
 					DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT };
-
-	static Log log;
-
-	int PID;
-	bool padConnected;
-	XINPUT_STATE currentState, previousState;
-	float deadLX, deadLY, deadRX, deadRY;
-	float adjLX, adjLY, adjRX, adjRY;
-	float trigL, trigR;
-
-	float NormaliseStick( int stickOutput );
-	float AdjustNormOutput( float normalisedOutput, float deadzone );
-	float NormaliseTrigger( int trigOutput );
-public:
 
 	XboxController( int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
 

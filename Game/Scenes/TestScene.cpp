@@ -13,6 +13,10 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL )
 	FontPosition.left = 0;
 	FontPosition.right = settings.GetInteger( "display/xResolution" );
 	FontPosition.bottom = settings.GetInteger( "display/yResolution" );
+
+	input.Register( &keys );
+	input.Register( &logiMouse );
+	input.Register( &player1 );
 }
 
 TestScene::~TestScene( void )
@@ -158,10 +162,35 @@ void TestScene::FadeIn( void )
 
 void TestScene::MainLoop( void )
 {
-	/*if( input.Controller().AButton() )
+	if( player1.WentUp( XboxController::Button::A ) )
 	{
 		log.Message( "A button detected!", true );
-	}*/
+	}
+
+	if( keys.WentDown( Keyboard::Keys::LEFT_CONTROL ) )
+	{
+		log.Message( "A key is going down!", true );
+	}
+
+	if( keys.WentUp( Keyboard::Keys::LEFT_CONTROL ) )
+	{
+		log.Message( "A key is going up!", true );
+	}
+
+	if( logiMouse.IsPressed( Mouse::Button::LEFT ) )
+	{
+		log.Message( "Left mouse button is pressed", true );
+	}
+
+	if( logiMouse.WentDown( Mouse::Button::LEFT ) )
+	{
+		log.Message( "Left mouse button is going down", true );
+	}
+
+	if( logiMouse.WentUp( Mouse::Button::LEFT ) )
+	{
+		log.Message( "Left mouse button is going up", true );
+	}
 }
 
 void TestScene::FadeOut( void )

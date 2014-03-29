@@ -92,7 +92,7 @@ bool XboxController::WentDown( int button )
 	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
 	bool currentDown = IsPressed( button );
 
-	return ( ( previousDown = false ) && ( currentDown = true ) );
+	return ( ( previousDown == false ) && ( currentDown == true ) );
 }
 
 bool XboxController::WentUp( int button )
@@ -102,7 +102,7 @@ bool XboxController::WentUp( int button )
 	bool previousDown = ( ( previousState.Gamepad.wButtons & button ) == button );
 	bool currentDown = IsPressed( button );
 
-	return ( ( previousDown = true ) && ( currentDown = false ) );
+	return ( ( previousDown == true ) && ( currentDown == false ) );
 }
 
 float XboxController::NormaliseStick( int stickOutput )
