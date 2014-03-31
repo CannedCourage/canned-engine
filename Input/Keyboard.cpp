@@ -44,12 +44,12 @@ void Keyboard::ReceiveRawInput( const RAWKEYBOARD& input )
 
 	if( state == DOWN )
 	{
-		currentPresses[vKey] = DOWN;
+		currentPresses[ vKey ] = DOWN;
 	}
 
 	if( state == UP )
 	{
-		currentPresses[vKey] = UP;
+		currentPresses[ vKey ] = UP;
 	}
 }
 
@@ -183,11 +183,7 @@ void Keyboard::Update( void )
 
 void Keyboard::PostUpdate( void )
 {
-	previousPresses.clear();
-
 	previousPresses = currentPresses;
-
-	currentPresses.clear();
 }
 
 bool Keyboard::IsPressed( int key )
@@ -197,12 +193,12 @@ bool Keyboard::IsPressed( int key )
 
 bool Keyboard::WentDown( int key )
 {
-	return ( IsPressed( key ) && ( previousPresses[ key ] != DOWN ) );
+	return ( IsPressed( key ) && ( ( previousPresses[ key ] == 0 ) || ( previousPresses[ key ] == UP ) ) );
 }
 
 bool Keyboard::WentUp( int key )
 {
-	return ( currentPresses[ key ] == UP );
+	return ( ( currentPresses[ key ] == UP ) && ( previousPresses[ key ] == DOWN ) );
 }
 
 std::string GetKeyName( UINT virtualKey, UINT scanCode, UINT flags )

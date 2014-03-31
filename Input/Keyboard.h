@@ -57,9 +57,9 @@ public:
 	void Update( void );
 	void PostUpdate( void );
 
-	bool IsPressed( int key );
-	bool WentDown( int key );
-	bool WentUp( int key );
+	virtual bool IsPressed( int key );
+	virtual bool WentDown( int key );
+	virtual bool WentUp( int key );
 
 	std::string GetKeyName( UINT virtualKey, UINT scanCode, UINT flags );
 };
