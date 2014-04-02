@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"logi",
+				"logicalDevices"
+			],
+			[
+				"LEFT",
+				"LEFT_CONTROL"
+			],
+			[
+				"K",
+				"Keyboard"
+			],
+			[
+				"WEnt",
+				"WentDown"
+			],
+			[
 				"No",
 				"NormaliseTrigger"
 			],
@@ -300,34 +316,34 @@
 	"buffers":
 	[
 		{
-			"file": "Assets/AssetManager.h",
+			"file": "Game/Scenes/TestScene.h",
 			"settings":
 			{
-				"buffer_size": 802,
+				"buffer_size": 907,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Assets/MeshManager.cpp",
+			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 10042,
+				"buffer_size": 10232,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Entity/EntityManager.h",
+			"file": "Input/Input.h",
 			"settings":
 			{
-				"buffer_size": 275,
+				"buffer_size": 840,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Entity/EntityManager.cpp",
+			"file": "Input/Input.cpp",
 			"settings":
 			{
-				"buffer_size": 180,
+				"buffer_size": 2487,
 				"line_ending": "Windows"
 			}
 		}
@@ -400,31 +416,31 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
-		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/MeshBuilder.cpp",
-		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/DataConverters.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Entity/EntityManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Entity/EntityManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/MeshBuilder.cpp",
+		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/DataConverters.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshData.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshComponent.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
@@ -546,6 +562,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			" = 0.0f",
+			"LEFT_ALT",
+			"padIt",
+			"Controller",
+			"0",
+			"mouseButtons.buttons",
+			"LEFT",
+			"button",
+			"mouse",
 			"n",
 			"v",
 			"int",
@@ -664,16 +689,7 @@
 			";",
 			"false",
 			"padState[player].",
-			"[player]",
-			"int",
-			"padConnected",
-			"_MESH_IMPORTER_H_",
-			"state",
-			"anyAvailable",
-			"adapters",
-			"D3DFMT_A8R8G8B8",
-			"D15S",
-			"TwoSamples"
+			"[player]"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -692,23 +708,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Assets/AssetManager.h",
+					"file": "Game/Scenes/TestScene.h",
 					"settings":
 					{
-						"buffer_size": 802,
+						"buffer_size": 907,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								497,
-								497
+								556,
+								556
 							]
 						],
 						"settings":
@@ -724,18 +740,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Assets/MeshManager.cpp",
+					"file": "Game/Scenes/TestScene.cpp",
 					"settings":
 					{
-						"buffer_size": 10042,
+						"buffer_size": 10232,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9582,
-								9582
+								1182,
+								1182
 							]
 						],
 						"settings":
@@ -751,49 +767,51 @@
 				},
 				{
 					"buffer": 2,
-					"file": "Entity/EntityManager.h",
+					"file": "Input/Input.h",
 					"settings":
 					{
-						"buffer_size": 275,
+						"buffer_size": 840,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								505,
+								505
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 54.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "Entity/EntityManager.cpp",
+					"file": "Input/Input.cpp",
 					"settings":
 					{
-						"buffer_size": 180,
+						"buffer_size": 2487,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1036,
+								1036
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

@@ -8,14 +8,16 @@
 #define HID_USAGE_GENERIC_KEYBOARD     ((USHORT) 0x06)
 #endif
 
-#include "Logging\Log.h"
-#include "Input\PhysicalDevice.h"
+#include "Logging/Log.h"
+#include "Input/PhysicalDevice.h"
 
 #include <windows.h>
 #include <Winuser.h>
 
 #include <map>
 #include <string>
+
+class Input;
 
 class Keyboard : public PhysicalDevice
 {
@@ -50,6 +52,7 @@ public:
 				NUMPAD_5 = VK_NUMPAD5 };
 
 	Keyboard( void );
+	Keyboard( Input& input );
 
 	void RegisterForRawInput( HWND hWnd );
 	void ReceiveRawInput( const RAWKEYBOARD& input );

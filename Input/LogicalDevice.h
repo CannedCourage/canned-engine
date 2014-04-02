@@ -3,11 +3,12 @@
 
 #include <vector>
 
+class Input;
 class PhysicalDevice;
 
 typedef bool (PhysicalDevice::*MethodPointer)(int);
 
-class Controller
+class LogicalDevice
 {
 private:
 protected:
@@ -19,7 +20,8 @@ protected:
 	bool anyPressed, chordPressed;
 public:
 
-	Controller( void );
+	LogicalDevice( void );
+	LogicalDevice( Input& input );
 
 	void AddInput( PhysicalDevice* k, MethodPointer f, const int& arg );
 	void EvaluateInputs( void );

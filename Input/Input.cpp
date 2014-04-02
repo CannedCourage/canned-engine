@@ -4,6 +4,7 @@
 #include "Input/XboxController.h"
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"
+#include "Input/LogicalDevice.h"
 
 using std::vector;
 
@@ -30,6 +31,7 @@ void Input::Update( void )
 	std::vector<Mouse*>::iterator mouseIt;
 	std::vector<Keyboard*>::iterator keyIt;
 	std::vector<XboxController*>::iterator padIt;
+	std::vector<LogicalDevice*>::iterator logIt;
 	
 	for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
 	{
@@ -44,6 +46,11 @@ void Input::Update( void )
 	for( padIt = pads.begin(); padIt != pads.end(); padIt++ )
 	{
 		(*padIt)->Update();
+	}
+
+	for( logIt = logicalDevices.begin(); logIt != logicalDevices.end(); logIt++ )
+	{
+		(*logIt)->EvaluateInputs();
 	}
 }
 
@@ -86,6 +93,11 @@ void Input::Register( Keyboard* keyboard )
 void Input::Register( XboxController* pad )
 {
 	pads.push_back( pad );
+}
+
+void Input::Register( LogicalDevice* intent )
+{
+	logicalDevices.push_back( intent );
 }
 
 void Input::ReceiveRawInput( RAWINPUT* in )

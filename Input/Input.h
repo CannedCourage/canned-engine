@@ -15,6 +15,7 @@ class Settings;
 class Mouse;
 class Keyboard;
 class XboxController;
+class LogicalDevice;
 
 class Input
 {
@@ -29,6 +30,7 @@ protected:
 	std::vector<Mouse*> mice;
 	std::vector<Keyboard*> keyboards;
 	std::vector<XboxController*> pads;
+	std::vector<LogicalDevice*> logicalDevices;
 public:
 
 	Input( System& s );
@@ -42,6 +44,7 @@ public:
 	void Register( Mouse* mouse );
 	void Register( Keyboard* keyboard );
 	void Register( XboxController* pad );
+	void Register( LogicalDevice* logiDevice );
 
 	void ReceiveRawInput( RAWINPUT* in );
 };

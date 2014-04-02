@@ -1,9 +1,15 @@
-#include "Input\Mouse.h"
+#include "Input/Mouse.h"
+#include "input/Input.h"
 
 Log Mouse::log( "Mouse" );
 
 Mouse::Mouse( void )
 {
+}
+
+Mouse::Mouse( Input& input )
+{
+	input.Register( this );
 }
 
 void Mouse::RegisterForRawInput( HWND hWnd )

@@ -1,5 +1,6 @@
-#include "Keyboard.h"
-#include "Window\WindowMS.h"
+#include "Input/Keyboard.h"
+#include "Window/WindowMS.h"
+#include "Input/Input.h"
 
 using std::map;
 
@@ -7,6 +8,11 @@ Log Keyboard::log( "Keyboard" );
 
 Keyboard::Keyboard( void )
 {
+}
+
+Keyboard::Keyboard( Input& input )
+{
+	input.Register( this );
 }
 
 void Keyboard::RegisterForRawInput( HWND hWnd )

@@ -14,6 +14,8 @@
 #include <windows.h>
 #include <map>
 
+class Input;
+
 class Mouse : public PhysicalDevice
 {
 private:
@@ -35,6 +37,7 @@ public:
 				};
 
 	Mouse( void );
+	Mouse( Input& input );
 
 	void RegisterForRawInput( HWND hWnd );
 	void ReceiveRawInput( const RAWMOUSE& input );

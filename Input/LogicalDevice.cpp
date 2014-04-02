@@ -1,18 +1,24 @@
-#include "Input\LogicalDevice.h"
-#include "Input\PhysicalDevice.h"
+#include "Input/LogicalDevice.h"
+#include "Input/PhysicalDevice.h"
+#include "Input/Input.h"
 
-Controller::Controller( void ) : anyPressed( false ), chordPressed( false )
+LogicalDevice::LogicalDevice( void ) : anyPressed( false ), chordPressed( false )
 {
 }
 
-void Controller::AddInput( PhysicalDevice* k, MethodPointer f, const int& arg )
+LogicalDevice::LogicalDevice( Input& input ) : anyPressed( false ), chordPressed( false )
+{
+	input.Register( this );
+}
+
+void LogicalDevice::AddInput( PhysicalDevice* k, MethodPointer f, const int& arg )
 {
 	devices.push_back( k );
 	functions.push_back( f );
 	args.push_back( arg );
 }
 
-void Controller::EvaluateInputs( void )
+void LogicalDevice::EvaluateInputs( void )
 {
 	const int numInputs = devices.size();
 
@@ -31,7 +37,7 @@ void Controller::EvaluateInputs( void )
 	{
 		anyPressed = true;
 
-		if( triggeredInputs = numInputs )
+		if( triggeredInputs == numInputs )
 		{
 			chordPressed = true;
 		}
@@ -47,12 +53,12 @@ void Controller::EvaluateInputs( void )
 	}
 }
 
-bool Controller::IsAnyPressed( void )
+bool LogicalDevice::IsAnyPressed( void )
 {
 	return anyPressed;
 }
 
-bool Controller::IsChordPressed( void )
+bool LogicalDevice::IsChordPressed( void )
 {
 	return chordPressed;
 }

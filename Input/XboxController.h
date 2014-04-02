@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <XInput.h>
 
+class Input;
+
 class XboxController : PhysicalDevice
 {
 private:
@@ -42,6 +44,7 @@ public:
 					DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT };
 
 	XboxController( int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
+	XboxController( Input& input, int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
 
 	bool PadConnected( void );
 	void GetPadState( void );
