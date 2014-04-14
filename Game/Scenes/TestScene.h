@@ -7,6 +7,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Input/XboxController.h"
+#include "Input/LogicalDevice.h"
 
 class System;
 
@@ -28,15 +29,14 @@ protected:
 	Keyboard keys;
 	Mouse logiMouse;
 	XboxController player1;
+	LogicalDevice test1;
 
 	VertexBuffer<Vertex3dTx> buffer;
 
-	void FadeIn( void );
+	FMOD::Channel* channel;
+
 	void MainLoop( void );
-	void FadeOut( void );
-	void RenderIn( void );
 	void RenderMain( void );
-	void RenderOut( void );
 public:
 
 	TestScene( System &s );

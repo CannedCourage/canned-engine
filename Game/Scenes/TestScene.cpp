@@ -1,7 +1,9 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
 
-TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL ), cubeTex( NULL ), font( NULL ), buffer( s )
+//Globals for scene variables?
+
+TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL ), cubeTex( NULL ), font( NULL ), buffer( s ), keys( input ), logiMouse( input ), player1( input ), test1( input ), channel( NULL )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -14,9 +16,8 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL )
 	FontPosition.right = settings.GetInteger( "display/xResolution" );
 	FontPosition.bottom = settings.GetInteger( "display/yResolution" );
 
-	input.Register( &keys );
-	input.Register( &logiMouse );
-	input.Register( &player1 );
+	test1.AddInput( &keys, &(PhysicalDevice::IsPressed), Keyboard::Keys::LEFT_CONTROL );
+	test1.AddInput( &keys, &(PhysicalDevice::WentUp), Keyboard::Keys::LEFT_ALT );
 }
 
 TestScene::~TestScene( void )
@@ -62,9 +63,13 @@ void TestScene::Load( void )
 	D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
 
 	//Meshes
+	//IDEA: Eliminate Load* methods, only use Get* methods, asset manager loads if asset is not already loaded.
 	assets.LoadMesh( "tiger.x" );
 	Entity tiger = entityManager.New();
 	meshes.AddMeshComponent( tiger, assets.GetMesh( 0 ) );
+
+	assets.LoadSoundSample( "Sounds/drumloop.wav" );
+	sound.System()->playSound( assets.GetSound( 0 ), 0, false, &channel );
 
 	//Always set state and report
 	loaded = true;
@@ -155,51 +160,33 @@ void TestScene::Unload( void )
 	system.sceneManager.ReportFinishedUnloading( this );
 }
 
-void TestScene::FadeIn( void )
-{
-	SetState( update );
-}
-
 void TestScene::MainLoop( void )
 {
-	if( player1.WentUp( XboxController::Button::A ) )
+	/*if( test1.IsAnyPressed() )
 	{
-		log.Message( "A button detected!", true );
+		log.Message( "Logical Device: Any Pressed!", true );
+	}*/
+
+	if( test1.IsChordPressed() )
+	{
+		log.Message( "Logical Device: Chord Pressed!", true );
+	}
+	/*
+	if( player1.WentDown( XboxController::Button::A ) )
+	{
+		log.Message( "A button down!", true );
 	}
 
 	if( keys.WentDown( Keyboard::Keys::LEFT_CONTROL ) )
 	{
-		log.Message( "A key is going down!", true );
-	}
-
-	if( keys.WentUp( Keyboard::Keys::LEFT_CONTROL ) )
-	{
-		log.Message( "A key is going up!", true );
-	}
-
-	if( logiMouse.IsPressed( Mouse::Button::LEFT ) )
-	{
-		log.Message( "Left mouse button is pressed", true );
+		log.Message( "CTRL going down!", true );
 	}
 
 	if( logiMouse.WentDown( Mouse::Button::LEFT ) )
 	{
-		log.Message( "Left mouse button is going down", true );
+		log.Message( "Left button going down", true );
 	}
-
-	if( logiMouse.WentUp( Mouse::Button::LEFT ) )
-	{
-		log.Message( "Left mouse button is going up", true );
-	}
-}
-
-void TestScene::FadeOut( void )
-{
-	Unload();
-}
-
-void TestScene::RenderIn( void )
-{
+	//*/
 }
 
 void TestScene::RenderMain( void )
@@ -241,14 +228,3 @@ void TestScene::RenderMain( void )
 
 	graphics.Device()->Present( NULL, NULL, NULL, NULL );
 }
-
-void TestScene::RenderOut( void )
-{
-}
-
-//graphics.Device()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-//graphics.Device()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);	//Use the diffuse component of the vertex
-//graphics.Device()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-//graphics.Device()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
-//graphics.Device()->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-//graphics.Device()->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
