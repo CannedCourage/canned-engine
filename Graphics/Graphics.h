@@ -1,5 +1,5 @@
 //Graphics Class
-//Initialise DirectX, handle drawing calls
+//Initialise DirectX
 
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
