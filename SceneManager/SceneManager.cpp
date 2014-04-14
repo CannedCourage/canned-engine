@@ -61,7 +61,9 @@ void SceneManager::Render()
 	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{
 		log.Message( "Device Lost", true );
+		system.assets.OnLost();
 		system.graphics.Refresh();
+		system.assets.OnRecover();
 	}
 	else	//Draw
 	{
