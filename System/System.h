@@ -11,6 +11,7 @@
 #include "Engine/Time.h"
 #include "Input/Input.h"
 #include "Assets/AssetManager.h"
+#include "Sound/Sound.h"
 
 class System
 {
@@ -29,7 +30,7 @@ public:
 	WindowMS window;
 	Graphics graphics;
 	Input input;
-	//Sound sound;
+	Sound sound;
 	
 	AssetManager assets;
 	//EntityManager entityManager;?

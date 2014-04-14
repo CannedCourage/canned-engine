@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"sound",
+				"soundAssets"
+			],
+			[
+				"FMOD",
+				"FMOD_ErrorString"
+			],
+			[
 				"logi",
 				"logicalDevices"
 			],
@@ -316,10 +324,66 @@
 	"buffers":
 	[
 		{
+			"file": "Sound/Sound.h",
+			"settings":
+			{
+				"buffer_size": 582,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Sound/Sound.cpp",
+			"settings":
+			{
+				"buffer_size": 1330,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Sound/SoundProcessor.h",
+			"settings":
+			{
+				"buffer_size": 221,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Sound/SoundProcessor.cpp",
+			"settings":
+			{
+				"buffer_size": 33,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/AssetManager.h",
+			"settings":
+			{
+				"buffer_size": 1194,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/AssetManager.cpp",
+			"settings":
+			{
+				"buffer_size": 681,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/SoundManager.cpp",
+			"settings":
+			{
+				"buffer_size": 867,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "Game/Scenes/TestScene.h",
 			"settings":
 			{
-				"buffer_size": 907,
+				"buffer_size": 839,
 				"line_ending": "Windows"
 			}
 		},
@@ -327,23 +391,15 @@
 			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 10232,
+				"buffer_size": 8897,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Input/Input.h",
+			"file": "SceneManager/IScene.h",
 			"settings":
 			{
-				"buffer_size": 840,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Input/Input.cpp",
-			"settings":
-			{
-				"buffer_size": 2487,
+				"buffer_size": 1579,
 				"line_ending": "Windows"
 			}
 		}
@@ -416,6 +472,35 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/play_sound.cpp",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/programmer_sound.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/inc/fmod_studio_common.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/common.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/common_platform.cpp",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/common_platform.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/common_platform.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/common.cpp",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/common.h",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/inc/fmod_errors.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
+		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/inc/fmod.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Mouse.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
@@ -425,26 +510,14 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/LogicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Entity/EntityManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Entity/EntityManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/MeshBuilder.cpp",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/DataConverters.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/Scenes.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshData.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshComponent.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.h",
@@ -453,7 +526,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexFormats.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/VertexBuffer.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Time.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice",
@@ -498,7 +570,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
 		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/TestScene.txt",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Ideas.txt",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/Animation.h",
 		"/C/Users/Scott/Programming/Examples/Anima 1.0/Anima 1.0/Repo/TestEnvironment.h",
@@ -511,7 +582,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/OtherIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/guiIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/GraphicsResolutions.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/adapter.h",
@@ -529,21 +599,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Window/iWindow.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/StandardResources/resource.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/mainSettings.json",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/StandardResources/resource.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/Settings.h",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/test.json",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/test.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/test.json",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/copy.json",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/DefaultSettings.json",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/copy.json",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/main.cpp",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/output.json",
-		"/C/Users/Scott/Programming/Libraries/jsonbox-0.4.3-src/examples/main.cpp",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.cpp",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/StringFunctions.h",
-		"/C/Users/Scott/Programming/Projects/Settings_TestHarness/Settings_TestHarness/Settings_TestHarness/Settings.h"
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/mainSettings.json"
 	],
 	"find":
 	{
@@ -562,6 +618,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			" = 0;",
+			"channel",
+			"++m",
+			"system",
+			"FMOD_ErrorString",
+			"Common_Fatal",
+			"ERRCHECK",
+			"std::",
 			" = 0.0f",
 			"LEFT_ALT",
 			"padIt",
@@ -681,15 +745,7 @@
 			"mEffect",
 			"mIndexBuffer",
 			"mVertexDeclaration",
-			"mVertexBuffer",
-			"A",
-			"XINPUT_GAMEPAD_DPAD_UP",
-			"XINPUT_GAMEPAD_LEFT_THUMB",
-			"XINPUT_GAMEPAD_DPAD_UP",
-			";",
-			"false",
-			"padState[player].",
-			"[player]"
+			"mVertexBuffer"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -708,23 +764,23 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Game/Scenes/TestScene.h",
+					"file": "Sound/Sound.h",
 					"settings":
 					{
-						"buffer_size": 907,
+						"buffer_size": 582,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								556,
-								556
+								413,
+								413
 							]
 						],
 						"settings":
@@ -740,24 +796,25 @@
 				},
 				{
 					"buffer": 1,
-					"file": "Game/Scenes/TestScene.cpp",
+					"file": "Sound/Sound.cpp",
 					"settings":
 					{
-						"buffer_size": 10232,
+						"buffer_size": 1330,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1182,
-								1182
+								257,
+								257
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -767,45 +824,70 @@
 				},
 				{
 					"buffer": 2,
-					"file": "Input/Input.h",
+					"file": "Sound/SoundProcessor.h",
 					"settings":
 					{
-						"buffer_size": 840,
+						"buffer_size": 221,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								505,
-								505
+								189,
+								189
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 54.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "Input/Input.cpp",
+					"file": "Sound/SoundProcessor.cpp",
 					"settings":
 					{
-						"buffer_size": 2487,
+						"buffer_size": 33,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1036,
-								1036
+								33,
+								33
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Assets/AssetManager.h",
+					"settings":
+					{
+						"buffer_size": 1194,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								421,
+								421
 							]
 						],
 						"settings":
@@ -815,6 +897,141 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Assets/AssetManager.cpp",
+					"settings":
+					{
+						"buffer_size": 681,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								393,
+								393
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Assets/SoundManager.cpp",
+					"settings":
+					{
+						"buffer_size": 867,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								695,
+								695
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Game/Scenes/TestScene.h",
+					"settings":
+					{
+						"buffer_size": 839,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								668,
+								668
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Game/Scenes/TestScene.cpp",
+					"settings":
+					{
+						"buffer_size": 8897,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3446,
+								3446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 648.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "SceneManager/IScene.h",
+					"settings":
+					{
+						"buffer_size": 1579,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1056,
+								1056
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 540.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

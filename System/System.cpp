@@ -17,7 +17,7 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 	
 	input.Init();
 	graphics.Init();
-	//sound;
+	sound.Init();
 
 	return result;
 }
@@ -57,11 +57,13 @@ int System::GameLoop( void )
 	time.AddToAcc( time.deltaTimeS() );
 
 	input.Update();
+	sound.Update();
 	sceneManager.Update();
 
 	while( time.Acc() > time.fixedStepS() )
 	{
 		if( time.fixedStepS() == 0 ){ break; }
+		//physics.integrate( time.fixedStepS() );
 		sceneManager.FixedUpdate();
 		time.SubFromAcc( time.fixedStepS() );
 	}
@@ -75,7 +77,9 @@ int System::GameLoop( void )
 
 //If the System is shutting down, that means end of program, time to do cleanup
 void System::Shutdown( void )
-{	
+{
+	sound.CleanUp();
+	
 	graphics.CleanUp();
 
 	window.Destroy();
