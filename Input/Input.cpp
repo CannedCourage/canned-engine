@@ -6,8 +6,6 @@
 #include "Input/Keyboard.h"
 #include "Input/LogicalDevice.h"
 
-using std::vector;
-
 Input::Input( System& s ) : log( "Input" ), system( s ) , settings( system.settings )
 {
 }
@@ -18,16 +16,10 @@ Input::~Input( void )
 
 void Input::Init( void )
 {
-	//mouse.RegisterForRawInput( system.window );
-	//keyboard.RegisterForRawInput( system.window );
-
-	//pad1.CheckForPad();
 }
 
 void Input::Update( void )
 {
-	//pad1.GetPadState();
-	
 	std::vector<Mouse*>::iterator mouseIt;
 	std::vector<Keyboard*>::iterator keyIt;
 	std::vector<XboxController*>::iterator padIt;
@@ -104,7 +96,7 @@ void Input::ReceiveRawInput( RAWINPUT* in )
 {
 	if( in->header.dwType == RIM_TYPEMOUSE )
 	{
-		vector<Mouse*>::iterator mouseIt;
+		std::vector<Mouse*>::iterator mouseIt;
 
 		for( mouseIt = mice.begin(); mouseIt < mice.end(); mouseIt++ )
 		{
@@ -114,7 +106,7 @@ void Input::ReceiveRawInput( RAWINPUT* in )
 	
 	if( in->header.dwType == RIM_TYPEKEYBOARD )
 	{
-		vector<Keyboard*>::iterator keyboardIt;
+		std::vector<Keyboard*>::iterator keyboardIt;
 
 		for( keyboardIt = keyboards.begin(); keyboardIt < keyboards.end(); keyboardIt++ )
 		{
