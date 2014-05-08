@@ -1,68 +1,22 @@
 #include "SceneManager/SceneManager.h"
 #include "SceneManager/IScene.h"
 
-void SceneManager::ChangeScene( IScene* const newScene )
-{
-	if( currentScene != NULL )
-	{
-		currentScene->SetState( out );
-	}
-
-	PreloadScene( newScene );
-}
-
-void SceneManager::PreloadScene( IScene* const newScene )
-{
-	if( nextScene == NULL )
-	{
-		nextScene = newScene;
-
-		nextScene->Load();
-	}
-	else
-	{
-		nextScene->Unload();
-
-		delete nextScene;
-
-		nextScene = newScene;
-
-		nextScene->Load();
-	}
-}
-
 void SceneManager::SwapSceneBuffers( void )
 {
 	log.Message( "Buffers Swapping" );
 	currentScene = nextScene;
-	nextScene = 0;
+	nextScene = NULL;
 	currentSceneFinished = false;
 	nextSceneReady = false;
 }
 
-void SceneManager::ReportFinishedLoading( IScene* const scene )
+void SceneManager::ChangeScene( unsigned int i )
 {
-	if( scene == nextScene )
-	{
-		nextSceneReady = true;
-	}
-	if( scene == currentScene )
-	{
-		currentSceneFinished = false;
-	}
+	currentScene->Unload();
+	
+	currentScene = sceneList[i];
 }
 
-void SceneManager::ReportFinishedUnloading( IScene* const scene )
+void SceneManager::PreloadScene( unsigned int i )
 {
-	if( scene == nextScene )
-	{
-		nextScene = 0;
-		nextSceneReady = false;
-	}
-	if( scene == currentScene )
-	{
-		currentScene = 0;
-		currentSceneFinished = true;
-	}
-	delete scene;
 }

@@ -45,7 +45,7 @@ void SplashScreen::Load( void )
 
 	//Always set state and report
 	loaded = true;
-	system.sceneManager.ReportFinishedLoading( this );
+	//system.sceneManager.ReportFinishedLoading( this );
 }
 
 void SplashScreen::Unload( void )
@@ -68,7 +68,7 @@ void SplashScreen::Unload( void )
 
 	//Always set state and report
 	loaded = false;
-	system.sceneManager.ReportFinishedUnloading( this );
+	//system.sceneManager.ReportFinishedUnloading( this );
 }
 
 void SplashScreen::OnLost( void )
@@ -112,34 +112,16 @@ void SplashScreen::OnRecover( void )
 	lost = false;
 }
 
-void SplashScreen::FadeIn( void )
-{
-	SetState( update );
-}
-
 void SplashScreen::MainLoop( void )
 {
 	if( time > maxTime )
 	{
-		system.sceneManager.ChangeScene( new TestScene( system ) );
+		//system.sceneManager.ChangeScene( new TestScene( system ) );
 	}
 	else
 	{
 		time += timeStep;
 	}
-}
-
-void SplashScreen::FadeOut( void )
-{
-	Unload();
-}
-
-void SplashScreen::RenderIn( void )
-{
-	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
-	graphics.Device()->BeginScene();    // begins the 3D scene
-	graphics.Device()->EndScene();    // ends the 3D scene
-	graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }
 
 void SplashScreen::RenderMain( void )
@@ -168,12 +150,4 @@ void SplashScreen::RenderMain( void )
 	graphics.Device()->EndScene();    // ends the 3D scene
 
     graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
-}
-
-void SplashScreen::RenderOut( void )
-{
-	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
-	graphics.Device()->BeginScene();    // begins the 3D scene
-	graphics.Device()->EndScene();    // ends the 3D scene
-	graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }

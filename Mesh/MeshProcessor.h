@@ -1,6 +1,8 @@
 #ifndef _MESHPROCESSOR_H_
 #define _MESHPROCESSOR_H_
 
+#include "Engine/iProcess.h"
+
 #include "Mesh/MeshComponent.h"
 
 #include "Logging/Log.h"
@@ -9,7 +11,7 @@
 
 class Graphics;
 
-class MeshProcessor
+class MeshProcessor : public iProcess
 {
 private:
 protected:
@@ -27,8 +29,9 @@ public:
 	void AddMeshComponent( const unsigned int entityID, const Mesh& meshAsset );
 	MeshComponent& GetMeshComponent( const unsigned int entityID );
 
-	void Update( const float& dT );
-	void Render( const float& dT );
+	void Start( void );
+	void Update( const double& deltaT );
+	void End( void );
 };
 
 #endif //_MESHPROCESSOR_H_

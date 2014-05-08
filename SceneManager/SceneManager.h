@@ -8,6 +8,8 @@
 #include <deque>
 using std::deque;
 
+#include <vector>
+
 class System;
 class IScene;
 
@@ -30,12 +32,16 @@ protected:
 	bool update;
 	bool render;
 
-	void SwapSceneBuffers( void );
+	std::vector<IScene*> sceneList;
 
+	void SwapSceneBuffers( void );
 public:
 
 	SceneManager( System &s );
 	~SceneManager( void );
+
+	void Init( void );
+	void Shutdown( void );
 
 	bool Update( void );
 	bool FixedUpdate( void );
@@ -46,10 +52,8 @@ public:
 	void OnLost( void );
 	void OnRecover( void );
 
-	void ChangeScene( IScene* const newScene );
-	void PreloadScene( IScene* const newScene );
-	void ReportFinishedLoading( IScene* const scene );
-	void ReportFinishedUnloading( IScene* const scene );
+	void ChangeScene( unsigned int i );
+	void PreloadScene( unsigned int i );
 };
 
 inline void SceneManager::SetUpdate( const bool& b )

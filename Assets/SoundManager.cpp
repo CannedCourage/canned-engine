@@ -23,7 +23,12 @@ void AssetManager::ReleaseSounds( void )
 {
 	for( unsigned int s = 0; s < soundAssets.size(); s++ )
 	{
-		//sound.ErrorCheck( soundAssets[s]->release(), "Releasing Sounds" );
+		//Still erroring :(
+		if( soundAssets[s] )
+		{
+			sound.ErrorCheck( soundAssets[s]->release(), "Releasing Sounds" );
+			soundAssets[s] = NULL; //Always null your pointers
+		}
 	}
 }
 

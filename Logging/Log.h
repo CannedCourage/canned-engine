@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define DEFAULT_LOG_FILENAME "ScottEngine_Log"
+#define DEFAULT_LOG_FILENAME "C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/ScottEngine_Log"
 
 class Log
 {

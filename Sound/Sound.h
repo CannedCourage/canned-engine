@@ -9,14 +9,17 @@
 #include "fmod_errors.h"
 #include "fmod_studio_common.h"
 
+#include "Logging/Log.h"
+
 class Sound
 {
 private:
 protected:
 
+	Log log;
+
 	FMOD::Studio::System* studio;
 	FMOD::System* lowlevel;
-	FMOD::Channel* channel;
 	unsigned int version;
 public:
 

@@ -35,8 +35,14 @@ protected:
 
 	FMOD::Channel* channel;
 
-	void MainLoop( void );
-	void RenderMain( void );
+	//Processors
+	MeshProcessor meshes;
+
+	void MainLoop( void ); //Remove
+	void RenderMain( void ); //Remove
+
+	void PreRender( void );
+	void PostRender( void );
 public:
 
 	TestScene( System &s );

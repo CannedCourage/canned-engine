@@ -8,6 +8,8 @@
 #include "Entity/EntityManager.h"
 #include "Mesh/MeshProcessor.h"
 
+#include "Engine/ProcessManager.h"
+
 class System;
 class SceneManager;
 class Settings;
@@ -34,34 +36,34 @@ protected:
 	
 	AssetManager& assets;
 	EntityManager entityManager;
-
-	//Processors
-	MeshProcessor meshes;
+	ProcessManager engine;
 
 	Log log;
 
-	sceneStates state, nextState;	//State info
 	bool loaded;					//Has the scene been loaded?
 	bool lost;
 
-	virtual void FadeIn( void ){ SetState( update ); }
-	virtual void MainLoop( void ){ SetState( out ); }
-	virtual void FadeOut( void ){ /*Add code to end scene, send message to scene manager?*/ Unload(); }
-	virtual void RenderIn( void ){}
+	virtual void MainLoop( void ){}
 	virtual void RenderMain( void ){}
-	virtual void RenderOut( void ){}
 public:
 
 	const char* name;
 
-	IScene( System &sys, const char* n = "DEFAULT", sceneStates s = init );
+	IScene( System &sys, const char* n = "DEFAULT" );
 	~IScene( void );
+
+	virtual void PreUpdate( void );
 	virtual void Update( void );
+	virtual void FixedUpdate( void );
+	virtual void PostUpdate( void );
+	virtual void PreRender( void );
 	virtual void Render( void );
+	virtual void PostRender( void );
+
 	virtual void Load( void ){}
 	virtual void Unload( void ){}
 	virtual const bool IsLoaded( void ) const;
-	virtual void SetState( sceneStates s );
+
 	virtual void OnLost( void ) = 0;
 	virtual void OnRecover( void ) = 0;
 };

@@ -47,7 +47,8 @@ double Time::deltaTimeActual( void )
 
 double Time::deltaTimeS( void )
 {
-	return clamp( deltaTime * timeScaleGlobal, 0, MAXDT * timeScaleGlobal );
+	//return clamp( deltaTime * timeScaleGlobal, 0, MAXDT * timeScaleGlobal );
+	return ( deltaTimeActual() * timeScaleGlobal );
 }
 
 double Time::fixedStepActual( void )

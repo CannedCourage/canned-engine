@@ -2,19 +2,19 @@
 #include "SceneManager/IScene.h"
 #include "System/System.h"
 
-IScene::IScene( System &sys, const char* n, sceneStates s ) : 	system( sys ),
-																manager( sys.sceneManager ),
-																settings( sys.settings ),
-																graphics( sys.graphics ),
-																input( sys.input ),
-																sound( sys.sound ),
-																assets( sys.assets ),
-																meshes( sys.graphics ),
-																log( n ),
-																name( n ),
-																state( s ),
-																loaded( false ),
-																lost( false )
+IScene::IScene( System &sys, const char* n ) : 	system( sys ),
+												manager( sys.sceneManager ),
+												settings( sys.settings ),
+												graphics( sys.graphics ),
+												input( sys.input ),
+												sound( sys.sound ),
+												assets( sys.assets ),
+												entityManager(),
+												engine(),
+												log( n ),
+												name( n ),
+												loaded( false ),
+												lost( false )
 {
 }
 
@@ -22,63 +22,46 @@ IScene::~IScene( void )
 {
 }
 
+void IScene::PreUpdate( void )
+{
+	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_UPDATE );
+}
+
 void IScene::Update( void )
 {
-	if( !loaded )
-	{
-		Load();
-	}
+	MainLoop(); //Keep for now, remove eventually
 
-	switch( state )
-	{
-	case init:
-		FadeIn();
-		break;
+	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
+}
 
-	case update:
-		MainLoop();
-		break;
+void IScene::FixedUpdate( void )
+{
+	engine.UpdateProcesses( system.time.deltaTimeS(), FIXED_UPDATE );
+}
 
-	case out:
-		FadeOut();
-		break;
-	}
+void IScene::PostUpdate( void )
+{
+	engine.UpdateProcesses( system.time.deltaTimeS(), POST_UPDATE );
+}
+
+void IScene::PreRender( void )
+{
+	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_RENDER );
 }
 
 void IScene::Render( void )
 {
-	if( lost )
-		return;
+	RenderMain(); //Keep for now, remove eventually
 
-	if( !loaded )
-	{
-		Load();
-	}
+	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
+}
 
-	switch( state )
-	{
-	case init:
-		RenderIn();
-		break;
-
-	case update:
-		RenderMain();
-		break;
-
-	case out:
-		RenderOut();
-		break;
-	}
-	//Update state here so that the correct and corresponding render method is called, even if the state changes in the update method
-	state = nextState;
+void IScene::PostRender( void )
+{
+	engine.UpdateProcesses( system.time.deltaTimeS(), POST_RENDER );
 }
 
 inline const bool IScene::IsLoaded( void ) const
 {
 	return loaded;
-}
-
-inline void IScene::SetState( sceneStates s )
-{
-	nextState = s;
 }

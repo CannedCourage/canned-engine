@@ -3,7 +3,17 @@
 
 //Globals for scene variables?
 
-TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL ), cubeTex( NULL ), font( NULL ), buffer( s ), keys( input ), logiMouse( input ), player1( input ), test1( input ), channel( NULL )
+TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
+									cubeBuffer( NULL ),
+									cubeTex( NULL ),
+									font( NULL ),
+									buffer( s ),
+									keys( input ),
+									logiMouse( input ),
+									player1( input ),
+									test1( input ),
+									channel( NULL ),
+									meshes( s.graphics )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -18,10 +28,13 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ), cubeBuffer( NULL )
 
 	test1.AddInput( &keys, &(PhysicalDevice::IsPressed), Keyboard::Keys::LEFT_CONTROL );
 	test1.AddInput( &keys, &(PhysicalDevice::WentUp), Keyboard::Keys::LEFT_ALT );
+
+	engine.AddProcess( &meshes, RENDER );
 }
 
 TestScene::~TestScene( void )
 {
+	Unload();
 }
 
 void TestScene::Load( void )
@@ -73,7 +86,6 @@ void TestScene::Load( void )
 
 	//Always set state and report
 	loaded = true;
-	system.sceneManager.ReportFinishedLoading( this );
 }
 
 void TestScene::OnLost( void )
@@ -90,7 +102,6 @@ void TestScene::OnLost( void )
 		if( font != NULL )
 		{
 			graphics.ErrorCheck( font->OnLostDevice(), "Error Font, lost device" );
-		
 		}
 
 		lost = true;
@@ -101,7 +112,7 @@ void TestScene::OnRecover( void )
 {
 	if( lost )
 	{
-		log.Message( "ReLoading", true );
+		log.Message( "Reloading", true );
 		//graphics.SetRenderStates();
 		Vertex3dTx verts[] = { 
 		// Front Face (1-2-3-4)
@@ -121,17 +132,17 @@ void TestScene::OnRecover( void )
 		graphics.ErrorCheck
 		( 
 			graphics.Device()->CreateVertexBuffer( 24*sizeof(Vertex3dTx), D3DUSAGE_WRITEONLY, Vertex3dTx::format, D3DPOOL_DEFAULT, &cubeBuffer, NULL ), 
-			TEXT( "cubeBuffer creation failed" ) 
+			"cubeBuffer creation failed"
 		);
 
 		VOID* pVoid;
-		graphics.ErrorCheck( cubeBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), TEXT( "SplashScreen: Error locking cube buffer" ) );
+		graphics.ErrorCheck( cubeBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), "SplashScreen: Error locking cube buffer" );
 		memcpy( pVoid, verts, sizeof(verts) );
-		graphics.ErrorCheck( cubeBuffer->Unlock(), TEXT( "SplashScreen: Error unlocking cube buffer" ) );
+		graphics.ErrorCheck( cubeBuffer->Unlock(), "SplashScreen: Error unlocking cube buffer" );
 
 		//D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Arial" ) };
 		//D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
-		graphics.ErrorCheck( font->OnResetDevice(), TEXT( "Error recovering font" ) );
+		graphics.ErrorCheck( font->OnResetDevice(), "Error recovering font" );
 
 		lost = false;
 	}
@@ -155,9 +166,17 @@ void TestScene::Unload( void )
 		font->Release();
 		font = NULL;
 	}
+
+	bool Playing = true;
+	
+	if( channel )
+	{
+		channel->isPlaying( &Playing );
+		if( Playing ){ sound.ErrorCheck( channel->stop(), "Main: Stopping sound" ); log.Message( "Inside Unload, Stop Sound", true ); }
+	}
+
 	//Always set state and report
 	loaded = false;
-	system.sceneManager.ReportFinishedUnloading( this );
 }
 
 void TestScene::MainLoop( void )
@@ -170,6 +189,12 @@ void TestScene::MainLoop( void )
 	if( test1.IsChordPressed() )
 	{
 		log.Message( "Logical Device: Chord Pressed!", true );
+		bool Playing = false;
+		if( channel )
+		{
+			channel->isPlaying( &Playing );
+			if( Playing ){ sound.ErrorCheck( channel->stop(), "Main: Stopping sound" ); }
+		}
 	}
 	/*
 	if( player1.WentDown( XboxController::Button::A ) )
@@ -189,7 +214,7 @@ void TestScene::MainLoop( void )
 	//*/
 }
 
-void TestScene::RenderMain( void )
+void TestScene::PreRender( void )
 {
 	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 150, 150, 150 ), 1.0f, 0 );
 
@@ -199,7 +224,10 @@ void TestScene::RenderMain( void )
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
 
 	graphics.Device()->BeginScene();
+}
 
+void TestScene::RenderMain( void )
+{
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting False" );
 
 	graphics.Device()->SetFVF(Vertex3dTx::format);
@@ -219,11 +247,10 @@ void TestScene::RenderMain( void )
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
 	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
+}
 
-	//Mesh manager stuff here
-	float placeholderDeltaT = 0.0f;
-	meshes.Render( placeholderDeltaT );
-
+void TestScene::PostRender( void )
+{
 	graphics.Device()->EndScene();
 
 	graphics.Device()->Present( NULL, NULL, NULL, NULL );

@@ -2,6 +2,7 @@
 #define _ENTITYMANAGER_H_
 
 #include "Logging/Log.h"
+#include <vector>
 
 typedef unsigned int Entity;
 

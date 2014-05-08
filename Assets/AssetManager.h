@@ -43,7 +43,6 @@ protected:
 	
 	void ReleaseSounds( void );
 	
-	//Replace with sound class wrapper
 	std::vector<FMOD::Sound*> soundAssets;
 public:
 
@@ -52,6 +51,8 @@ public:
 
 	void OnLost( void );
 	void OnRecover( void );
+
+	void CleanUp( void );
 
 	//Meshes
 
@@ -62,7 +63,7 @@ public:
 	
 	bool LoadSoundSample( const char* file );
 	bool LoadSoundStream( const char* file );
-	FMOD::Sound* GetSound( const unsigned int meshID );
+	FMOD::Sound* GetSound( const unsigned int soundID );
 
 };
 

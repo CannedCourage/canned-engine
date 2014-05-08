@@ -1,5 +1,5 @@
 #include "Mesh/MeshProcessor.h"
-#include "Graphics\Graphics.h"
+#include "Graphics/Graphics.h"
 
 MeshProcessor::MeshProcessor( Graphics& g ) : log( "MeshProcessor" ), graphics( g )
 {
@@ -19,11 +19,15 @@ MeshComponent& MeshProcessor::GetMeshComponent( const unsigned int entityID )
 	return meshComponents[ entityID ];
 }
 
-void MeshProcessor::Update( const float& dT )
+void MeshProcessor::Start( void )
 {
 }
 
-void MeshProcessor::Render( const float& dT )
+void MeshProcessor::End( void )
+{
+}
+
+void MeshProcessor::Update( const double& deltaT )
 {
 	graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE);

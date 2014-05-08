@@ -25,7 +25,10 @@ Log::Log( void )
 		{
 			throw( "Log: globalFile creation failed" );
 		}
-		fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp
+		else
+		{
+			fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp
+		}
 	}
 	counter++;
 }
@@ -43,7 +46,10 @@ Log::Log( const char* scope_ )
 		{
 			throw( "Log: globalFile creation failed" );
 		}
-		fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp to master file
+		else
+		{
+			fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp to master file
+		}
 	}
 
 	//sprintf( scope, "%s", scope_ );								//Store scope for prepending messages
@@ -55,7 +61,10 @@ Log::Log( const char* scope_ )
 	{
 		throw( "Log: localFile creation failed" );
 	}
-	fprintf( localFile, "%s\t%s", tempscope, asctime( time_GMT ) );	//Print local filename - tab - timestamp to local file
+	else
+	{
+		fprintf( localFile, "%s\t%s", tempscope, asctime( time_GMT ) );	//Print local filename - tab - timestamp to local file
+	}
 	counter++;
 }
 

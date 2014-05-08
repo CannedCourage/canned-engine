@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-Sound::Sound( void ) : studio( NULL ), lowlevel( NULL ), version( NULL ), channel( NULL )
+Sound::Sound( void ) : log( "Sound" ), studio( NULL ), lowlevel( NULL ), version( NULL )
 {
 }
 
@@ -49,6 +49,7 @@ void Sound::Update( void )
 void Sound::CleanUp( void )
 {
     studio->release();
+    //lowlevel->release();
 }
 
 void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
@@ -58,6 +59,8 @@ void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
         std::ostringstream o;
 
         o << "FMOD error " << result << " - " << FMOD_ErrorString( result ) << ": " << info;
+
+        log.Message( o.str().c_str() );
 
         throw( o.str().c_str() );
     }

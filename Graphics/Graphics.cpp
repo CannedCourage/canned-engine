@@ -127,11 +127,14 @@ void Graphics::Refresh( void )
 	SetParameters();
 
 	//TODO: Replace with message system?
+	system.assets.OnLost();
 	system.sceneManager.OnLost();
 
 	if( Reset() )
 	{
 		log.Message( "Recovering", true );
+		
+		system.assets.OnRecover();
 		system.sceneManager.OnRecover();
 	}
 }

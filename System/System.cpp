@@ -18,6 +18,7 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 	input.Init();
 	graphics.Init();
 	sound.Init();
+	sceneManager.Init();
 
 	return result;
 }
@@ -40,12 +41,15 @@ int System::Run( void )
 		if( ::GetAsyncKeyState( VK_ESCAPE ) )
 			PostMessage( window.getHandle(), WM_CLOSE, 0, 0 );
 
-        if( msg.message == WM_QUIT )
-            break;
-
 		GameLoop();
 
 		time.frameEnd();
+
+		if( msg.message == WM_QUIT )
+		{
+			sceneManager.Shutdown();
+			break;
+		}
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
@@ -63,7 +67,7 @@ int System::GameLoop( void )
 	while( time.Acc() > time.fixedStepS() )
 	{
 		if( time.fixedStepS() == 0 ){ break; }
-		//physics.integrate( time.fixedStepS() );
+		//physics.Integrate( time.fixedStepS() );
 		sceneManager.FixedUpdate();
 		time.SubFromAcc( time.fixedStepS() );
 	}
@@ -78,10 +82,10 @@ int System::GameLoop( void )
 //If the System is shutting down, that means end of program, time to do cleanup
 void System::Shutdown( void )
 {
+	//sceneManager.Shutdown();
+	assets.CleanUp();
 	sound.CleanUp();
-	
 	graphics.CleanUp();
-
 	window.Destroy();
 }
 

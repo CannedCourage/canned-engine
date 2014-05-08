@@ -10,6 +10,11 @@ AssetManager::AssetManager( System& sys ) : log( "AssetManager" ), graphics( sys
 
 AssetManager::~AssetManager( void )
 {
+	CleanUp();
+}
+
+void AssetManager::CleanUp( void )
+{
 	for( unsigned int m = 0; m < meshAssets.size(); m++ )
 	{
 		ReleaseMeshResources( meshAssets[m] );
