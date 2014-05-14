@@ -367,79 +367,7 @@
 			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 9272,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SplashScreen.cpp",
-			"settings":
-			{
-				"buffer_size": 4853,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SplashScreen.h",
-			"settings":
-			{
-				"buffer_size": 789,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SceneManager.h",
-			"settings":
-			{
-				"buffer_size": 1089,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SceneManager.cpp",
-			"settings":
-			{
-				"buffer_size": 2446,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/SceneSwapping.cpp",
-			"settings":
-			{
-				"buffer_size": 424,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Assets/SoundManager.cpp",
-			"settings":
-			{
-				"buffer_size": 973,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Sound/Sound.cpp",
-			"settings":
-			{
-				"buffer_size": 1397,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Assets/AssetManager.h",
-			"settings":
-			{
-				"buffer_size": 1183,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "System/System.cpp",
-			"settings":
-			{
-				"buffer_size": 3241,
+				"buffer_size": 9152,
 				"line_ending": "Windows"
 			}
 		}
@@ -512,19 +440,24 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/ProcessManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
@@ -536,11 +469,6 @@
 		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/lowlevel/examples/play_sound.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/iProcess.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Clamp.h",
@@ -658,6 +586,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Unloading",
 			"Stopping sound",
 			"\\",
 			"dt",
@@ -784,8 +713,7 @@
 			";",
 			"unsigned short player",
 			"XXboxController",
-			"[player]",
-			"Input"
+			"[player]"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -893,69 +821,15 @@
 					"file": "Game/Scenes/TestScene.cpp",
 					"settings":
 					{
-						"buffer_size": 9272,
+						"buffer_size": 9152,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6494,
-								6494
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2524.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "SceneManager/SplashScreen.cpp",
-					"settings":
-					{
-						"buffer_size": 4853,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3420,
-								3420
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1512.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "SceneManager/SplashScreen.h",
-					"settings":
-					{
-						"buffer_size": 789,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								6047,
+								6047
 							]
 						],
 						"settings":
@@ -965,196 +839,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "SceneManager/SceneManager.h",
-					"settings":
-					{
-						"buffer_size": 1089,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								653,
-								653
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 162.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "SceneManager/SceneManager.cpp",
-					"settings":
-					{
-						"buffer_size": 2446,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 216.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "SceneManager/SceneSwapping.cpp",
-					"settings":
-					{
-						"buffer_size": 424,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								367,
-								367
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "Assets/SoundManager.cpp",
-					"settings":
-					{
-						"buffer_size": 973,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								870,
-								870
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "Sound/Sound.cpp",
-					"settings":
-					{
-						"buffer_size": 1397,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1064,
-								1064
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 108.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "Assets/AssetManager.h",
-					"settings":
-					{
-						"buffer_size": 1183,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "System/System.cpp",
-					"settings":
-					{
-						"buffer_size": 3241,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1200,
-								1200
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 918.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

@@ -44,12 +44,13 @@ void Sound::Init( void )
 void Sound::Update( void )
 {
     studio->update();
+	lowlevel->update();
 }
 
 void Sound::CleanUp( void )
 {
     studio->release();
-    //lowlevel->release();
+    lowlevel->release();
 }
 
 void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
@@ -60,7 +61,7 @@ void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
 
         o << "FMOD error " << result << " - " << FMOD_ErrorString( result ) << ": " << info;
 
-        log.Message( o.str().c_str() );
+        log.Message( o.str().c_str(), true );
 
         throw( o.str().c_str() );
     }

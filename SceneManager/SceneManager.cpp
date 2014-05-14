@@ -27,6 +27,8 @@ void SceneManager::Init( void )
 
 void SceneManager::Shutdown( void )
 {
+	log.Message( "Scene Shutdown Method", true );
+
 	if( nextScene != NULL )
 	{
 		nextScene->Unload();
@@ -47,6 +49,9 @@ void SceneManager::Shutdown( void )
 			sceneList[i] = NULL;
 		}
 	}
+
+	update = false;
+	render = false;
 }
 
 bool SceneManager::Update( void )
@@ -153,5 +158,5 @@ void SceneManager::OnRecover( void )
 
 SceneManager::~SceneManager( void )
 {
-	Shutdown();
+	//Shutdown();
 }

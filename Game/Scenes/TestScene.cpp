@@ -150,7 +150,6 @@ void TestScene::OnRecover( void )
 
 void TestScene::Unload( void )
 {
-	log.Message( "Unloading", true );
 	if( cubeBuffer != NULL )
 	{
 		cubeBuffer->Release();
@@ -172,7 +171,7 @@ void TestScene::Unload( void )
 	if( channel )
 	{
 		channel->isPlaying( &Playing );
-		if( Playing ){ sound.ErrorCheck( channel->stop(), "Main: Stopping sound" ); log.Message( "Inside Unload, Stop Sound", true ); }
+		if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
 	}
 
 	//Always set state and report
@@ -188,12 +187,11 @@ void TestScene::MainLoop( void )
 
 	if( test1.IsChordPressed() )
 	{
-		log.Message( "Logical Device: Chord Pressed!", true );
 		bool Playing = false;
 		if( channel )
 		{
 			channel->isPlaying( &Playing );
-			if( Playing ){ sound.ErrorCheck( channel->stop(), "Main: Stopping sound" ); }
+			if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
 		}
 	}
 	/*

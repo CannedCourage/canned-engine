@@ -39,17 +39,22 @@ int System::Run( void )
         }
 
 		if( ::GetAsyncKeyState( VK_ESCAPE ) )
-			PostMessage( window.getHandle(), WM_CLOSE, 0, 0 );
+		{
+			Quit();
+			time.frameEnd();
+			break;
+		}
+
+		if( msg.message == WM_QUIT )
+		{
+			log.Message( "QUITTING", true );
+			time.frameEnd();
+			break;
+		}
 
 		GameLoop();
 
 		time.frameEnd();
-
-		if( msg.message == WM_QUIT )
-		{
-			sceneManager.Shutdown();
-			break;
-		}
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
@@ -61,7 +66,6 @@ int System::GameLoop( void )
 	time.AddToAcc( time.deltaTimeS() );
 
 	input.Update();
-	sound.Update();
 	sceneManager.Update();
 
 	while( time.Acc() > time.fixedStepS() )
@@ -73,6 +77,7 @@ int System::GameLoop( void )
 	}
 
 	input.PostUpdate();
+	sound.Update();
 
 	sceneManager.Render();
 
@@ -82,7 +87,7 @@ int System::GameLoop( void )
 //If the System is shutting down, that means end of program, time to do cleanup
 void System::Shutdown( void )
 {
-	//sceneManager.Shutdown();
+	sceneManager.Shutdown();
 	assets.CleanUp();
 	sound.CleanUp();
 	graphics.CleanUp();
