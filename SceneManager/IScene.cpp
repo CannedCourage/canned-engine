@@ -29,8 +29,6 @@ void IScene::PreUpdate( void )
 
 void IScene::Update( void )
 {
-	MainLoop(); //Keep for now, remove eventually
-
 	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
 }
 
@@ -51,8 +49,6 @@ void IScene::PreRender( void )
 
 void IScene::Render( void )
 {
-	RenderMain(); //Keep for now, remove eventually
-
 	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
 }
 

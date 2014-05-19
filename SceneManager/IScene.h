@@ -42,9 +42,6 @@ protected:
 
 	bool loaded;					//Has the scene been loaded?
 	bool lost;
-
-	virtual void MainLoop( void ){}
-	virtual void RenderMain( void ){}
 public:
 
 	const char* name;

@@ -79,10 +79,10 @@ void TestScene::Load( void )
 	//IDEA: Eliminate Load* methods, only use Get* methods, asset manager loads if asset is not already loaded.
 	assets.LoadMesh( "tiger.x" );
 	Entity tiger = entityManager.New();
-	meshes.AddMeshComponent( tiger, assets.GetMesh( 0 ) );
+	meshes.AddMeshComponent( tiger, assets.GetMesh( "tiger.x" ) );
 
 	assets.LoadSoundSample( "Sounds/drumloop.wav" );
-	sound.System()->playSound( assets.GetSound( 0 ), 0, false, &channel );
+	sound.System()->playSound( assets.GetSound( "Sounds/drumloop.wav" ), 0, false, &channel );
 
 	//Always set state and report
 	loaded = true;
@@ -178,8 +178,10 @@ void TestScene::Unload( void )
 	loaded = false;
 }
 
-void TestScene::MainLoop( void )
+void TestScene::Update( void )
 {
+	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
+
 	/*if( test1.IsAnyPressed() )
 	{
 		log.Message( "Logical Device: Any Pressed!", true );
@@ -222,9 +224,11 @@ void TestScene::PreRender( void )
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
 
 	graphics.Device()->BeginScene();
+
+	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_RENDER );
 }
 
-void TestScene::RenderMain( void )
+void TestScene::Render( void )
 {
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting False" );
 
@@ -245,10 +249,14 @@ void TestScene::RenderMain( void )
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
 	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
+
+	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
 }
 
 void TestScene::PostRender( void )
 {
+	engine.UpdateProcesses( system.time.deltaTimeS(), POST_RENDER );
+
 	graphics.Device()->EndScene();
 
 	graphics.Device()->Present( NULL, NULL, NULL, NULL );

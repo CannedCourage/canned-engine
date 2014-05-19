@@ -38,10 +38,10 @@ protected:
 	//Processors
 	MeshProcessor meshes;
 
-	void MainLoop( void ); //Remove
-	void RenderMain( void ); //Remove
+	void Update( void ); //Remove
 
 	void PreRender( void );
+	void Render( void );
 	void PostRender( void );
 public:
 

@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"Rele",
+				"ReleaseAllMeshes"
+			],
+			[
+				"Acc",
+				"AccquireAllMeshes"
+			],
+			[
+				"Re",
+				"ReleaseAllMeshes"
+			],
+			[
 				"Sc",
 				"SceneManager"
 			],
@@ -340,26 +352,10 @@
 	"buffers":
 	[
 		{
-			"file": "SceneManager/IScene.h",
-			"settings":
-			{
-				"buffer_size": 1428,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "SceneManager/IScene.cpp",
-			"settings":
-			{
-				"buffer_size": 1418,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "Game/Scenes/TestScene.h",
 			"settings":
 			{
-				"buffer_size": 947,
+				"buffer_size": 932,
 				"line_ending": "Windows"
 			}
 		},
@@ -367,7 +363,7 @@
 			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 9152,
+				"buffer_size": 9431,
 				"line_ending": "Windows"
 			}
 		}
@@ -440,13 +436,16 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneSwapping.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.cpp",
@@ -458,7 +457,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/ProcessManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/MeshManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
@@ -478,8 +476,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/SoundProcessor.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
 		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/programmer_sound.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.h",
@@ -586,6 +582,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			" ];",
+			"m",
+			"iterator",
+			"name",
+			"meshAssets",
+			"vector",
 			"Unloading",
 			"Stopping sound",
 			"\\",
@@ -707,13 +709,7 @@
 			"XboxController",
 			"Input",
 			"GetPadStates",
-			";",
-			");\n",
-			"Button",
-			";",
-			"unsigned short player",
-			"XXboxController",
-			"[player]"
+			";"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -732,23 +728,23 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "SceneManager/IScene.h",
+					"file": "Game/Scenes/TestScene.h",
 					"settings":
 					{
-						"buffer_size": 1428,
+						"buffer_size": 932,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								979,
-								979
+								687,
+								687
 							]
 						],
 						"settings":
@@ -757,79 +753,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 216.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "SceneManager/IScene.cpp",
-					"settings":
-					{
-						"buffer_size": 1418,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1243,
-								1243
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Game/Scenes/TestScene.h",
-					"settings":
-					{
-						"buffer_size": 947,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								720,
-								720
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 162.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "Game/Scenes/TestScene.cpp",
 					"settings":
 					{
-						"buffer_size": 9152,
+						"buffer_size": 9431,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6047,
-								6047
+								7892,
+								7892
 							]
 						],
 						"settings":
@@ -838,7 +780,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1728.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
