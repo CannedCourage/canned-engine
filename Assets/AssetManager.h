@@ -8,7 +8,9 @@
 
 #include <assimp/Importer.hpp>
 
-#include <vector>
+#include <map>
+#include <string>
+
 #include "Mesh/Mesh.h"
 
 #include "fmod.hpp"
@@ -31,19 +33,21 @@ protected:
 
 	//Meshes
 
-	std::vector<Mesh> meshAssets;
+	std::map<std::string, Mesh> meshAssets;
 
 	void GetVertexInformation( const aiMesh* mesh, MeshData* data );
-	void BuildMesh( const aiScene* sc );
+	void BuildMesh( const aiScene* sc, const char* name );
 
 	void AccquireMeshResources( Mesh& mesh );
+	void AccquireAllMeshes( void );
 	void ReleaseMeshResources( Mesh& mesh );
+	void ReleaseAllMeshes( void );
 
 	//Sounds
 	
 	void ReleaseSounds( void );
 	
-	std::vector<FMOD::Sound*> soundAssets;
+	std::map<std::string, FMOD::Sound*> soundAssets;
 public:
 
 	AssetManager( System& sys );
@@ -57,13 +61,13 @@ public:
 	//Meshes
 
 	bool LoadMesh( const char* file );
-	const Mesh& GetMesh( const unsigned int meshID );
+	const Mesh& GetMesh( const char* name );
 
 	//Sounds
 	
 	bool LoadSoundSample( const char* file );
 	bool LoadSoundStream( const char* file );
-	FMOD::Sound* GetSound( const unsigned int soundID );
+	FMOD::Sound* GetSound( const char* name );
 
 };
 

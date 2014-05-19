@@ -3,36 +3,44 @@
 
 bool AssetManager::LoadSoundSample( const char* file )
 {
+	std::string name( file );
+
 	FMOD::Sound* newSound = NULL;
 	sound.ErrorCheck( sound.System()->createSound( file, FMOD_CREATESAMPLE, NULL, &newSound ), "Loading Uncompressed Sound" );
-	soundAssets.push_back( newSound );
+	soundAssets[ name ] = newSound;
 
 	return true;
 }
 
 bool AssetManager::LoadSoundStream( const char* file )
 {
+	std::string name( file );
+
 	FMOD::Sound* newSound = NULL;
 	sound.ErrorCheck( sound.System()->createSound( file, FMOD_CREATESTREAM, NULL, &newSound ), "Loading Compressed Sound" );
-	soundAssets.push_back( newSound );
+	soundAssets[ name ] = newSound;
 
 	return true;
 }
 
 void AssetManager::ReleaseSounds( void )
 {
-	for( unsigned int s = 0; s < soundAssets.size(); s++ )
+	std::map<std::string, FMOD::Sound*>::iterator it;
+
+	for(it = soundAssets.begin(); it != soundAssets.end(); it++)
 	{
-		//Still erroring :(
-		if( soundAssets[s] )
+		if( it->second )
 		{
-			sound.ErrorCheck( soundAssets[s]->release(), "Releasing Sounds" );
-			soundAssets[s] = NULL; //Always null your pointers
+			sound.ErrorCheck( it->second->release(), "Releasing Sounds" );
+
+			it->second = NULL; //Always null your pointers
 		}
 	}
 }
 
-FMOD::Sound* AssetManager::GetSound( const unsigned int soundID )
+FMOD::Sound* AssetManager::GetSound( const char* name )
 {
-	return soundAssets[soundID];
+	std::string str( name );
+
+	return soundAssets[ name ];
 }

@@ -18,15 +18,17 @@ bool AssetManager::LoadMesh( const char* file )
 	}
 	else
 	{
-		BuildMesh( scene );
+		BuildMesh( scene, file );
 
 		return true;
 	}
 }
 
-const Mesh& AssetManager::GetMesh( const unsigned int meshID )
+const Mesh& AssetManager::GetMesh( const char* name )
 {
-	return meshAssets[ meshID ];
+	std::string nameString( name );
+
+	return meshAssets[ nameString ];
 }
 
 void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
@@ -113,17 +115,19 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 	data->triangleCount = mesh->mNumFaces;
 }
 
-void AssetManager::BuildMesh( const aiScene* sc )
+void AssetManager::BuildMesh( const aiScene* sc, const char* name )
 {
+	std::string nameString( name );
+	
 	//For each mesh in scene
 	int numMeshes = sc->mNumMeshes;
 
 	for( int m = 0; m < numMeshes; m++ )
 	{
 		log.Message( "Building Mesh" );
-		meshAssets.push_back( Mesh() );
+		meshAssets[ nameString ] = Mesh();
 
-		MeshData& data = meshAssets.back().data;
+		MeshData& data = meshAssets[ nameString ].data;
 
 		//Get mesh
 		const aiMesh* mesh = sc->mMeshes[m];
@@ -227,7 +231,7 @@ void AssetManager::BuildMesh( const aiScene* sc )
 		}
 	}
 
-	Mesh& newMesh = meshAssets.back();
+	Mesh& newMesh = meshAssets[ nameString ];
 	AccquireMeshResources( newMesh );
 }
 

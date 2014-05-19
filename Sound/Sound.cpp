@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <stdexcept>
+
 Sound::Sound( void ) : log( "Sound" ), studio( NULL ), lowlevel( NULL ), version( NULL )
 {
 }
@@ -63,6 +65,8 @@ void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
 
         log.Message( o.str().c_str(), true );
 
-        throw( o.str().c_str() );
+		std::runtime_error e( o.str() );
+
+        throw( e );
     }
 }

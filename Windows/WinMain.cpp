@@ -4,6 +4,8 @@
 
 #include "System/System.h"
 
+#include <stdexcept>
+
 System* sys = NULL;
 
 //WinMain, Parameters: hInstance( application instance ), hPrevInstance( previous instance of the application running, unused holdover from win16 ), 
@@ -68,6 +70,14 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	catch( LPCTSTR error )
 	{
 		MessageBox( NULL, error, TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
+	catch( std::exception error )
+	{
+		MessageBox( NULL, error.what(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();

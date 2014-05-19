@@ -13,28 +13,39 @@ AssetManager::~AssetManager( void )
 	CleanUp();
 }
 
+void AssetManager::AccquireAllMeshes( void )
+{
+	std::map<std::string, Mesh>::iterator it;
+
+	for(it = meshAssets.begin(); it != meshAssets.end(); it++)
+	{
+		AccquireMeshResources( it->second );
+	}
+}
+
+void AssetManager::ReleaseAllMeshes( void )
+{
+	std::map<std::string, Mesh>::iterator it;
+
+	for(it = meshAssets.begin(); it != meshAssets.end(); it++)
+	{
+		ReleaseMeshResources( it->second );
+	}
+}
+
 void AssetManager::CleanUp( void )
 {
-	for( unsigned int m = 0; m < meshAssets.size(); m++ )
-	{
-		ReleaseMeshResources( meshAssets[m] );
-	}
+	ReleaseAllMeshes();
 
 	ReleaseSounds();
 }
 
 void AssetManager::OnLost( void )
 {
-	for( unsigned int m = 0; m < meshAssets.size(); m++ )
-	{
-		ReleaseMeshResources( meshAssets[m] );
-	}
+	ReleaseAllMeshes();
 }
 
 void AssetManager::OnRecover( void )
 {
-	for( unsigned int m = 0; m < meshAssets.size(); m++ )
-	{
-		AccquireMeshResources( meshAssets[m] );
-	}
+	AccquireAllMeshes();
 }
