@@ -42,5 +42,5 @@ FMOD::Sound* AssetManager::GetSound( const char* name )
 {
 	std::string str( name );
 
-	return soundAssets[ name ];
+	return soundAssets[ str ];
 }

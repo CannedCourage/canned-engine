@@ -22,9 +22,17 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			return 0;
 		}
 	}
-	catch( LPCTSTR error )
+	catch( std::exception error )
 	{
-		MessageBox( NULL, error, TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( NULL, error.what(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
+	catch( std::string error )
+	{
+		MessageBox( NULL, error.c_str(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();
@@ -39,9 +47,17 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			return 0;
 		}
 	}
-	catch( LPCTSTR error )
+	catch( std::exception error )
 	{
-		MessageBox( NULL, error, TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( NULL, error.what(), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
+	catch( std::string error )
+	{
+		MessageBox( NULL, error.c_str(), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();
@@ -54,9 +70,17 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		//Run() implements the message loop, which is the main loop
 		result = sys->Run();
 	}
-	catch( LPCTSTR error )
+	catch( std::exception error )
 	{
-		MessageBox( NULL, error, TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( NULL, error.what(), TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
+	catch( std::string error )
+	{
+		MessageBox( NULL, error.c_str(), TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();
@@ -67,17 +91,17 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	{
 		sys->Shutdown();
 	}
-	catch( LPCTSTR error )
+	catch( std::exception error )
 	{
-		MessageBox( NULL, error, TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( NULL, error.what(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();
 		}
 	}
-	catch( std::exception error )
+	catch( std::string error )
 	{
-		MessageBox( NULL, error.what(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
+		MessageBox( NULL, error.c_str(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
 		if( sys != NULL )
 		{
 			sys->Quit();

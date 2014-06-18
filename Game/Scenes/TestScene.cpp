@@ -1,7 +1,9 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
+#include "Maths/VectorToD3D.h"
 
 //Globals for scene variables?
+ID3DXSprite* s = NULL;
 
 TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									cubeBuffer( NULL ),
@@ -13,7 +15,8 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									player1( input ),
 									test1( input ),
 									channel( NULL ),
-									meshes( s.graphics )
+									meshes( s.graphics ),
+									sprites( s.graphics )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -21,15 +24,11 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 		(float)settings.GetInteger( "display/xResolution" )/(float)settings.GetInteger( "display/yResolution" ), 
 		1.0f, 100.0f );
 
-	FontPosition.top = 0;
-	FontPosition.left = 0;
-	FontPosition.right = settings.GetInteger( "display/xResolution" );
-	FontPosition.bottom = settings.GetInteger( "display/yResolution" );
-
 	test1.AddInput( &keys, &(PhysicalDevice::IsPressed), Keyboard::Keys::LEFT_CONTROL );
 	test1.AddInput( &keys, &(PhysicalDevice::WentUp), Keyboard::Keys::LEFT_ALT );
 
 	engine.AddProcess( &meshes, RENDER );
+	engine.AddProcess( &sprites, RENDER );
 }
 
 TestScene::~TestScene( void )
@@ -72,9 +71,6 @@ void TestScene::Load( void )
 		TEXT( "Failed creating texture" ) 
 	);
 
-	D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Arial" ) };
-	D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
-
 	//Meshes
 	//IDEA: Eliminate Load* methods, only use Get* methods, asset manager loads if asset is not already loaded.
 	assets.LoadMesh( "tiger.x" );
@@ -82,7 +78,11 @@ void TestScene::Load( void )
 	meshes.AddMeshComponent( tiger, assets.GetMesh( "tiger.x" ) );
 
 	assets.LoadSoundSample( "Sounds/drumloop.wav" );
-	sound.System()->playSound( assets.GetSound( "Sounds/drumloop.wav" ), 0, false, &channel );
+	//sound.System()->playSound( assets.GetSound( "Sounds/drumloop.wav" ), 0, false, &channel );
+	
+	assets.LoadTexture( "qMark.bmp" );
+	Entity qMark = entityManager.New();
+	sprites.AddSpriteComponent( qMark, assets.GetTexture( "qMark.bmp" ) );
 
 	//Always set state and report
 	loaded = true;
@@ -98,10 +98,6 @@ void TestScene::OnLost( void )
 			log.Message( "Releasing cube buffer", true );
 			cubeBuffer->Release();
 			cubeBuffer = NULL;
-		}
-		if( font != NULL )
-		{
-			graphics.ErrorCheck( font->OnLostDevice(), "Error Font, lost device" );
 		}
 
 		lost = true;
@@ -139,10 +135,6 @@ void TestScene::OnRecover( void )
 		graphics.ErrorCheck( cubeBuffer->Lock( 0, 0, (void**)&pVoid, 0 ), "SplashScreen: Error locking cube buffer" );
 		memcpy( pVoid, verts, sizeof(verts) );
 		graphics.ErrorCheck( cubeBuffer->Unlock(), "SplashScreen: Error unlocking cube buffer" );
-
-		//D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Arial" ) };
-		//D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font );
-		graphics.ErrorCheck( font->OnResetDevice(), "Error recovering font" );
 
 		lost = false;
 	}
@@ -247,8 +239,6 @@ void TestScene::Render( void )
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 12, 2 ), "Drawing cube" );
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
 	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
-
-	font->DrawText( NULL, "Text Sample Using D3DXFont", -1, &FontPosition, DT_CENTER | DT_BOTTOM, 0xffffffff );
 
 	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
 }

@@ -6,12 +6,12 @@
 #include "Logging/Log.h"
 
 #include <deque>
-using std::deque;
 
 #include <vector>
 
 class System;
 class IScene;
+class GUI;
 
 class SceneManager
 {
@@ -34,6 +34,8 @@ protected:
 
 	std::vector<IScene*> sceneList;
 
+	std::deque<GUI*> GUIStack;
+
 	void SwapSceneBuffers( void );
 public:
 
@@ -54,6 +56,12 @@ public:
 
 	void ChangeScene( unsigned int i );
 	void PreloadScene( unsigned int i );
+
+	//GUI
+	void PushGUI( GUI* const newGUI );
+	GUI* const PopGUI( void );
+	GUI* const SwapToGUI( GUI* const newGUI );
+	void ClearGUIStack( void );
 };
 
 inline void SceneManager::SetUpdate( const bool& b )

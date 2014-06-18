@@ -38,6 +38,8 @@ void AssetManager::CleanUp( void )
 	ReleaseAllMeshes();
 
 	ReleaseSounds();
+
+	ReleaseTextures();
 }
 
 void AssetManager::OnLost( void )

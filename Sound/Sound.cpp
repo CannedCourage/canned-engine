@@ -65,7 +65,7 @@ void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
 
         log.Message( o.str().c_str(), true );
 
-		std::runtime_error e( o.str() );
+		std::exception e( o.str().c_str() );
 
         throw( e );
     }

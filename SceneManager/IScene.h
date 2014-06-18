@@ -6,7 +6,6 @@
 #include "Logging/Log.h"
 #include "Assets/AssetManager.h"
 #include "Entity/EntityManager.h"
-#include "Mesh/MeshProcessor.h"
 
 #include "Engine/ProcessManager.h"
 
@@ -47,7 +46,7 @@ public:
 	const char* name;
 
 	IScene( System &sys, const char* n = "DEFAULT" );
-	~IScene( void );
+	virtual ~IScene( void );
 
 	virtual void PreUpdate( void );
 	virtual void Update( void );

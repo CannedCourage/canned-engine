@@ -17,6 +17,8 @@
 
 #include "Logging\Log.h"
 
+#include <d3dx9.h>
+
 class System;
 class Graphics;
 class Sound;
@@ -48,6 +50,12 @@ protected:
 	void ReleaseSounds( void );
 	
 	std::map<std::string, FMOD::Sound*> soundAssets;
+
+	//Textures
+
+	std::map<std::string, IDirect3DTexture9*> textureAssets;
+
+	void ReleaseTextures( void );
 public:
 
 	AssetManager( System& sys );
@@ -69,6 +77,10 @@ public:
 	bool LoadSoundStream( const char* file );
 	FMOD::Sound* GetSound( const char* name );
 
+	//Textures
+	
+	void LoadTexture( const char* filename );
+	IDirect3DTexture9* GetTexture( const char* filename );
 };
 
 #endif //_ASSETMANAGER_H_

@@ -27,7 +27,7 @@ void ProcessManager::UpdateProcesses( const double& deltaT, Priority priority )
 	{
 		if( mapIt->second == priority )
 		{
-			if( mapIt->first ){ mapIt->first->Update( deltaT ); }
+			if( mapIt->first != NULL ){ mapIt->first->Update( deltaT ); }
 		}
 	}
 }

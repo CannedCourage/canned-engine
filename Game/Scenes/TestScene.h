@@ -9,6 +9,9 @@
 #include "Input/XboxController.h"
 #include "Input/LogicalDevice.h"
 
+#include "Mesh/MeshProcessor.h"
+#include "Sprite/SpriteProcessor.h"
+
 class System;
 
 class TestScene : public IScene
@@ -37,6 +40,7 @@ protected:
 
 	//Processors
 	MeshProcessor meshes;
+	SpriteProcessor sprites;
 
 	void Update( void ); //Remove
 

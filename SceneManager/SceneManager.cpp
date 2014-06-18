@@ -4,6 +4,8 @@
 #include "SceneManager/SceneManager.h"
 #include "SceneManager/Scenes.h"
 #include "SceneManager/IScene.h"
+#include "GUI/GUI.h"
+#include "Game/Interfaces/MainMenuGUI.h"
 
 SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 {
@@ -23,6 +25,8 @@ void SceneManager::Init( void )
 	//Temp: Use SplashScreen
 	//currentScene = new SplashScreen( system );
 	currentScene = sceneList[1];
+
+	PushGUI( new MainMenu( system, "Main Menu" ) );
 }
 
 void SceneManager::Shutdown( void )
@@ -50,6 +54,8 @@ void SceneManager::Shutdown( void )
 		}
 	}
 
+	ClearGUIStack();
+
 	update = false;
 	render = false;
 }
@@ -70,6 +76,11 @@ bool SceneManager::Update( void )
 	else
 	{
 		return false;
+	}
+
+	if( !( GUIStack.empty() ) )
+	{
+		GUIStack.front()->Update();
 	}
 
 	return true;
@@ -106,9 +117,19 @@ void SceneManager::Render()
 		{
 			if( currentScene->IsLoaded() )
 			{
-				currentScene->PreRender();
+				currentScene->PreRender(); //BeginScene
+
 				currentScene->Render();
-				currentScene->PostRender();
+
+				//Render GUI
+				std::deque<GUI*>::reverse_iterator itr;
+
+				for( itr = GUIStack.rbegin(); itr != GUIStack.rend(); itr++ )
+				{
+					( *itr )->Render();
+				}
+
+				currentScene->PostRender(); //EndScene
 			}
 			else
 			{
@@ -158,5 +179,5 @@ void SceneManager::OnRecover( void )
 
 SceneManager::~SceneManager( void )
 {
-	//Shutdown();
+	Shutdown();
 }

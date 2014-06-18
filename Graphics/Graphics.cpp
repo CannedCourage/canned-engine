@@ -285,9 +285,12 @@ void Graphics::ErrorCheck( HRESULT result, const char* const info )
 
 	ostringstream e;
 
-	e << "Graphics: " << info << "\r\n" << text;
+	//e << "Graphics: " << info << "\r\n" << text;
+	e << "Graphics: " << text << std::endl << info;
 
 	string error = e.str();
 
-	throw( error.c_str() );
+	std::exception ex( error.c_str() );
+
+	throw( ex );
 }
