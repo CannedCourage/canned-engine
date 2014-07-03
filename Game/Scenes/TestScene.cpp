@@ -1,6 +1,5 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
-#include "Maths/VectorToD3D.h"
 
 //Globals for scene variables?
 ID3DXSprite* s = NULL;
@@ -233,12 +232,12 @@ void TestScene::Render( void )
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, cubeBuffer, 0, sizeof(Vertex3dTx) ), "Setting stream source" );
 	graphics.Device()->SetTexture( 0, cubeTex );
 
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing cube" );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 4, 2 ), "Drawing cube" );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 8, 2 ), "Drawing cube" );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 12, 2 ), "Drawing cube" );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
-	graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 4, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 8, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 12, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
+	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
 	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
 }

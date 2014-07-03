@@ -4,8 +4,12 @@
 		"selected_items":
 		[
 			[
+				"Vect",
+				"Vector3D"
+			],
+			[
 				"spr",
-				"spriteInterface"
+				"spriteComponents"
 			],
 			[
 				"Ent",
@@ -368,6 +372,62 @@
 	"buffers":
 	[
 		{
+			"file": "Sprite/SpriteProcessor.h",
+			"settings":
+			{
+				"buffer_size": 1326,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Sprite/SpriteProcessor.cpp",
+			"settings":
+			{
+				"buffer_size": 7963,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Transform/Transform.h",
+			"settings":
+			{
+				"buffer_size": 574,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Transform/TransformProcessor.h",
+			"settings":
+			{
+				"buffer_size": 659,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Transform/TransformProcessor.cpp",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
+			"settings":
+			{
+				"buffer_size": 349,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Sprite/SpriteComponent.h",
+			"settings":
+			{
+				"buffer_size": 597,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "Game/Scenes/TestScene.h",
 			"settings":
 			{
@@ -379,55 +439,47 @@
 			"file": "Game/Scenes/TestScene.cpp",
 			"settings":
 			{
-				"buffer_size": 8824,
+				"buffer_size": 8836,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Mesh/MeshProcessor.h",
+			"file": "Sprite/SpriteShader.fx",
 			"settings":
 			{
-				"buffer_size": 652,
+				"buffer_size": 1955,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Mesh/MeshProcessor.cpp",
+			"file": "Sprite/TestShader.fx",
 			"settings":
 			{
-				"buffer_size": 3526,
+				"buffer_size": 1322,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Sprite/SpriteProcessor.h",
+			"file": "Maths/Matrix.h",
 			"settings":
 			{
-				"buffer_size": 716,
+				"buffer_size": 525,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Sprite/SpriteProcessor.cpp",
+			"file": "Maths/Vector.h",
 			"settings":
 			{
-				"buffer_size": 1696,
+				"buffer_size": 399,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Sprite/SpriteComponent.h",
+			"file": "Maths/Vector3D.cpp",
 			"settings":
 			{
-				"buffer_size": 429,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Graphics/Graphics.h",
-			"settings":
-			{
-				"buffer_size": 3122,
+				"buffer_size": 309,
 				"line_ending": "Windows"
 			}
 		}
@@ -500,7 +552,15 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
+		"/C/Users/Scott/Desktop/SpriteComponent.cpp",
+		"/C/Users/Scott/Desktop/SpriteShader.fx",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sprite/SpriteComponent.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.h",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
+		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorToD3D.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/VectorToD3D.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector.h",
@@ -510,7 +570,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector2D.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Maths/Vector4D.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/AssetManager.h",
 		"/C/Users/Scott/AppData/Local/Temp/Sprite.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Engine/ProcessManager.cpp",
@@ -530,14 +589,12 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Interfaces/MainMenuGUI.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/GUIManager.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Windows/WinMain.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/GUI.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SceneManager.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Interfaces/MenuOPtion.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/XboxController.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Physics/Physics.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Scenes/TestScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/IScene.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/GUI/guiIdeas.txt",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/System/System.cpp",
@@ -547,9 +604,7 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/SceneManager/SplashScreen.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Logging/Log.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Sound/Sound.h",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/MeshProcessor.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.cpp",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Input.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Entity/EntityManager.h",
@@ -565,7 +620,6 @@
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/PhysicalDevice.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Input/Keyboard.h",
 		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/programmer_sound.cpp",
-		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Graphics/Graphics.h",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Assets/SoundManager.h",
 		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/inc/fmod_studio_common.h",
 		"/C/Program Files (x86)/FMOD SoundSystem/FMOD Studio API Windows/api/studio/examples/common.h",
@@ -625,9 +679,7 @@
 		"/C/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/savegames/6837df50-888a-4003-9f44-a0cbed12badd/449/1.save",
 		"/C/Users/Scott/Programming/Projects/GitHub/canned-engine/Mesh/Mesh.cpp",
 		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/README.md",
-		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/Default (Windows).sublime-keymap",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/Input.txt",
-		"/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Logs/System.txt"
+		"/C/Users/Scott/AppData/Roaming/Sublime Text 2/Packages/AdvancedNewFile/Default (Windows).sublime-keymap"
 	],
 	"find":
 	{
@@ -646,6 +698,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"SpriteComponent",
+			"spriteComponent",
+			"SpriteComponent",
+			"SpriteProcessor",
+			"\\",
+			"D3DHANDLE",
+			"\\",
+			"VFormat",
+			"vBuffer",
 			"s",
 			"second",
 			"test1",
@@ -764,16 +825,7 @@
 			"\\",
 			"mice",
 			"mouseIt",
-			"mice",
-			"mouseIt",
-			"const",
-			"Keyboard",
-			"&",
-			"mice",
-			"mouseIt",
-			"it",
-			"/",
-			"\\"
+			"mice"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -792,77 +844,23 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 11,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Game/Scenes/TestScene.h",
+					"file": "Sprite/SpriteProcessor.h",
 					"settings":
 					{
-						"buffer_size": 1027,
+						"buffer_size": 1326,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								750,
-								750
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 216.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Game/Scenes/TestScene.cpp",
-					"settings":
-					{
-						"buffer_size": 8824,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7707,
-								7707
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 758.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Mesh/MeshProcessor.h",
-					"settings":
-					{
-						"buffer_size": 652,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								341,
-								341
+								0,
+								1326
 							]
 						],
 						"settings":
@@ -877,19 +875,72 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "Mesh/MeshProcessor.cpp",
+					"buffer": 1,
+					"file": "Sprite/SpriteProcessor.cpp",
 					"settings":
 					{
-						"buffer_size": 3526,
+						"buffer_size": 7963,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								649,
-								649
+								5446,
+								5446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2214.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Transform/Transform.h",
+					"settings":
+					{
+						"buffer_size": 574,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								574,
+								574
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Transform/TransformProcessor.h",
+					"settings":
+					{
+						"buffer_size": 659,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								220,
+								220
 							]
 						],
 						"settings":
@@ -905,24 +956,23 @@
 				},
 				{
 					"buffer": 4,
-					"file": "Sprite/SpriteProcessor.h",
+					"file": "Transform/TransformProcessor.cpp",
 					"settings":
 					{
-						"buffer_size": 716,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								282,
-								297
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -932,27 +982,27 @@
 				},
 				{
 					"buffer": 5,
-					"file": "Sprite/SpriteProcessor.cpp",
+					"file": "/C/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json",
 					"settings":
 					{
-						"buffer_size": 1696,
+						"buffer_size": 349,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1600,
-								1600
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 162.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -962,15 +1012,15 @@
 					"file": "Sprite/SpriteComponent.h",
 					"settings":
 					{
-						"buffer_size": 429,
+						"buffer_size": 597,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								337,
-								396
+								429,
+								429
 							]
 						],
 						"settings":
@@ -986,18 +1036,18 @@
 				},
 				{
 					"buffer": 7,
-					"file": "Graphics/Graphics.h",
+					"file": "Game/Scenes/TestScene.h",
 					"settings":
 					{
-						"buffer_size": 3122,
+						"buffer_size": 1027,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								726,
+								726
 							]
 						],
 						"settings":
@@ -1006,7 +1056,168 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1566.0,
+						"translation.y": 216.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Game/Scenes/TestScene.cpp",
+					"settings":
+					{
+						"buffer_size": 8836,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8054,
+								8054
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3512.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Sprite/SpriteShader.fx",
+					"settings":
+					{
+						"buffer_size": 1955,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								278,
+								278
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Sprite/TestShader.fx",
+					"settings":
+					{
+						"buffer_size": 1322,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19,
+								19
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Maths/Matrix.h",
+					"settings":
+					{
+						"buffer_size": 525,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								473,
+								473
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "Maths/Vector.h",
+					"settings":
+					{
+						"buffer_size": 399,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								286,
+								378
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "Maths/Vector3D.cpp",
+					"settings":
+					{
+						"buffer_size": 309,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								254,
+								254
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
