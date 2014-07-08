@@ -5,19 +5,19 @@
 //Matrix multiplication
 //Matrix A is m x n, matrix B is n x p, result is an m x p matrix
 
+#include <iostream>
 #include <vector>
-#include <stdexcept>
 
 class Matrix
 {
 private:
 protected:
 
-	int rows, columns;
+	unsigned int rows, columns;
 	std::vector< std::vector<double> > elements;
 public:
 
-	Matrix( const int r = 2, const int c = 2 );
+	Matrix( const unsigned int r = 2, const unsigned int c = 2 );
 	Matrix( const Matrix& mat );
 	Matrix& operator=( const Matrix& rhs );
 
@@ -45,11 +45,15 @@ public:
 	void Transpose( void );
 	const Matrix Transposed( void );
 
+	friend double MatrixDeterminant( const Matrix& mat );
+
 	double Determinant( void );
 
 	double Trace( void );
-};
 
-//const Matrix operator*( const Matrix& lhs, const Matrix& rhs );
+	const bool IsSquare( void ) const;
+
+	friend std::ostream& operator<<(std::ostream& os, const Matrix& mat);
+};
 
 #endif //_MATRIX_H_
