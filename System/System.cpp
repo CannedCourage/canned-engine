@@ -1,4 +1,4 @@
-#define settingsFile "C:/Users/Scott/Programming/Projects/Scott_Oliver_Engine/Scott_Oliver_Engine/Settings/MainSettings.json"
+#define settingsFile "w:/engine/data/settings/MainSettings.json"
 
 #include "System/System.h"
 #include "StandardResources/resource.h"

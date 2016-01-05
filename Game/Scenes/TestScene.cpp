@@ -1,6 +1,10 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
 
+#define DRUMLOOP "w:/game/sounds/drumloop.wav"
+#define TIGER "w:/game/meshes/tiger.x"
+#define QMARK "w:/game/textures/qMark.bmp"
+
 //Globals for scene variables?
 ID3DXSprite* s = NULL;
 
@@ -66,22 +70,22 @@ void TestScene::Load( void )
 
 	graphics.ErrorCheck
 	( 
-		D3DXCreateTextureFromFile( graphics.Device(), TEXT( "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Game/Textures/qMark.bmp" ), &cubeTex ), 
+		D3DXCreateTextureFromFile( graphics.Device(), TEXT( "w:/game/textures/qMark.bmp" ), &cubeTex ), 
 		TEXT( "Failed creating texture" ) 
 	);
 
 	//Meshes
 	//IDEA: Eliminate Load* methods, only use Get* methods, asset manager loads if asset is not already loaded.
-	assets.LoadMesh( "tiger.x" );
+	assets.LoadMesh( TIGER );
 	Entity tiger = entityManager.New();
-	meshes.AddMeshComponent( tiger, assets.GetMesh( "tiger.x" ) );
+	meshes.AddMeshComponent( tiger, assets.GetMesh( TIGER ) );
 
-	assets.LoadSoundSample( "Sounds/drumloop.wav" );
-	//sound.System()->playSound( assets.GetSound( "Sounds/drumloop.wav" ), 0, false, &channel );
+	assets.LoadSoundSample( DRUMLOOP );
+	sound.System()->playSound( assets.GetSound( DRUMLOOP ), 0, false, &channel );
 	
-	assets.LoadTexture( "qMark.bmp" );
+	assets.LoadTexture( QMARK );
 	Entity qMark = entityManager.New();
-	sprites.AddSpriteComponent( qMark, assets.GetTexture( "qMark.bmp" ) );
+	sprites.AddSpriteComponent( qMark, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
 
 	//Always set state and report
 	loaded = true;
@@ -181,10 +185,22 @@ void TestScene::Update( void )
 	if( test1.IsChordPressed() )
 	{
 		bool Playing = false;
+		bool Paused = false;
 		if( channel )
 		{
 			channel->isPlaying( &Playing );
-			if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
+			channel->getPaused( &Paused );
+			//if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
+			//else{ sound.ErrorCheck( channel->setLoopCount( 1 ), "Main: Starting sound" ); }
+
+			if( Playing && !Paused )
+			{
+				sound.ErrorCheck( channel->setPaused( true ), "Pausing" );
+			}
+			else
+			{
+				sound.ErrorCheck( channel->setPaused( false ), "Un-pausing" );
+			}
 		}
 	}
 	/*

@@ -12,7 +12,7 @@ SpriteProcessor::SpriteProcessor( Graphics& g ) : 	graphics( g ),
 													texOffset( 3*sizeof( float ) ),
 													stride( 5*sizeof( float ) ),
 													effect( NULL ),
-													effectFile( "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Sprite/TestShader.fx" ),
+													effectFile( "W:/engine/code/Sprite/TestShader.fx" ),
 													shaderFlags( D3DXSHADER_USE_LEGACY_D3DX9_31_DLL ),
 													log( "SpriteProcessor" )
 {
@@ -67,7 +67,7 @@ SpriteProcessor::SpriteProcessor( Graphics& g ) : 	graphics( g ),
 	NULL, // LPD3DXEFFECTPOOL pPool,
     &effect, 
     NULL ),
-	"Creating Sprite Shader" );
+	"Error creating Sprite Shader" );
 	
 	worldHandle = effect->GetParameterBySemantic( NULL, "WORLD" );
 	viewHandle = effect->GetParameterBySemantic( NULL, "VIEW" );
