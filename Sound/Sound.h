@@ -4,6 +4,9 @@
 #ifndef _SOUND_H_
 #define _SOUND_H_
 
+#pragma comment(lib, "fmodL64_vc.lib")
+#pragma comment(lib, "fmodstudioL64_vc.lib")
+
 #include "fmod_studio.hpp"
 #include "fmod.hpp"
 #include "fmod_errors.h"

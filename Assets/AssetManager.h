@@ -1,6 +1,8 @@
 #ifndef _ASSETMANAGER_H_
 #define _ASSETMANAGER_H_
 
+#pragma comment(lib, "assimp.lib")
+
 //Assimp include files. These three are usually needed.
 #include <assimp/cimport.h>
 #include <assimp/scene.h>

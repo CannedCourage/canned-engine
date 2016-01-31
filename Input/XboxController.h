@@ -1,6 +1,8 @@
 #ifndef _XBOXCONTROLLER_H_
 #define _XBOXCONTROLLER_H_
 
+#pragma comment(lib, "Xinput.lib")
+
 #include "Logging\Log.h"
 #include "Input\PhysicalDevice.h"
 
