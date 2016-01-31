@@ -4,7 +4,7 @@
 #include "Logging/Log.h"
 #include <vector>
 
-typedef unsigned int Entity;
+#include "Entity/Entity.h"
 
 class EntityManager
 {

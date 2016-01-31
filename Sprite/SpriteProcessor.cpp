@@ -1,20 +1,21 @@
 #include "Sprite/SpriteProcessor.h"
 #include "Graphics/Graphics.h"
+#include "Transform/TransformProcessor.h"
 
 #include <assert.h>
 
-SpriteProcessor::SpriteProcessor( Graphics& g ) : 	graphics( g ),
-													vBuffer( NULL ),
-													iBuffer( NULL ),
-													vDecl( NULL ),
-													numVerts( 4 ),
-													posOffset( 0*sizeof( float ) ),
-													texOffset( 3*sizeof( float ) ),
-													stride( 5*sizeof( float ) ),
-													effect( NULL ),
-													effectFile( "W:/engine/code/Sprite/TestShader.fx" ),
-													shaderFlags( D3DXSHADER_USE_LEGACY_D3DX9_31_DLL ),
-													log( "SpriteProcessor" )
+SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ),
+																		vBuffer( NULL ),
+																		iBuffer( NULL ),
+																		vDecl( NULL ),
+																		numVerts( 4 ),
+																		posOffset( 0*sizeof( float ) ),
+																		texOffset( 3*sizeof( float ) ),
+																		stride( 5*sizeof( float ) ),
+																		effect( NULL ),
+																		effectFile( "W:/engine/code/Sprite/TestShader.fx" ),
+																		shaderFlags( D3DXSHADER_USE_LEGACY_D3DX9_31_DLL ),
+																		log( "SpriteProcessor" )
 {
 	D3DVERTEXELEMENT9 pos = { 0, posOffset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
 	D3DVERTEXELEMENT9 tex = { 0, texOffset, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 };
@@ -27,7 +28,12 @@ SpriteProcessor::SpriteProcessor( Graphics& g ) : 	graphics( g ),
 	graphics.Device()->CreateVertexDeclaration( &vElements[0], &vDecl );
 	
 	VFormat vertices[] =
-	{ { 0.0f, 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f } };
+	{
+		{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f },
+		{ 0.5f, 0.5f, 0.0f, 1.0f, 0.0f },
+		{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
+		{ 0.5f, -0.5f, 0.0f, 1.0f, 1.0f }
+	};
 
 	verts.push_back( vertices[0] );
 	verts.push_back( vertices[1] );
@@ -74,6 +80,8 @@ SpriteProcessor::SpriteProcessor( Graphics& g ) : 	graphics( g ),
 	projHandle = effect->GetParameterBySemantic( NULL, "PROJECTION" );
 	//texTransHandle = effect->GetParameterByName( NULL, "matTex" );
 	textureHandle = effect->GetParameterByName( NULL, "g_MeshTexture" );
+
+	//TODO: Switch back to SpriteShader.fx
 	//RenderWithTexture = effect->GetTechniqueByName( "RenderSpriteWithTexture" );
 	RenderWithoutTexture = effect->GetTechniqueByName( "RenderSpriteWithoutTexture" );
 }
@@ -105,7 +113,7 @@ SpriteProcessor::~SpriteProcessor( void )
 	}
 }
 
-void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* texture )
+void SpriteProcessor::AddSpriteComponent( const Entity entityID, IDirect3DTexture9* texture )
 {
 	SpriteComponent s;
 
@@ -114,7 +122,7 @@ void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3D
 	spriteComponents[ entityID ] = s;
 }
 
-SpriteComponent& SpriteProcessor::GetSpriteComponent( const unsigned int entityID )
+SpriteComponent& SpriteProcessor::GetSpriteComponent( const Entity entityID )
 {
 	return spriteComponents[ entityID ];
 }
@@ -126,11 +134,11 @@ void SpriteProcessor::Start( void )
 void SpriteProcessor::Update( const double& deltaT )
 {
 	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Setting sprite render state" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Disabling Z-writes" );
 	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, TRUE ), "Setting sprite render state" );
 
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Setting Lighting State Failed" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE ), "Setting Culling Mode Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Disabling Lighting Failed" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE ), "Disabling Culling" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_FALSE ), "Disabling Depth Testing" );
 	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
 
@@ -139,23 +147,46 @@ void SpriteProcessor::Update( const double& deltaT )
 	graphics.ErrorCheck( graphics.Device()->SetIndices( iBuffer ), "Setting indices" );
 
 	D3DXMATRIX worldMat, viewMat, projMat, texTransMat;
+	D3DXMATRIX transMat, rotMatX, rotMatY, rotMatZ, scaleMat;
+
+	D3DXMatrixIdentity( &transMat );
+	D3DXMatrixIdentity( &rotMatX );
+	D3DXMatrixIdentity( &rotMatY );
+	D3DXMatrixIdentity( &rotMatZ );
+	D3DXMatrixIdentity( &scaleMat );
 
 	D3DXMatrixIdentity( &worldMat );
 	D3DXMatrixIdentity( &viewMat );
 	D3DXMatrixIdentity( &projMat );
 	D3DXMatrixIdentity( &texTransMat );
 
-	D3DXMatrixTranslation( &worldMat, 0, 0, 0 );
-	D3DXMatrixScaling( &worldMat, 640, 360, 0 );
-
 	D3DXMatrixLookAtLH( &viewMat, &(D3DXVECTOR3( 0.0f, 0.0f, -1.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
 	
+	//TODO: Get screen info from Graphics class(?) - This is a good reason to abstract this code away into the graphics class
 	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 1.0f );
 
 	std::map<int, SpriteComponent>::iterator it;
+
+	TransformComponent tForm;
 	//*
 	for( it = spriteComponents.begin(); it != spriteComponents.end(); it++ )
 	{
+		tForm = transforms.GetTransformComponent( it->first );
+
+		//TODO: Get Transform details from Entity - This will probably get moved into spriteComponent loop
+		D3DXMatrixTranslation( &transMat, tForm.translation.x, tForm.translation.y, 0 );
+		D3DXMatrixRotationX( &rotMatX, tForm.localRotation.x );
+		D3DXMatrixRotationY( &rotMatY, tForm.localRotation.y );
+		D3DXMatrixRotationZ( &rotMatZ, tForm.localRotation.z );
+		D3DXMatrixScaling( &worldMat, tForm.scale.x, tForm.scale.y, 0 );
+
+		//Multplication order: scaling * localRotation * translation * rotation
+		D3DXMatrixMultiply( &worldMat, &worldMat, &scaleMat );
+		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatX );
+		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatY );
+		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatZ );
+		D3DXMatrixMultiply( &worldMat, &worldMat, &transMat );
+
 		//Set World Matrix - This will come from Transform
 		effect->SetMatrix( worldHandle, &worldMat ); //Calculate from Transform
 
@@ -165,9 +196,11 @@ void SpriteProcessor::Update( const double& deltaT )
 		
 		effect->SetTexture( textureHandle, it->second.texture ); //From sprite component
 
+		//TODO: Animated Sprites
 		//Set Texture Matrix (in shader)
 		//effect->SetMatrix( texTransHandle, &texTransMat ); //Calculate from texture coordinates in sprite component
 		
+		//TODO: Switch effect file - This name is garbage
 		effect->SetTechnique( RenderWithoutTexture );
 		
 		// Apply the technique contained in the effect 
@@ -178,13 +211,13 @@ void SpriteProcessor::Update( const double& deltaT )
 		{
 			effect->BeginPass(iPass);
 
-			// Only call CommitChanges if any state changes have happened
-			// after BeginPass is called
+			//Only call CommitChanges if any state changes have happened
+			//after BeginPass is called
 			//effect->CommitChanges();
 
-			// Render the mesh with the applied technique
+			//Render the mesh with the applied technique
 			//graphics.ErrorCheck( graphics.Device()->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, numVerts, 0, 2 ), "Drawing sprite" );
-			graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing cube" );
+			graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing sprite" );
 
 			effect->EndPass();
 		}
@@ -195,20 +228,7 @@ void SpriteProcessor::Update( const double& deltaT )
 		graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, NULL, 0, 0 ), "Clearing stream source" );
 		graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
 	}
-	//*/
-	/*
-	for( it = spriteComponents.begin(); it != spriteComponents.end(); it++ )
-	{
-		graphics.Device()->SetTransform( D3DTS_VIEW, &viewMat );
-		graphics.Device()->SetTransform( D3DTS_WORLD, &worldMat );
-		graphics.Device()->SetTransform( D3DTS_PROJECTION, &projMat );
-
-		graphics.Device()->SetTexture( 0, it->second.texture );
-
-		//graphics.ErrorCheck( graphics.Device()->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, numVerts, 0, 2 ), "Drawing sprite" );
-		graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing cube" );
-	}
-	//*/
+	
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE );
 	graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE );
 }

@@ -18,8 +18,9 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									player1( input ),
 									test1( input ),
 									channel( NULL ),
+									transforms(),
 									meshes( s.graphics ),
-									sprites( s.graphics )
+									sprites( s.graphics, transforms )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -30,6 +31,7 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 	test1.AddInput( &keys, &(PhysicalDevice::IsPressed), Keyboard::Keys::LEFT_CONTROL );
 	test1.AddInput( &keys, &(PhysicalDevice::WentUp), Keyboard::Keys::LEFT_ALT );
 
+	engine.AddProcess( &transforms, UPDATE );
 	engine.AddProcess( &meshes, RENDER );
 	engine.AddProcess( &sprites, RENDER );
 }
@@ -84,8 +86,19 @@ void TestScene::Load( void )
 	sound.System()->playSound( assets.GetSound( DRUMLOOP ), 0, false, &channel );
 	
 	assets.LoadTexture( QMARK );
+
+	//Perhaps give Entities a human-readable name?
 	Entity qMark = entityManager.New();
+
+	//TODO: Need to add delete* methods to remove components
+	transforms.AddTransformComponent( qMark );
 	sprites.AddSpriteComponent( qMark, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
+
+	//transforms.GetTransformComponent( qMark ).localRotation.x = 30;
+	//transforms.GetTransformComponent( qMark ).localRotation.y = 30;
+
+	transforms.GetTransformComponent( qMark ).scale.x = 640;
+	transforms.GetTransformComponent( qMark ).scale.y = 320;
 
 	//Always set state and report
 	loaded = true;
@@ -176,6 +189,8 @@ void TestScene::Unload( void )
 void TestScene::Update( void )
 {
 	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
+
+	transforms.GetTransformComponent( 1 ).localRotation.z -= 0.1;
 
 	/*if( test1.IsAnyPressed() )
 	{

@@ -9,6 +9,7 @@
 #include "Input/XboxController.h"
 #include "Input/LogicalDevice.h"
 
+#include "Transform/TransformProcessor.h"
 #include "Mesh/MeshProcessor.h"
 #include "Sprite/SpriteProcessor.h"
 
@@ -39,6 +40,7 @@ protected:
 	FMOD::Channel* channel;
 
 	//Processors
+	TransformProcessor transforms;
 	MeshProcessor meshes;
 	SpriteProcessor sprites;
 

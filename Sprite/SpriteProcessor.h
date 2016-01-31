@@ -10,8 +10,7 @@
 #include <map>
 #include <vector>
 
-//#include <d3d9.h>
-//#include <d3dx9.h>
+#include "Entity/Entity.h"
 
 struct VFormat
 {
@@ -20,6 +19,7 @@ struct VFormat
 };
 
 class Graphics;
+class TransformProcessor;
 
 class SpriteProcessor : public iProcess
 {
@@ -27,7 +27,9 @@ private:
 protected:
 
 	Graphics& graphics;
+	TransformProcessor& transforms;
 
+	//TODO: Replace with std::vector< std::pair< int, SpriteComponent > > ?
 	std::map<int, SpriteComponent> spriteComponents; //entity id as key
 
 	IDirect3DVertexBuffer9* vBuffer;
@@ -55,11 +57,11 @@ protected:
 	Log log;
 public:
 
-	SpriteProcessor( Graphics& g );
+	SpriteProcessor( Graphics& g, TransformProcessor& t );
 	~SpriteProcessor( void );
 
-	void AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* _texture );
-	SpriteComponent& GetSpriteComponent( const unsigned int entityID );
+	void AddSpriteComponent( const Entity entityID, IDirect3DTexture9* _texture );
+	SpriteComponent& GetSpriteComponent( const Entity entityID );
 
 	void Start( void );
 	void Update( const double& deltaT );
