@@ -3,7 +3,7 @@
 
 MenuOption::MenuOption( System& sys, const char* _name, GUI& _parent ) : Widget( sys, _name, _parent ), displayText( "" )
 {
-	D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Arial" ) };
+	D3DXFONT_DESC FontDesc = { 24, 0, 400, 0, false, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_PITCH, TEXT( "Super Mario Bros." ) };
 	graphics.ErrorCheck( D3DXCreateFontIndirect( graphics.Device(), &FontDesc, &font ), "Create font indirect" );
 
 	FontPosition.top = 0;
