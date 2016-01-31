@@ -19,6 +19,8 @@ SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 
 void SceneManager::Init( void )
 {
+	log.Message( "SceneManager initialisation" );
+	
 	sceneList.push_back( new SplashScreen( system ) );
 	sceneList.push_back( new TestScene( system ) );
 	//TO DO: determine default starting scene then initialise
