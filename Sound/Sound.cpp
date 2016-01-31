@@ -24,6 +24,8 @@ FMOD::System* Sound::System( void )
 
 void Sound::Init( void )
 {
+    log.Message( "Sound Initialisation");
+    
 	ErrorCheck( FMOD::Studio::System::create( &studio ), "Creating System" );
 
     ErrorCheck( studio->getLowLevelSystem( &lowlevel ), "Getting Low Level System" );
@@ -45,14 +47,28 @@ void Sound::Init( void )
 
 void Sound::Update( void )
 {
-    studio->update();
-	lowlevel->update();
+    if( studio != NULL )
+    {
+        studio->update();
+    }
+
+    if( lowlevel != NULL )
+    {
+        lowlevel->update();
+    }
 }
 
 void Sound::CleanUp( void )
 {
-    studio->release();
-    lowlevel->release();
+    if( studio != NULL )
+    {
+        studio->release();
+    }
+
+    if( lowlevel )
+    {
+        lowlevel->release();
+    }
 }
 
 void Sound::ErrorCheck( FMOD_RESULT result, const char* const info )
