@@ -47,11 +47,11 @@ void Graphics::Init( void )
 
 	GetAdaptersFromInterface();
 
-	GetModesFromInterface();
-
 	ReadSettings();
 
 	ApplySettings();
+
+	GetModesFromInterface();
 
 	SetParameters();
 
