@@ -113,7 +113,7 @@ SpriteProcessor::~SpriteProcessor( void )
 	}
 }
 
-void SpriteProcessor::AddSpriteComponent( const Entity entityID, IDirect3DTexture9* texture )
+void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* texture )
 {
 	SpriteComponent s;
 
@@ -122,7 +122,7 @@ void SpriteProcessor::AddSpriteComponent( const Entity entityID, IDirect3DTextur
 	spriteComponents[ entityID ] = s;
 }
 
-SpriteComponent& SpriteProcessor::GetSpriteComponent( const Entity entityID )
+SpriteComponent& SpriteProcessor::GetSpriteComponent( const unsigned int entityID )
 {
 	return spriteComponents[ entityID ];
 }

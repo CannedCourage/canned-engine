@@ -9,7 +9,7 @@
 
 #include <map>
 
-#include "Entity/Entity.h"
+//#include "Entity/Entity.h"
 
 class TransformProcessor : public iProcess
 {
@@ -22,8 +22,8 @@ public:
 	TransformProcessor( void );
 	~TransformProcessor( void );
 
-	void AddTransformComponent( const Entity entityID );
-	TransformComponent& GetTransformComponent( const Entity entityID );
+	void AddTransformComponent( const unsigned int entityID );
+	TransformComponent& GetTransformComponent( const unsigned int entityID );
 
 	void Start( void );
 	void Update( const double& deltaT );

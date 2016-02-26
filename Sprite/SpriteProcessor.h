@@ -10,7 +10,7 @@
 #include <map>
 #include <vector>
 
-#include "Entity/Entity.h"
+//#include "Entity/Entity.h"
 
 struct VFormat
 {
@@ -60,8 +60,8 @@ public:
 	SpriteProcessor( Graphics& g, TransformProcessor& t );
 	~SpriteProcessor( void );
 
-	void AddSpriteComponent( const Entity entityID, IDirect3DTexture9* _texture );
-	SpriteComponent& GetSpriteComponent( const Entity entityID );
+	void AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* _texture );
+	SpriteComponent& GetSpriteComponent( const unsigned int entityID );
 
 	void Start( void );
 	void Update( const double& deltaT );

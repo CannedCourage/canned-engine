@@ -79,8 +79,8 @@ void TestScene::Load( void )
 	//Meshes
 	//IDEA: Eliminate Load* methods, only use Get* methods, asset manager loads if asset is not already loaded.
 	assets.LoadMesh( TIGER );
-	Entity tiger = entityManager.New();
-	meshes.AddMeshComponent( tiger, assets.GetMesh( TIGER ) );
+	Entity& tiger = entityManager.New( "tiger" );
+	meshes.AddMeshComponent( tiger.ID, assets.GetMesh( TIGER ) );
 
 	assets.LoadSoundSample( DRUMLOOP );
 	sound.System()->playSound( assets.GetSound( DRUMLOOP ), 0, false, &channel );
@@ -88,17 +88,17 @@ void TestScene::Load( void )
 	assets.LoadTexture( QMARK );
 
 	//Perhaps give Entities a human-readable name?
-	Entity qMark = entityManager.New();
+	Entity& qMark = entityManager.New( "qMark" );
 
 	//TODO: Need to add delete* methods to remove components
-	transforms.AddTransformComponent( qMark );
-	sprites.AddSpriteComponent( qMark, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
+	transforms.AddTransformComponent( qMark.ID );
+	sprites.AddSpriteComponent( qMark.ID, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
 
 	//transforms.GetTransformComponent( qMark ).localRotation.x = 30;
 	//transforms.GetTransformComponent( qMark ).localRotation.y = 30;
 
-	transforms.GetTransformComponent( qMark ).scale.x = 640;
-	transforms.GetTransformComponent( qMark ).scale.y = 320;
+	transforms.GetTransformComponent( qMark.ID ).scale.x = 640;
+	transforms.GetTransformComponent( qMark.ID ).scale.y = 320;
 
 	//Always set state and report
 	loaded = true;
@@ -190,7 +190,7 @@ void TestScene::Update( void )
 {
 	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
 
-	transforms.GetTransformComponent( 1 ).localRotation.z -= 0.1;
+	transforms.GetTransformComponent( entityManager["qMark"].ID ).localRotation.z -= 0.1;
 
 	/*if( test1.IsAnyPressed() )
 	{
@@ -218,22 +218,6 @@ void TestScene::Update( void )
 			}
 		}
 	}
-	/*
-	if( player1.WentDown( XboxController::Button::A ) )
-	{
-		log.Message( "A button down!", true );
-	}
-
-	if( keys.WentDown( Keyboard::Keys::LEFT_CONTROL ) )
-	{
-		log.Message( "CTRL going down!", true );
-	}
-
-	if( logiMouse.WentDown( Mouse::Button::LEFT ) )
-	{
-		log.Message( "Left button going down", true );
-	}
-	//*/
 }
 
 void TestScene::PreRender( void )

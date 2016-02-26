@@ -8,14 +8,14 @@ TransformProcessor::~TransformProcessor( void )
 {
 }
 
-void TransformProcessor::AddTransformComponent( const Entity entityID )
+void TransformProcessor::AddTransformComponent( const unsigned int entityID )
 {
 	TransformComponent t;
 
 	transformComponents[ entityID ] = t;
 }
 
-TransformComponent& TransformProcessor::GetTransformComponent( const Entity entityID )
+TransformComponent& TransformProcessor::GetTransformComponent( const unsigned int entityID )
 {
 	return transformComponents[ entityID ];
 }
