@@ -17,15 +17,15 @@ Entity& EntityManager::New( const char* name )
 
 Entity& EntityManager::New( const std::string& name )
 {
-	Entity* e = new Entity( name );
+	Entity e( name );
 
-	//entities[e->ID] = e;
-	entities.insert( EntityPair( e->ID, e ) );
+	entities[e.ID] = e;
+	//entities.insert( EntityPair( e.ID, e ) );
 
 	//index[name] = ( e->ID );
-	index.insert( IndexPair( name, e->ID ) );
+	index.insert( IndexPair( name, e.ID ) );
 
-	return ( *e );
+	return entities[e.ID];
 }
 
 void EntityManager::Delete( const unsigned int ID )
@@ -35,7 +35,7 @@ void EntityManager::Delete( const unsigned int ID )
 
 	if( it != entities.end() )
 	{
-		std::string entityName = it->second->Name;
+		std::string entityName = it->second.Name;
 
 		entities.erase( it );
 
@@ -81,7 +81,7 @@ Entity& EntityManager::operator[]( const unsigned int ID )
 		throw( ex );
 	}
 
-	return ( *( it->second ) );
+	return ( it->second );
 }
 
 Entity& EntityManager::operator[]( const char* name )
@@ -133,7 +133,7 @@ const Entity& EntityManager::operator[]( const unsigned int ID ) const
 		throw( ex );
 	}
 
-	return ( *( it->second ) );
+	return ( it->second );
 }
 
 const Entity& EntityManager::operator[]( const char* name ) const

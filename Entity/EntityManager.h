@@ -2,17 +2,34 @@
 #define _ENTITYMANAGER_H_
 
 #include "Logging/Log.h"
-#include <map>
+#include <unordered_map>
 #include <string>
 
 #include "Entity/Entity.h"
 
-typedef std::map<const unsigned int,Entity* const> ListOfEntities;
-typedef std::map<const std::string,const unsigned int> IndexOfEntities;
+//typedef std::map<const unsigned int,Entity* const> ListOfEntities;
+typedef std::unordered_map<unsigned int,Entity> ListOfEntities;
+typedef std::unordered_map<std::string,const unsigned int> IndexOfEntities;
 
-typedef std::pair<const unsigned int,Entity* const> EntityPair;
-typedef std::pair<const std::string,const unsigned int> IndexPair;
+//typedef std::pair<const unsigned int,Entity* const> EntityPair;
+typedef std::pair<unsigned int,Entity> EntityPair;
+typedef std::pair<std::string,const unsigned int> IndexPair;
 
+//TODO: Make methods that return a non-const reference to Entity private
+//TODO: Add const versions of New() methods
+//TODO: Change implementation of subscript operator to use <algorithm> functions
+//i.e. (http://stackoverflow.com/questions/15517991/search-a-vector-of-objects-by-object-attribute)
+/*
+const Entity& operator[]( const std::string& name )
+{
+	auto result = std::find_if( entities.begin(), entities.end(), [&name]( const T& obj ){return obj.Name == name}; )
+
+	if( result != entities.end() )
+	{
+		return result->second;
+	}
+}
+//*/
 class EntityManager
 {
 private:

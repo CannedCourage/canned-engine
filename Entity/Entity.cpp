@@ -2,6 +2,10 @@
 
 unsigned int Entity::entityCounter = 0;
 
+Entity::Entity( void )
+{
+}
+
 Entity::Entity( const char* name ) : ID( entityCounter ), Name( name )
 {
 	entityCounter++;
@@ -10,6 +14,18 @@ Entity::Entity( const char* name ) : ID( entityCounter ), Name( name )
 Entity::Entity( const std::string& name ) : ID( entityCounter ), Name( name )
 {
 	entityCounter++;
+}
+
+Entity::Entity( const Entity& entity ) : ID( entity.ID ), Name( entity.Name )
+{
+}
+
+Entity& Entity::operator=( const Entity& entity )
+{
+	this->ID = entity.ID;
+	this->Name = entity.Name;
+
+	return ( *this );
 }
 
 Entity::~Entity( void )

@@ -6,22 +6,26 @@
 class Entity
 {
 private:
-
-	//This object should not be constructed from another object.
-	//TODO: Create clone method? This would dupicate components as well.
-	Entity( const Entity& entity );
-	Entity& operator=( const Entity& entity );
 protected:
 
 	static unsigned int entityCounter;
 public:
+	
+	//TODO: Consider the constness of this, might be ok if only const references returned
+	unsigned int ID;
+	std::string Name;
 
-	const unsigned int ID;
-	const std::string Name;
-
+	Entity( void );
 	Entity( const char* name );
 	Entity( const std::string& name );
+	
+	Entity( const Entity& entity );
+
+	Entity& operator=( const Entity& entity );
+	
 	~Entity( void );
+
+	//TODO: Create clone method? This would dupicate components as well.
 };
 
 #endif //_ENTITY_H_
