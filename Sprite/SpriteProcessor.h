@@ -68,4 +68,33 @@ public:
 	void End( void );
 };
 
+class Entity;
+
+class SpriteAdder
+{
+private:
+protected:
+
+	SpriteProcessor& sprites;
+public:
+
+	SpriteAdder( SpriteProcessor& s );
+
+	void operator()( const Entity& entity, IDirect3DTexture9* texture );
+};
+
+class SpriteGetter
+{
+private:
+protected:
+
+	SpriteProcessor& sprites;
+public:
+
+	SpriteGetter( SpriteProcessor& s );
+
+	SpriteComponent& operator()( const Entity& entity );
+	const SpriteComponent& operator()( const Entity& entity ) const;
+};
+
 #endif //_SPRITEPROCESSOR_H_
