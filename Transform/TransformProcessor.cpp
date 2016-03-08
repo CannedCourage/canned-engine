@@ -12,13 +12,18 @@ void TransformProcessor::AddTransformComponent( const unsigned int entityID )
 {
 	TransformComponent t;
 
-	transformComponents[ entityID ] = t;
+	transformComponents[entityID] = t;
 }
 
 TransformComponent& TransformProcessor::GetTransformComponent( const unsigned int entityID )
 {
-	return transformComponents[ entityID ];
+	return transformComponents[entityID];
 }
+
+// const TransformComponent& TransformProcessor::GetTransformComponent( const unsigned int entityID ) const
+// {
+// 	return transformComponents[entityID];
+// }
 
 void TransformProcessor::Start( void )
 {
