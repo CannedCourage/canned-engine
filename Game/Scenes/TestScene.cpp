@@ -20,7 +20,11 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									channel( NULL ),
 									transforms(),
 									meshes( s.graphics ),
-									sprites( s.graphics, transforms )
+									sprites( s.graphics, transforms ),
+									AddTransform( transforms ),
+									GetTransform( transforms ),
+									AddSprite( sprites ),
+									GetSprite( sprites )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -87,18 +91,14 @@ void TestScene::Load( void )
 	
 	assets.LoadTexture( QMARK );
 
-	//Perhaps give Entities a human-readable name?
 	Entity& qMark = entityManager.New( "qMark" );
 
 	//TODO: Need to add delete* methods to remove components
-	transforms.AddTransformComponent( qMark.ID );
-	sprites.AddSpriteComponent( qMark.ID, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
+	AddTransform( qMark );
+	AddSprite( qMark, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
 
-	//transforms.GetTransformComponent( qMark ).localRotation.x = 30;
-	//transforms.GetTransformComponent( qMark ).localRotation.y = 30;
-
-	transforms.GetTransformComponent( qMark.ID ).scale.x = 640;
-	transforms.GetTransformComponent( qMark.ID ).scale.y = 320;
+	GetTransform( qMark ).scale.x = 640;
+	GetTransform( qMark ).scale.y = 320;
 
 	//Always set state and report
 	loaded = true;
@@ -190,7 +190,8 @@ void TestScene::Update( void )
 {
 	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
 
-	transforms.GetTransformComponent( entityManager["qMark"].ID ).localRotation.z -= 0.1;
+	// transforms.GetTransformComponent( entityManager["qMark"].ID ).localRotation.z -= 0.1;
+	GetTransform( entityManager["qMark"] ).localRotation.z -= 0.01;
 
 	/*if( test1.IsAnyPressed() )
 	{

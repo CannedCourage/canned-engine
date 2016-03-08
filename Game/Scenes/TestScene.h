@@ -44,6 +44,12 @@ protected:
 	MeshProcessor meshes;
 	SpriteProcessor sprites;
 
+	//Helpers
+	TransformAdder 	AddTransform;
+	TransformGetter GetTransform;
+	SpriteAdder 	AddSprite;
+	SpriteGetter	GetSprite;
+
 	void Update( void ); //Remove
 
 	void PreRender( void );
