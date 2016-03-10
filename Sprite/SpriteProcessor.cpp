@@ -78,12 +78,23 @@ SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphic
 	worldHandle = effect->GetParameterBySemantic( NULL, "WORLD" );
 	viewHandle = effect->GetParameterBySemantic( NULL, "VIEW" );
 	projHandle = effect->GetParameterBySemantic( NULL, "PROJECTION" );
-	//texTransHandle = effect->GetParameterByName( NULL, "matTex" );
+	texTransHandle = effect->GetParameterBySemantic( NULL, "TEXTRANSFROM" );
 	textureHandle = effect->GetParameterByName( NULL, "g_MeshTexture" );
 
-	//TODO: Switch back to SpriteShader.fx
-	//RenderWithTexture = effect->GetTechniqueByName( "RenderSpriteWithTexture" );
-	RenderWithoutTexture = effect->GetTechniqueByName( "RenderSpriteWithoutTexture" );
+	//TODO: Switch back to SpriteShader.fx	
+	RenderWithTexture = effect->GetTechniqueByName( "RenderSpriteWithTexture" );
+
+	D3DXMatrixIdentity( &viewMat );
+	D3DXMatrixIdentity( &projMat );
+
+	D3DXMatrixLookAtLH( &viewMat, &(D3DXVECTOR3( 0.0f, 0.0f, -1.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
+	
+	//TODO: Get screen info from Graphics class(?) - This is a good reason to abstract this code away into the graphics class
+	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 1.0f );
+
+	//Set View Matrix
+	effect->SetMatrix( viewHandle, &viewMat );
+	effect->SetMatrix( projHandle, &projMat );
 }
 
 SpriteProcessor::~SpriteProcessor( void )
@@ -131,102 +142,90 @@ void SpriteProcessor::Start( void )
 {
 }
 
+void SpriteProcessor::DrawSprite( const unsigned int entityID, SpriteComponent& sprite )
+{
+	D3DXMATRIX world, textureTransformation; //Passed to shader
+	D3DXMATRIX translation, localRotationX, localRotationY, localRotationZ, scaling; //Geometry
+	D3DXMATRIX textureScaling, textureTranslation; //Texture Coordinates
+
+	D3DXMatrixIdentity( &world ); D3DXMatrixIdentity( &textureTransformation );
+	D3DXMatrixIdentity( &translation );
+	D3DXMatrixIdentity( &localRotationX ); D3DXMatrixIdentity( &localRotationY ); D3DXMatrixIdentity( &localRotationZ );
+	D3DXMatrixIdentity( &scaling );
+	D3DXMatrixIdentity( &textureScaling ); D3DXMatrixIdentity( &textureTranslation );
+
+	const TransformComponent& tForm = transforms.GetTransformComponent( entityID );
+
+	D3DXMatrixTranslation( &translation, tForm.translation.x, tForm.translation.y, tForm.translation.z );
+
+	D3DXMatrixRotationX( &localRotationX, tForm.localRotation.x );
+	D3DXMatrixRotationY( &localRotationY, tForm.localRotation.y );
+	D3DXMatrixRotationZ( &localRotationZ, tForm.localRotation.z );
+	
+	D3DXMatrixScaling( &world, tForm.scale.x, tForm.scale.y, 1 );
+
+	//Multplication order: scaling * localRotation * translation * rotation
+	//TODO: Implement non-local rotations?
+	world = world * scaling * localRotationX * localRotationY * localRotationZ * translation;
+
+	effect->SetMatrix( worldHandle, &world );
+	
+	effect->SetTexture( textureHandle, sprite.texture );
+
+	//Hardcoded texture coordinates have height/length of 1
+	//Scaling amount equals new height/width divided by the old (1.0f)
+	float heightScaling = sprite.texRect.bottom - sprite.texRect.top;
+	float widthScaling = sprite.texRect.right - sprite.texRect.left;
+
+	//This transforms the texture coordinates that are hard coded in the vertex array
+	D3DXMatrixScaling( &textureScaling, widthScaling, heightScaling, 1 );
+	D3DXMatrixTranslation( &textureTranslation, sprite.texRect.left, sprite.texRect.top, 0 );
+	textureTransformation = textureScaling * textureTranslation;
+
+	effect->SetMatrix( texTransHandle, &textureTransformation );
+	
+	//TODO: Switch effect file
+	effect->SetTechnique( RenderWithTexture );
+	
+	//Apply the technique contained in the effect 
+	UINT cPasses = 0;
+	effect->Begin( &cPasses, 0 );
+
+	for( int iPass = 0; iPass < cPasses; iPass++ )
+	{
+		effect->BeginPass( iPass );
+
+		//Render the geometry with the applied technique
+		graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing sprite" );
+
+		effect->EndPass();
+	}
+	
+	effect->End();
+	
+	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, NULL, 0, 0 ), "Clearing stream source" );
+	graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
+}
+
 void SpriteProcessor::Update( const double& deltaT )
 {
-	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Disabling Z-writes" );
 	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, TRUE ), "Setting sprite render state" );
 
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Disabling Lighting Failed" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE ), "Disabling Culling" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_FALSE ), "Disabling Depth Testing" );
-	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_COLORVERTEX, TRUE ), "Enabling Vertex Colours" );
 
 	graphics.ErrorCheck( graphics.Device()->SetVertexDeclaration( vDecl ), "Setting vertex declaration" );
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, vBuffer, 0, stride ), "Setting stream source" );
 	graphics.ErrorCheck( graphics.Device()->SetIndices( iBuffer ), "Setting indices" );
 
-	D3DXMATRIX worldMat, viewMat, projMat, texTransMat;
-	D3DXMATRIX transMat, rotMatX, rotMatY, rotMatZ, scaleMat;
+	ListOfSprites::iterator it;
 
-	D3DXMatrixIdentity( &transMat );
-	D3DXMatrixIdentity( &rotMatX );
-	D3DXMatrixIdentity( &rotMatY );
-	D3DXMatrixIdentity( &rotMatZ );
-	D3DXMatrixIdentity( &scaleMat );
-
-	D3DXMatrixIdentity( &worldMat );
-	D3DXMatrixIdentity( &viewMat );
-	D3DXMatrixIdentity( &projMat );
-	D3DXMatrixIdentity( &texTransMat );
-
-	D3DXMatrixLookAtLH( &viewMat, &(D3DXVECTOR3( 0.0f, 0.0f, -1.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
-	
-	//TODO: Get screen info from Graphics class(?) - This is a good reason to abstract this code away into the graphics class
-	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 1.0f );
-
-	std::map<int, SpriteComponent>::iterator it;
-
-	TransformComponent tForm;
-	//*
 	for( it = spriteComponents.begin(); it != spriteComponents.end(); it++ )
 	{
-		tForm = transforms.GetTransformComponent( it->first );
-
-		//TODO: Get Transform details from Entity - This will probably get moved into spriteComponent loop
-		D3DXMatrixTranslation( &transMat, tForm.translation.x, tForm.translation.y, 0 );
-		D3DXMatrixRotationX( &rotMatX, tForm.localRotation.x );
-		D3DXMatrixRotationY( &rotMatY, tForm.localRotation.y );
-		D3DXMatrixRotationZ( &rotMatZ, tForm.localRotation.z );
-		D3DXMatrixScaling( &worldMat, tForm.scale.x, tForm.scale.y, 0 );
-
-		//Multplication order: scaling * localRotation * translation * rotation
-		D3DXMatrixMultiply( &worldMat, &worldMat, &scaleMat );
-		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatX );
-		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatY );
-		D3DXMatrixMultiply( &worldMat, &worldMat, &rotMatZ );
-		D3DXMatrixMultiply( &worldMat, &worldMat, &transMat );
-
-		//Set World Matrix - This will come from Transform
-		effect->SetMatrix( worldHandle, &worldMat ); //Calculate from Transform
-
-		//Set View Matrix
-		effect->SetMatrix( viewHandle, &viewMat );
-		effect->SetMatrix( projHandle, &projMat );
-		
-		effect->SetTexture( textureHandle, it->second.texture ); //From sprite component
-
-		//TODO: Animated Sprites
-		//Set Texture Matrix (in shader)
-		//effect->SetMatrix( texTransHandle, &texTransMat ); //Calculate from texture coordinates in sprite component
-		
-		//TODO: Switch effect file - This name is garbage
-		effect->SetTechnique( RenderWithoutTexture );
-		
-		// Apply the technique contained in the effect 
-		UINT cPasses = 0;
-		effect->Begin(&cPasses, 0);
-
-		for(int iPass = 0; iPass < cPasses; iPass++)
-		{
-			effect->BeginPass(iPass);
-
-			//Only call CommitChanges if any state changes have happened
-			//after BeginPass is called
-			//effect->CommitChanges();
-
-			//Render the mesh with the applied technique
-			//graphics.ErrorCheck( graphics.Device()->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, numVerts, 0, 2 ), "Drawing sprite" );
-			graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing sprite" );
-
-			effect->EndPass();
-		}
-		
-		effect->End();
-		
-		graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, FALSE );
-		graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, NULL, 0, 0 ), "Clearing stream source" );
-		graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
+		DrawSprite( it->first, it->second );
 	}
 	
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE );

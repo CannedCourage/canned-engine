@@ -5,8 +5,13 @@
 
 struct SpriteComponent
 {
+	//Store textureCoordinates as coordinates, but will become a transformation matrix
 	RECT texRect;
-	IDirect3DTexture9* texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }
+
+	//Apply rotation about Z-axis in the followng amount
+	float rotation;
+	
+	IDirect3DTexture9* texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
 
 	SpriteComponent( void );
 };

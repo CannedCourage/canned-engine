@@ -2,8 +2,10 @@
 
 SpriteComponent::SpriteComponent( void ) : texture( NULL )
 {
-	texRect.left = 0;
-	texRect.top = 0;
-	texRect.right = 0;
-	texRect.bottom = 0;
+	texRect.left = 0.0f;
+	texRect.top = 0.0f;
+	texRect.right = 1.0f;
+	texRect.bottom = 1.0f;
+
+	rotation = 0.0f;
 }

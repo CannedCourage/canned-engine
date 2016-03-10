@@ -10,8 +10,6 @@
 #include <map>
 #include <vector>
 
-//#include "Entity/Entity.h"
-
 struct VFormat
 {
 	float x, y, z;
@@ -21,6 +19,10 @@ struct VFormat
 class Graphics;
 class TransformProcessor;
 
+//TODO: Replace with vector?
+//TODO: Replace with unordered_map?
+typedef std::map<int, SpriteComponent> ListOfSprites;
+
 class SpriteProcessor : public iProcess
 {
 private:
@@ -29,15 +31,14 @@ protected:
 	Graphics& graphics;
 	TransformProcessor& transforms;
 
-	//TODO: Replace with std::vector< std::pair< int, SpriteComponent > > ?
-	std::map<int, SpriteComponent> spriteComponents; //entity id as key
+	ListOfSprites spriteComponents; //entity id as key
 
 	IDirect3DVertexBuffer9* vBuffer;
 	IDirect3DVertexDeclaration9* vDecl;
 	IDirect3DIndexBuffer9* iBuffer;
 	
 	std::vector<VFormat> verts;
-	std::vector<short> indicies;
+	std::vector<unsigned short int> indicies;
 	std::vector<D3DVERTEXELEMENT9> vElements;
 	
 	const int numVerts;
@@ -54,7 +55,11 @@ protected:
 	D3DXHANDLE RenderWithTexture;
 	D3DXHANDLE RenderWithoutTexture;
 
+	D3DXMATRIX viewMat, projMat;
+
 	Log log;
+
+	void DrawSprite( const unsigned int entityID, SpriteComponent& sprite );
 public:
 
 	SpriteProcessor( Graphics& g, TransformProcessor& t );
