@@ -1,94 +1,93 @@
 #include "Engine/Time.h"
 #include "Maths/Clamp.h"
 
-Time::Time( void ) : begin( ), end( ), freq( 0.0f ), deltaTime( 0.0f ), fixedStep( 0.01f ), timeScaleGlobal( 1.0f ), physicsAccumulator( 0.0f ), MAXDT( 0.25 )
+Time::Time( void ) : StartOfFrame(), EndOfFrame(), FrameDeltaTime( 0 ), FixedPhysicsStep( 10 ),
+						PhysicsAcc( 0 ), TimeScaleFactor( 1.0f ), MAXDELTATIME( 250 )
 {
-	freq = getFreq();
 }
 
 Time::~Time( void )
 {
 }
 
-double Time::getFreq( void )
+void Time::FrameBegin( void )
 {
-	LARGE_INTEGER proc_freq;
-
-	if ( !::QueryPerformanceFrequency( &proc_freq ) )
-		throw ( TEXT( "QueryPerformanceFrequency() failed" ) );
-
-	return proc_freq.QuadPart;
+	StartOfFrame = EngineClock::now();
 }
 
-void Time::frameBegin( void )
+EngineDuration Time::FrameEnd( void )
 {
-	DWORD_PTR oldmask = ::SetThreadAffinityMask( ::GetCurrentThread(), 0 );
+	EndOfFrame = EngineClock::now();
 
-	::QueryPerformanceCounter( &begin );
+	FrameDeltaTime = std::chrono::duration_cast<EngineDuration>( EndOfFrame - StartOfFrame );
 
-	::SetThreadAffinityMask( ::GetCurrentThread(), oldmask );
+	return FrameDeltaTime;
 }
 
-double Time::frameEnd( void )
+EngineDuration Time::DeltaTimeActual( void )
 {
-	DWORD_PTR oldmask = ::SetThreadAffinityMask( ::GetCurrentThread(), 0 );
+	//Clamp deltaTime to prevent "Spiral of Death"
 
-	::QueryPerformanceCounter( &end );
+	if( FrameDeltaTime > MAXDELTATIME )
+	{
+		return MAXDELTATIME;
+	}
 
-	::SetThreadAffinityMask( ::GetCurrentThread(), oldmask );
+	if( FrameDeltaTime < EngineDuration::zero() )
+	{
+		return EngineDuration::zero();
+	}
 
-	return ( deltaTime = ( (end.QuadPart - begin.QuadPart) / freq) );
+	return FrameDeltaTime;
 }
 
-double Time::deltaTimeActual( void )
+EngineDuration Time::DeltaTime( void )
 {
-	return clamp( deltaTime, 0, MAXDT );	//Clamp deltaTime to prevent "Spiral of Death"
+	return std::chrono::duration_cast<EngineDuration>( DeltaTimeActual() * TimeScaleFactor );
 }
 
-double Time::deltaTimeS( void )
+EngineDuration Time::FixedStepActual( void )
 {
-	//return clamp( deltaTime * timeScaleGlobal, 0, MAXDT * timeScaleGlobal );
-	return ( deltaTimeActual() * timeScaleGlobal );
+	return FixedPhysicsStep;
 }
 
-double Time::fixedStepActual( void )
+EngineDuration Time::FixedStep( void )
 {
-	return clamp( fixedStep, 0, fixedStep );
+	return std::chrono::duration_cast<EngineDuration>( FixedPhysicsStep * TimeScaleFactor ); //Should physics timestep also be affected by timeScale?
 }
 
-double Time::fixedStepS( void )
+void Time::FixedStep( int milliseconds )
 {
-	return clamp( fixedStep * timeScaleGlobal, 0, fixedStep * timeScaleGlobal );	//Should physics timestep also be affected by timeScale?
+	if( milliseconds > 0 )
+	{
+		FixedPhysicsStep = EngineDuration( milliseconds );
+	}
 }
 
-void Time::fixedStepS( double t )
+double Time::TimeScale( void )
 {
-	t = clamp( t, 0, t );
-	fixedStep = t;
+	return TimeScaleFactor;
 }
 
-double Time::timeScale( void )
+void Time::TimeScale( double multiplier )
 {
-	return clamp( timeScaleGlobal, 0.0f, timeScaleGlobal );
+	if( multiplier > 0 )
+	{
+		TimeScaleFactor = multiplier;
+	}
 }
 
-void Time::timeScale( double t )
+EngineDuration Time::PhysicsAccumulator( void )
 {
-	t = clamp( t, 0, t );
-	timeScaleGlobal = t;
+	return PhysicsAcc;
 }
 
-double Time::Acc( void )
+void Time::AddToPhysicsAccumulator( EngineDuration time )
 {
-	return physicsAccumulator;
+	PhysicsAcc += time;
 }
 
-void Time::AddToAcc( double t )
+void Time::SubtractFromPhysicsAccumulator( EngineDuration time )
 {
-	physicsAccumulator += t;
-}
-
-void Time::SubFromAcc( double t )
-{
-	physicsAccumulator -= t;
+	PhysicsAcc -= time;
 }

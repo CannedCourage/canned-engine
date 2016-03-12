@@ -128,7 +128,7 @@ void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3D
 {
 	SpriteComponent s;
 
-	s.texture = texture;
+	s.Texture = texture;
 
 	spriteComponents[ entityID ] = s;
 }
@@ -142,7 +142,7 @@ void SpriteProcessor::Start( void )
 {
 }
 
-void SpriteProcessor::DrawSprite( const unsigned int entityID, SpriteComponent& sprite )
+void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteComponent& sprite )
 {
 	D3DXMATRIX world, textureTransformation; //Passed to shader
 	D3DXMATRIX translation, localRotationX, localRotationY, localRotationZ, scaling; //Geometry
@@ -170,16 +170,18 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, SpriteComponent& 
 
 	effect->SetMatrix( worldHandle, &world );
 	
-	effect->SetTexture( textureHandle, sprite.texture );
+	effect->SetTexture( textureHandle, sprite.Texture );
 
 	//Hardcoded texture coordinates have height/length of 1
 	//Scaling amount equals new height/width divided by the old (1.0f)
-	float heightScaling = sprite.texRect.bottom - sprite.texRect.top;
-	float widthScaling = sprite.texRect.right - sprite.texRect.left;
+	float heightScaling = sprite.TextureDimensions.bottom - sprite.TextureDimensions.top;
+	float widthScaling = sprite.TextureDimensions.right - sprite.TextureDimensions.left;
 
 	//This transforms the texture coordinates that are hard coded in the vertex array
 	D3DXMatrixScaling( &textureScaling, widthScaling, heightScaling, 1 );
-	D3DXMatrixTranslation( &textureTranslation, sprite.texRect.left, sprite.texRect.top, 0 );
+	//D3DXMatrixRotationZ( &textureRotation, sprite.TextureRotation );
+	D3DXMatrixTranslation( &textureTranslation, sprite.TextureDimensions.left, sprite.TextureDimensions.top, 0 );
+	
 	textureTransformation = textureScaling * textureTranslation;
 
 	effect->SetMatrix( texTransHandle, &textureTransformation );
@@ -207,7 +209,7 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, SpriteComponent& 
 	graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
 }
 
-void SpriteProcessor::Update( const double& deltaT )
+void SpriteProcessor::Update( const EngineDuration& deltaT )
 {
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Disabling Z-writes" );

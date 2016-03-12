@@ -26,35 +26,35 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 int System::Run( void )
 {
 	//The Message Loop
-	MSG msg;				//A system message
+	MSG msg; //A system message
 
 	while( TRUE )
     {
-    	time.frameBegin();
+    	time.FrameBegin();
 
         while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	//Get message from queue
         {
-            TranslateMessage( &msg );	//Additional Processing
-            DispatchMessage( &msg );	//Send the Message
+            TranslateMessage( &msg ); //Additional Processing
+            DispatchMessage( &msg ); //Send the Message
         }
 
 		if( ::GetAsyncKeyState( VK_ESCAPE ) )
 		{
 			Quit();
-			time.frameEnd();
+			time.FrameEnd();
 			break;
 		}
 
 		if( msg.message == WM_QUIT )
 		{
 			log.Message( "QUITTING", true );
-			time.frameEnd();
+			time.FrameEnd();
 			break;
 		}
 
 		GameLoop();
 
-		time.frameEnd();
+		time.FrameEnd();
     }
 
 	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
@@ -63,17 +63,17 @@ int System::Run( void )
 
 int System::GameLoop( void )
 {
-	time.AddToAcc( time.deltaTimeS() );
+	time.AddToPhysicsAccumulator( time.DeltaTimeActual() );
 
 	input.Update();
 	sceneManager.Update();
 
-	while( time.Acc() > time.fixedStepS() )
+	while( time.PhysicsAccumulator() > time.FixedStep() )
 	{
-		if( time.fixedStepS() == 0 ){ break; }
-		//physics.Integrate( time.fixedStepS() );
+		if( time.FixedStep() == EngineDuration::zero() ){ break; }
+		//physics.Integrate( time.FixedStep() );
 		sceneManager.FixedUpdate();
-		time.SubFromAcc( time.fixedStepS() );
+		time.SubtractFromPhysicsAccumulator( time.FixedStep() );
 	}
 
 	input.PostUpdate();

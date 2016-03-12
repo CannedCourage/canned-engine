@@ -24,37 +24,37 @@ IScene::~IScene( void )
 
 void IScene::PreUpdate( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTime(), PRE_UPDATE );
 }
 
 void IScene::Update( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTime(), UPDATE );
 }
 
 void IScene::FixedUpdate( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), FIXED_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTime(), FIXED_UPDATE );
 }
 
 void IScene::PostUpdate( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), POST_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTime(), POST_UPDATE );
 }
 
 void IScene::PreRender( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), PRE_RENDER );
 }
 
 void IScene::Render( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), RENDER );
 }
 
 void IScene::PostRender( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), POST_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), POST_RENDER );
 }
 
 inline const bool IScene::IsLoaded( void ) const

@@ -30,7 +30,7 @@ public:
 	MeshComponent& GetMeshComponent( const unsigned int entityID );
 
 	void Start( void );
-	void Update( const double& deltaT );
+	void Update( const EngineDuration& deltaT );
 	void End( void );
 };
 

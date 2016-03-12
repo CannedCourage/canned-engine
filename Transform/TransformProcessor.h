@@ -29,7 +29,7 @@ public:
 	//const TransformComponent& GetTransformComponent( const unsigned int entityID ) const;
 
 	void Start( void );
-	void Update( const double& deltaT );
+	void Update( const EngineDuration& deltaT );
 	void End( void );
 };
 

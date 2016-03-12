@@ -21,7 +21,7 @@ void ProcessManager::RemoveProcess( iProcess* process )
 	processes.erase( process );
 }
 
-void ProcessManager::UpdateProcesses( const double& deltaT, Priority priority )
+void ProcessManager::UpdateProcesses( const EngineDuration& deltaT, Priority priority )
 {
 	for( mapIt = processes.begin(); mapIt != processes.end(); mapIt++ )
 	{

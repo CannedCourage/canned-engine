@@ -27,7 +27,7 @@ void MeshProcessor::End( void )
 {
 }
 
-void MeshProcessor::Update( const double& deltaT )
+void MeshProcessor::Update( const EngineDuration& deltaT )
 {
 	graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE);

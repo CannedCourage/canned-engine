@@ -2,13 +2,11 @@
 #define _SPRITEPROCESSOR_H_
 
 #include "Engine/iProcess.h"
-
 #include "Sprite/SpriteComponent.h"
-
 #include "Logging/Log.h"
-
-#include <map>
+#include <unordered_map>
 #include <vector>
+#include <d3dx9.h>
 
 struct VFormat
 {
@@ -20,8 +18,7 @@ class Graphics;
 class TransformProcessor;
 
 //TODO: Replace with vector?
-//TODO: Replace with unordered_map?
-typedef std::map<int, SpriteComponent> ListOfSprites;
+typedef std::unordered_map<int, SpriteComponent> ListOfSprites;
 
 class SpriteProcessor : public iProcess
 {
@@ -59,7 +56,7 @@ protected:
 
 	Log log;
 
-	void DrawSprite( const unsigned int entityID, SpriteComponent& sprite );
+	void DrawSprite( const unsigned int entityID, const SpriteComponent& sprite );
 public:
 
 	SpriteProcessor( Graphics& g, TransformProcessor& t );
@@ -69,7 +66,7 @@ public:
 	SpriteComponent& GetSpriteComponent( const unsigned int entityID );
 
 	void Start( void );
-	void Update( const double& deltaT );
+	void Update( const EngineDuration& deltaT );
 	void End( void );
 };
 

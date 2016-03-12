@@ -1,50 +1,55 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 
-#include <Windows.h>
+#include <chrono>
+
+typedef std::chrono::milliseconds EngineDuration;
+typedef std::chrono::high_resolution_clock EngineClock;
+typedef EngineClock::time_point EngineTime;
 
 class Time
 {
 private:
 protected:
 
-	LARGE_INTEGER begin, end;
-	double freq, deltaTime, fixedStep, timeScaleGlobal;
-	double physicsAccumulator;
+	EngineTime StartOfFrame, EndOfFrame;
 
-	double getFreq( void );
+	EngineDuration FrameDeltaTime, FixedPhysicsStep, PhysicsAcc;
+	double TimeScaleFactor;
 
-	const float MAXDT;
+	const EngineDuration MAXDELTATIME;
 public:
 
 	Time( void );
 	~Time( void );
 
-	void frameBegin( void );
-	double frameEnd( void );	//Stops timer, stores the time, and stores the elapsed time as deltaTime
+	void FrameBegin( void );
+	EngineDuration FrameEnd( void ); //Stops timer, stores the time, and returns the elapsed time as deltaTime
 
 	//Get the dt in seconds
-	double deltaTimeActual( void );
+	EngineDuration DeltaTimeActual( void );
 	//Get the dt in seconds (s), this is multiplied by timeScale before being returned
-	double deltaTimeS( void );
+	EngineDuration DeltaTime( void );
 
 	//Get the fixed physics step in seconds (s)
-	double fixedStepActual( void );
+	EngineDuration FixedStepActual( void );
 	//Get the fixed physics step in seconds (s), this is multiplied by timeScale before being returned
-	double fixedStepS( void );
+	EngineDuration FixedStep( void );
 
-	//Set the fixed physics step (shouldn't be lower than 1/10?)
-	void fixedStepS( double t );
-
-	//Get the current timeScale
-	double timeScale( void );
+	//Set the fixed physics step (shouldn't be lower than 1/100?)
+	void FixedStep( int milliseconds );
 
 	//Set the timeScale
-	void timeScale( double t );
+	void TimeScale( double multiplier );
 
-	double Acc( void );
-	void AddToAcc( double t );
-	void SubFromAcc( double t );
+	//Get the current timeScale
+	double TimeScale( void );
+
+	EngineDuration PhysicsAccumulator( void );
+
+	void AddToPhysicsAccumulator( EngineDuration time );
+
+	void SubtractFromPhysicsAccumulator( EngineDuration time );
 };
 
 #endif //_TIMER_H_

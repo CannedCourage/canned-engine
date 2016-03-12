@@ -188,10 +188,10 @@ void TestScene::Unload( void )
 
 void TestScene::Update( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTime(), UPDATE );
 
 	// transforms.GetTransformComponent( entityManager["qMark"].ID ).localRotation.z -= 0.1;
-	GetTransform( entityManager["qMark"] ).localRotation.z -= 0.01;
+	GetTransform( entityManager["qMark"] ).localRotation.z -= ( 0.01 );
 
 	/*if( test1.IsAnyPressed() )
 	{
@@ -232,7 +232,7 @@ void TestScene::PreRender( void )
 
 	graphics.Device()->BeginScene();
 
-	engine.UpdateProcesses( system.time.deltaTimeS(), PRE_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), PRE_RENDER );
 }
 
 void TestScene::Render( void )
@@ -255,12 +255,12 @@ void TestScene::Render( void )
 	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 16, 2 ), "Drawing cube" );
 	//graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 20, 2 ), "Drawing cube" );
 
-	engine.UpdateProcesses( system.time.deltaTimeS(), RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), RENDER );
 }
 
 void TestScene::PostRender( void )
 {
-	engine.UpdateProcesses( system.time.deltaTimeS(), POST_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTime(), POST_RENDER );
 
 	graphics.Device()->EndScene();
 

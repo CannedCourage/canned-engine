@@ -2,6 +2,7 @@
 #define _PROCESSMANAGER_H_
 
 #include <map>
+#include "Engine/Time.h"
 
 class iProcess;
 
@@ -22,7 +23,7 @@ public:
 	void AddProcess( iProcess* process, Priority priority );
 	void RemoveProcess( iProcess* process );
 
-	void UpdateProcesses( const double& deltaT, Priority priority );
+	void UpdateProcesses( const EngineDuration& deltaT, Priority priority );
 };
 
 #endif //_PROCESSMANAGER_H_

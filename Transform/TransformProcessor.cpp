@@ -29,7 +29,7 @@ void TransformProcessor::Start( void )
 {
 }
 
-void TransformProcessor::Update( const double& deltaT )
+void TransformProcessor::Update( const EngineDuration& deltaT )
 {
 }
 
