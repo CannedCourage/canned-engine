@@ -1,11 +1,13 @@
 #include "Sprite/SpriteComponent.h"
 
-SpriteComponent::SpriteComponent( void ) : texture( NULL )
-{
-	texRect.left = 0.0f;
-	texRect.top = 0.0f;
-	texRect.right = 1.0f;
-	texRect.bottom = 1.0f;
+#include <d3dx9.h>
 
-	rotation = 0.0f;
+SpriteComponent::SpriteComponent( void ) : Texture( NULL )
+{
+	TextureDimensions.left = 0.0f;
+	TextureDimensions.top = 0.0f;
+	TextureDimensions.right = 1.0f;
+	TextureDimensions.bottom = 1.0f;
+
+	TextureRotation = 0.0f;
 }

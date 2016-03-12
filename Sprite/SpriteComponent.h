@@ -3,17 +3,23 @@
 
 #include <d3dx9.h>
 
-struct SpriteComponent
-{
-	//Store textureCoordinates as coordinates, but will become a transformation matrix
-	RECT texRect;
+class IDirect3DTexture9;
 
-	//Apply rotation about Z-axis in the followng amount
-	float rotation;
+class SpriteComponent
+{
+private:
+protected:
+public:
+
+	//This will become a transformation matrix that transforms the hard-coded texture coordinates
+	RECT TextureDimensions; //Scale and Translate
+	float TextureRotation; //Rotation about Z-axis
 	
-	IDirect3DTexture9* texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
+	IDirect3DTexture9* Texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
 
 	SpriteComponent( void );
 };
+
+typedef SpriteComponent Sprite;
 
 #endif //_SPRITECOMPONENT_H_
