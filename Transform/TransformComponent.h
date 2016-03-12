@@ -3,8 +3,12 @@
 
 #include "Maths/Vector.h"
 
-struct TransformComponent
+class TransformComponent
 {
+private:
+protected:
+public:
+	
 	Vector3D translation;
 	Vector3D localRotation;
 	Vector3D rotation;
@@ -12,5 +16,7 @@ struct TransformComponent
 
 	TransformComponent( void );
 };
+
+typedef TransformComponent Transform;
 
 #endif //_TRANSFORMCOMPONENT_H_
