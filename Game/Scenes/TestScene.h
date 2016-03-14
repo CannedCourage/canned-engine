@@ -12,6 +12,7 @@
 #include "Transform/TransformProcessor.h"
 #include "Mesh/MeshProcessor.h"
 #include "Sprite/SpriteProcessor.h"
+#include "Sprite/AnimatedSpriteProcessor.h"
 
 class System;
 
@@ -43,12 +44,15 @@ protected:
 	TransformProcessor transforms;
 	MeshProcessor meshes;
 	SpriteProcessor sprites;
+	AnimatedSpriteProcessor animatedSprites;
 
 	//Helpers
-	TransformAdder 	AddTransform;
-	TransformGetter GetTransform;
-	SpriteAdder 	AddSprite;
-	SpriteGetter	GetSprite;
+	TransformAdder 			AddTransform;
+	TransformGetter 		GetTransform;
+	SpriteAdder 			AddSprite;
+	SpriteGetter			GetSprite;
+	AnimatedSpriteAdder 	AddAnimatedSprite;
+	AnimatedSpriteGetter 	GetAnimatedSprite;
 
 	void Update( void ); //Remove
 

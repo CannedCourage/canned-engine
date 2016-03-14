@@ -4,6 +4,7 @@
 #define DRUMLOOP "w:/game/sounds/drumloop.wav"
 #define TIGER "w:/game/meshes/tiger.x"
 #define QMARK "w:/game/textures/qMark.bmp"
+#define UVTEST "w:/game/textures/uvtemplate.bmp"
 
 //Globals for scene variables?
 ID3DXSprite* s = NULL;
@@ -21,10 +22,13 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									transforms(),
 									meshes( s.graphics ),
 									sprites( s.graphics, transforms ),
+									animatedSprites( s.graphics, transforms ),
 									AddTransform( transforms ),
 									GetTransform( transforms ),
 									AddSprite( sprites ),
-									GetSprite( sprites )
+									GetSprite( sprites ),
+									AddAnimatedSprite( animatedSprites ),
+									GetAnimatedSprite( animatedSprites )
 {
 	D3DXMatrixTranslation( &matWorld, 0, 0, 0 );
 	D3DXMatrixLookAtLH( &matView, &(D3DXVECTOR3( 3.0f, 3.0f, -3.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
@@ -38,6 +42,7 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 	engine.AddProcess( &transforms, UPDATE );
 	engine.AddProcess( &meshes, RENDER );
 	engine.AddProcess( &sprites, RENDER );
+	engine.AddProcess( &animatedSprites, RENDER );
 }
 
 TestScene::~TestScene( void )
@@ -87,9 +92,10 @@ void TestScene::Load( void )
 	meshes.AddMeshComponent( tiger.ID, assets.GetMesh( TIGER ) );
 
 	assets.LoadSoundSample( DRUMLOOP );
-	sound.System()->playSound( assets.GetSound( DRUMLOOP ), 0, false, &channel );
+	//sound.System()->playSound( assets.GetSound( DRUMLOOP ), 0, false, &channel );
 	
 	assets.LoadTexture( QMARK );
+	assets.LoadTexture( UVTEST );
 
 	Entity& qMark = entityManager.New( "qMark" );
 
@@ -97,8 +103,49 @@ void TestScene::Load( void )
 	AddTransform( qMark );
 	AddSprite( qMark, assets.GetTexture( QMARK ) ); //Processor could call asset manager instead?
 
-	GetTransform( qMark ).scale.x = 640;
-	GetTransform( qMark ).scale.y = 320;
+	GetTransform( qMark ).scale.x = 512;
+	GetTransform( qMark ).scale.y = 512;
+
+	GetSprite( qMark ).TextureDimensions.right = 2.0f;
+	GetSprite( qMark ).TextureDimensions.bottom = 2.0f;
+
+	//TESTING ANIMATED SPRITES//
+
+	Entity& animTest = entityManager.New( "animTest" );
+	AddTransform( animTest );
+	AddAnimatedSprite( animTest );
+
+	Transform& animTransform = GetTransform( animTest );
+	animTransform.translation.x = -300;
+	animTransform.translation.y = -200;
+	animTransform.scale.x = 100;
+	animTransform.scale.y = 100;
+
+	Animation2D testAnimation( "test" );
+	Frame one( EngineDuration( std::chrono::seconds( 1 ) ) );
+	Frame two( EngineDuration( std::chrono::seconds( 1 ) ) );
+	Frame three( EngineDuration( std::chrono::seconds( 1 ) ) );
+
+	one.TextureDimensions.right = 0.1f;
+	one.TextureDimensions.bottom = 0.1f;
+	one.Texture = assets.GetTexture( UVTEST );
+
+	two.TextureDimensions.left = 0.1f;
+	two.TextureDimensions.right = 0.2f;
+	two.TextureDimensions.bottom = 0.1f;
+	two.Texture = assets.GetTexture( UVTEST );
+
+	three.TextureDimensions.left = 0.2f;
+	three.TextureDimensions.right = 0.3f;
+	three.TextureDimensions.bottom = 0.1f; 
+	three.Texture = assets.GetTexture( UVTEST );
+
+	testAnimation.AddFrame( one );
+	testAnimation.AddFrame( two );
+	testAnimation.AddFrame( three );
+
+	GetAnimatedSprite( animTest ).AddAnimation( testAnimation );
+	GetAnimatedSprite( animTest ).PlayAnimation( "test", Animation2D::PlaybackMode::LOOP );
 
 	//Always set state and report
 	loaded = true;
@@ -190,6 +237,8 @@ void TestScene::Update( void )
 {
 	engine.UpdateProcesses( system.time.DeltaTime(), UPDATE );
 
+	//log.Message( std::to_string( system.time.DeltaTime().count() ).c_str() );
+
 	// transforms.GetTransformComponent( entityManager["qMark"].ID ).localRotation.z -= 0.1;
 	GetTransform( entityManager["qMark"] ).localRotation.z -= ( 0.01 );
 
@@ -200,24 +249,27 @@ void TestScene::Update( void )
 
 	if( test1.IsChordPressed() )
 	{
-		bool Playing = false;
-		bool Paused = false;
-		if( channel )
-		{
-			channel->isPlaying( &Playing );
-			channel->getPaused( &Paused );
-			//if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
-			//else{ sound.ErrorCheck( channel->setLoopCount( 1 ), "Main: Starting sound" ); }
+		GetSprite( entityManager["qMark"] ).TextureDimensions.right -= 0.5f;
+		GetSprite( entityManager["qMark"] ).TextureDimensions.bottom -= 0.5f;
 
-			if( Playing && !Paused )
-			{
-				sound.ErrorCheck( channel->setPaused( true ), "Pausing" );
-			}
-			else
-			{
-				sound.ErrorCheck( channel->setPaused( false ), "Un-pausing" );
-			}
-		}
+		// bool Playing = false;
+		// bool Paused = false;
+		// if( channel )
+		// {
+		// 	channel->isPlaying( &Playing );
+		// 	channel->getPaused( &Paused );
+		// 	//if( Playing ){ sound.ErrorCheck( channel->setLoopCount( 0 ), "Main: Stopping sound" ); }
+		// 	//else{ sound.ErrorCheck( channel->setLoopCount( 1 ), "Main: Starting sound" ); }
+
+		// 	if( Playing && !Paused )
+		// 	{
+		// 		sound.ErrorCheck( channel->setPaused( true ), "Pausing" );
+		// 	}
+		// 	else
+		// 	{
+		// 		sound.ErrorCheck( channel->setPaused( false ), "Un-pausing" );
+		// 	}
+		// }
 	}
 }
 
