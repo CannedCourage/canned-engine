@@ -5,8 +5,12 @@
 
 #include "Mesh/Mesh.h"
 
-struct MeshComponent
+class MeshComponent
 {
+private:
+protected:
+public:
+	
 	IDirect3DVertexBuffer9* vertexBuffer;
 	IDirect3DVertexDeclaration9* vertexDeclaration;
 	IDirect3DIndexBuffer9* indexBuffer;
