@@ -5,6 +5,15 @@
 
 class IDirect3DTexture9;
 
+class RectangleFloat
+{
+private:
+protected:
+public:
+	
+	float top, left, right, bottom;
+};
+
 class SpriteComponent
 {
 private:
@@ -12,7 +21,7 @@ protected:
 public:
 
 	//This will become a transformation matrix that transforms the hard-coded texture coordinates
-	RECT TextureDimensions; //Scale and Translate
+	RectangleFloat TextureDimensions; //Scale and Translate
 	float TextureRotation; //Rotation about Z-axis
 	
 	IDirect3DTexture9* Texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?

@@ -1,10 +1,10 @@
-#include "Sprite/SpriteProcessor.h"
+#include "Sprite/AnimatedSpriteProcessor.h"
 #include "Graphics/Graphics.h"
 #include "Transform/TransformProcessor.h"
-#include <assert.h>
-#include <string>
 
-SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ),
+#include <assert.h>
+
+AnimatedSpriteProcessor::AnimatedSpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ),
 																		vBuffer( NULL ),
 																		iBuffer( NULL ),
 																		vDecl( NULL ),
@@ -15,7 +15,7 @@ SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphic
 																		effect( NULL ),
 																		effectFile( "W:/engine/code/Sprite/TestShader.fx" ),
 																		shaderFlags( D3DXSHADER_USE_LEGACY_D3DX9_31_DLL ),
-																		log( "SpriteProcessor" )
+																		log( "AnimatedSpriteProcessor" )
 {
 	D3DVERTEXELEMENT9 pos = { 0, posOffset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
 	D3DVERTEXELEMENT9 tex = { 0, texOffset, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 };
@@ -97,7 +97,7 @@ SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphic
 	effect->SetMatrix( projHandle, &projMat );
 }
 
-SpriteProcessor::~SpriteProcessor( void )
+AnimatedSpriteProcessor::~AnimatedSpriteProcessor( void )
 {
 	if( vDecl != NULL )
 	{
@@ -124,25 +124,23 @@ SpriteProcessor::~SpriteProcessor( void )
 	}
 }
 
-void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* texture )
+void AnimatedSpriteProcessor::AddAnimatedSpriteComponent( const unsigned int entityID )
 {
-	SpriteComponent s;
-
-	s.Texture = texture;
+	AnimatedSpriteComponent s;
 
 	spriteComponents[entityID] = s;
 }
 
-SpriteComponent& SpriteProcessor::GetSpriteComponent( const unsigned int entityID )
+AnimatedSpriteComponent& AnimatedSpriteProcessor::GetAnimatedSpriteComponent( const unsigned int entityID )
 {
-	return spriteComponents[entityID];
+	return spriteComponents[ entityID ];
 }
 
-void SpriteProcessor::Start( void )
+void AnimatedSpriteProcessor::Start( void )
 {
 }
-
-void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteComponent& sprite )
+#include <string>
+void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const AnimatedSpriteComponent& sprite )
 {
 	D3DXMATRIX world, textureTransformation; //Passed to shader
 	D3DXMATRIX translation, localRotationX, localRotationY, localRotationZ, scaling; //Geometry
@@ -155,6 +153,7 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteCompo
 	D3DXMatrixIdentity( &textureScaling ); D3DXMatrixIdentity( &textureTranslation );
 
 	const TransformComponent& tForm = transforms.GetTransformComponent( entityID );
+	const Frame& currentFrame = sprite.GetCurrentAnimation().GetCurrentFrame();
 
 	D3DXMatrixTranslation( &translation, tForm.translation.x, tForm.translation.y, tForm.translation.z );
 
@@ -170,17 +169,17 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteCompo
 
 	effect->SetMatrix( worldHandle, &world );
 	
-	effect->SetTexture( textureHandle, sprite.Texture );
+	effect->SetTexture( textureHandle, currentFrame.Texture );
 
 	//Hardcoded texture coordinates have height/length of 1
 	//Scaling amount equals new height/width divided by the old (1.0f)
-	float heightScaling = ( sprite.TextureDimensions.bottom - sprite.TextureDimensions.top );
-	float widthScaling = ( sprite.TextureDimensions.right - sprite.TextureDimensions.left );
+	float heightScaling = ( currentFrame.TextureDimensions.bottom - currentFrame.TextureDimensions.top );
+	float widthScaling = ( currentFrame.TextureDimensions.right - currentFrame.TextureDimensions.left );
 
 	//This transforms the texture coordinates that are hard coded in the vertex array
 	D3DXMatrixScaling( &textureScaling, widthScaling, heightScaling, 1 );
-	//D3DXMatrixRotationZ( &textureRotation, sprite.TextureRotation );
-	D3DXMatrixTranslation( &textureTranslation, sprite.TextureDimensions.left, sprite.TextureDimensions.top, 0 );
+	//D3DXMatrixRotationZ( &textureRotation, currentFrame.TextureRotation );
+	D3DXMatrixTranslation( &textureTranslation, currentFrame.TextureDimensions.left, currentFrame.TextureDimensions.top, 0 );
 	
 	textureTransformation = textureScaling * textureTranslation;
 
@@ -209,7 +208,7 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteCompo
 	graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
 }
 
-void SpriteProcessor::Update( const EngineDuration& deltaT )
+void AnimatedSpriteProcessor::Update( const EngineDuration& deltaT )
 {
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Disabling Z-writes" );
@@ -223,10 +222,12 @@ void SpriteProcessor::Update( const EngineDuration& deltaT )
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, vBuffer, 0, stride ), "Setting stream source" );
 	graphics.ErrorCheck( graphics.Device()->SetIndices( iBuffer ), "Setting indices" );
 
-	ListOfSprites::iterator it;
+	ListOfAnimatedSprites::iterator it;
 
 	for( it = spriteComponents.begin(); it != spriteComponents.end(); it++ )
 	{
+		it->second.Update( deltaT );
+		
 		DrawSprite( it->first, it->second );
 	}
 	
@@ -234,6 +235,6 @@ void SpriteProcessor::Update( const EngineDuration& deltaT )
 	graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE );
 }
 
-void SpriteProcessor::End( void )
+void AnimatedSpriteProcessor::End( void )
 {
 }
