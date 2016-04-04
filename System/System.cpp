@@ -52,6 +52,8 @@ int System::Run( void )
 			break;
 		}
 
+		sceneManager.Prepare();
+
 		GameLoop();
 
 		time.FrameEnd();

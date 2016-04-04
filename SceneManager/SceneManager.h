@@ -9,41 +9,46 @@
 
 #include <vector>
 
+#include <unordered_map>
+
+#include <functional>
+
 class System;
 class IScene;
 class GUI;
 
+typedef std::function<IScene* ( System &s )> SceneFactoryFunction;
+typedef std::unordered_map<std::string, SceneFactoryFunction> SceneList;
+
 class SceneManager
 {
 private:
-
-	//const SceneManager& operator=( const SceneManager& src );
 protected:
 
 	Log log;
 
-	System &system;
+	System& system;
 
-	IScene* currentScene;
-	bool currentSceneFinished;
-	IScene* nextScene;
-	bool nextSceneReady;
+	IScene* currentScene = NULL;
+	IScene* nextScene = NULL;
 
-	bool update;
-	bool render;
-
-	std::vector<IScene*> sceneList;
+	bool update = true;
+	bool render = true;
 
 	std::deque<GUI*> GUIStack;
 
 	void SwapSceneBuffers( void );
 public:
 
-	SceneManager( System &s );
+	static SceneList& GetSceneList( void );
+
+	SceneManager( System& s );
 	~SceneManager( void );
 
 	void Init( void );
 	void Shutdown( void );
+
+	void Prepare( void );
 
 	bool Update( void );
 	bool FixedUpdate( void );
@@ -54,8 +59,8 @@ public:
 	void OnLost( void );
 	void OnRecover( void );
 
-	void ChangeScene( unsigned int i );
-	void PreloadScene( unsigned int i );
+	void ChangeScene( const std::string& SceneName );
+	void QueueScene( const std::string& SceneName );
 
 	//GUI
 	void PushGUI( GUI* const newGUI );

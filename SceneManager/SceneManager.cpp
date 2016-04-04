@@ -1,5 +1,3 @@
-//Implementation of SceneManager
-
 #include "System/System.h"
 #include "SceneManager/SceneManager.h"
 #include "SceneManager/Scenes.h"
@@ -7,26 +5,24 @@
 #include "GUI/GUI.h"
 #include "Game/Interfaces/MainMenuGUI.h"
 
+SceneList& SceneManager::GetSceneList( void )
+{
+	static SceneList* scenes = new SceneList();
+
+	return ( *scenes );
+}
+
 SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 {
-	currentScene = NULL;
-	nextScene = NULL;
-	currentSceneFinished = false;
-	nextSceneReady = false;
-	update = true;
-	render = true;
 }
 
 void SceneManager::Init( void )
 {
 	log.Message( "SceneManager initialisation" );
 	
-	sceneList.push_back( new SplashScreen( system ) );
-	sceneList.push_back( new TestScene( system ) );
-	//TO DO: determine default starting scene then initialise
-	//Temp: Use SplashScreen
-	//currentScene = new SplashScreen( system );
-	currentScene = sceneList[1];
+	//TODO: Determine default starting scene then initialise
+	//With new SceneList implementation, this can be read from a settings file as a string
+	ChangeScene( "TestScene" );
 
 	PushGUI( new MainMenu( system, "Main Menu" ) );
 }
@@ -47,19 +43,28 @@ void SceneManager::Shutdown( void )
 		currentScene = NULL;
 	}
 
-	for( int i = 0; i < sceneList.size(); i++ )
-	{
-		if( sceneList[i] != NULL )
-		{
-			delete sceneList[i];
-			sceneList[i] = NULL;
-		}
-	}
-
 	ClearGUIStack();
 
 	update = false;
 	render = false;
+}
+
+void SceneManager::Prepare( void )
+{
+	if( currentScene != NULL )
+	{
+		if( currentScene->State == SceneState::END )
+		{
+			if( nextScene != NULL )
+			{
+				if( nextScene->IsLoaded() )
+				{
+					SwapSceneBuffers();
+				}
+			}
+		}
+	}
+
 }
 
 bool SceneManager::Update( void )
@@ -70,9 +75,22 @@ bool SceneManager::Update( void )
 	{
 		if( currentScene->IsLoaded() )
 		{
-			currentScene->PreUpdate();
-			currentScene->Update();
-			currentScene->PostUpdate();
+			if( currentScene->State == SceneState::INIT )
+			{
+				currentScene->Start();
+			}
+
+			if( currentScene->State == SceneState::UPDATE )
+			{
+				currentScene->PreUpdate();
+				currentScene->Update();
+				currentScene->PostUpdate();
+			}
+
+			if( currentScene->State == SceneState::CLEANUP )
+			{
+				currentScene->End();
+			}
 		}
 	}
 	else

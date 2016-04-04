@@ -1,11 +1,17 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
-#include "SceneManager/SceneManager.h"
 
 #define DRUMLOOP "w:/game/sounds/drumloop.wav"
 #define TIGER "w:/game/meshes/tiger.x"
-#define QMARK "w:/game/textures/qMark.bmp"
-#define UVTEST "w:/game/textures/uvtemplate.bmp"
+
+int RegisterTestScene( void )
+{
+	SceneManager::GetSceneList()["TestScene"] = []( System& Sys ){ return new TestScene( Sys ); };
+
+	return 0;
+}
+
+int Reg = RegisterTestScene();
 
 //Globals for scene variables?
 //Would multiple instances of this scene share global variables?
@@ -26,7 +32,6 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									AddAnimatedSprite( animatedSprites ),
 									GetAnimatedSprite( animatedSprites )
 {
-	//s.sceneManager.Creators["TestScene"] = std::bind( &GetTestScene, std::placeholders::_1 );
 	test1.AddInput( &keys, &(PhysicalDevice::IsPressed), Keyboard::Keys::LEFT_CONTROL );
 	test1.AddInput( &keys, &(PhysicalDevice::WentUp), Keyboard::Keys::LEFT_ALT );
 
@@ -47,9 +52,6 @@ void TestScene::Load( void )
 
 	assets.LoadSoundSample( DRUMLOOP );
 	
-	assets.LoadTexture( QMARK );
-	assets.LoadTexture( UVTEST );
-
 	graphics.LoadTexture( "w:/game/textures/qMark.bmp", "MarioQuestionBlockTexture" );
 	graphics.LoadTexture( "w:/game/textures/uvtemplate.bmp", "uvtest" );
 
