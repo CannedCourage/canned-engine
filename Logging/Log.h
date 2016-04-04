@@ -1,36 +1,33 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-#include <stdio.h>
-
-#define DEFAULT_LOG_FILENAME "w:/build/logs/ScottEngine_Log"
+#include <fstream>
+#include <string>
 
 class Log
 {
 private:
 protected:
 
-	static const char* globalFilename;	//Master log filename
-	static FILE* globalFile;			//Master log file
-	static int counter;
+	static const std::string GlobalFilename; 	//Master log filename
 
-	const char* scope;				//The original scope the message comes from
-	FILE* localFile;				//File local to the log object
+	const std::string Scope; 	//Where the message comes from
+	std::ofstream LocalFile; 	//Log file stream
 
-	time_t rawTime;
-	struct tm* time_GMT;
+	void StandardOutput( const std::string& String );
+	void WriteToLogFile( const std::string& String );
 
-	void Show( const char* s );
-	void Print( const char* s );
-
-	void UpdateTime( void );
+	std::string GetTimestamp( void );
 public:
 
 	Log( void );
-	Log( const char* scope_ );
+	Log( const std::string& LogFilename );
 	~Log( void );
 
-	void Message( const char* s, const bool show = false, const bool print = true );
+	void Open( const std::string& LogFilename );
+
+	void Message( const std::string& String, const bool StdOutput = false, const bool WriteToFile = true );
+	void operator()( const std::string& String, const bool StdOutput = false, const bool WriteToFile = true );
 };
 
 #endif //_LOG_H_

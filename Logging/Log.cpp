@@ -1,137 +1,150 @@
-#define _CRT_SECURE_NO_WARNINGS 1
+//#define _CRT_SECURE_NO_WARNINGS 1
 #include "Logging/Log.h"
+
 #include <iostream>
-#include <time.h>
+#include <sstream>
+#include <chrono>
+#include <ctime>
+#include <exception>
 
-#include <Windows.h>
+/*
+If a method/function expects a const reference to string, it will also accept a string literal, e.g.
+ 
+void Method( const std::string& str );
+a.Method( “literal” );
 
-using std::cout;
-using std::endl;
+See: http://stackoverflow.com/questions/4044255/passing-a-string-literal-to-a-function-that-takes-a-stdstring
+//*/
 
-const char* Log::globalFilename = DEFAULT_LOG_FILENAME;
-FILE* Log::globalFile = NULL;
-int Log::counter = 0;
+const std::string Log::GlobalFilename( "logs/ScottEngine_Log.txt" );
 
-Log::Log( void )
+Log::Log( void ) : Scope( "" ), LocalFile()
 {
-	UpdateTime();
-
-	if( counter == 0 )
-	{
-		char temp[MAX_PATH];
-		sprintf( temp, "%s.txt", globalFilename );				//Append .txt
-		globalFile = fopen( temp, "a" );						//Create master file
-		if( globalFile == NULL )
-		{
-			throw( "Log: globalFile creation failed" );
-		}
-		else
-		{
-			fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp
-		}
-	}
-	counter++;
 }
 
-Log::Log( const char* scope_ )
+Log::Log( const std::string& LogFilename ) : Scope( LogFilename ), LocalFile( "logs/" + LogFilename + ".txt", std::ios_base::out )
 {
-	UpdateTime();
-
-	if( counter == 0 )
+	if( LocalFile )
 	{
-		char temp[MAX_PATH];
-		sprintf( temp, "%s.txt", globalFilename );				//Append .txt
-		globalFile = fopen( temp, "a" );						//Create master file
-		if( globalFile == NULL )
-		{
-			throw( "Log: globalFile creation failed" );
-		}
-		else
-		{
-			fprintf( globalFile, "%s\t%s", temp, asctime( time_GMT ) );	//Print master filename - tab - timestamp to master file
-		}
-	}
-
-	//sprintf( scope, "%s", scope_ );								//Store scope for prepending messages
-	scope = scope_;
-	char tempscope[MAX_PATH];
-	sprintf( tempscope, "Logs/%s.txt", scope_ );				//Derive filename from scope, i.e. append .txt and copy
-	localFile = fopen( tempscope, "w" );						//Open log file for "scope.txt"
-	if( localFile == NULL )
-	{
-		throw( "Log: localFile creation failed" );
+		LocalFile << Scope << " " << GetTimestamp() << "\n";
 	}
 	else
 	{
-		fprintf( localFile, "%s\t%s", tempscope, asctime( time_GMT ) );	//Print local filename - tab - timestamp to local file
+		throw std::runtime_error( "Log: " + LogFilename + " log file stream creation failed" );
 	}
-	counter++;
 }
 
-Log::~Log(void)
+Log::~Log( void )
 {
-	Message("Log Closing");
-	if( localFile != NULL )
-	{
-		fclose(localFile);
-		localFile = NULL;
-	}
+	Message( Scope + " log stream closing" );
+}
 
-	if( counter == 1 )
+void Log::Open( const std::string& LogFilename )
+{
+	if( !LocalFile )
 	{
-		if( globalFile != NULL )
+		LocalFile.open( "logs/" + LogFilename + ".txt", std::ios_base::out );
+
+		if( LocalFile )
 		{
-			UpdateTime();
-			fprintf( globalFile, "\n%s: %s\t%s", DEFAULT_LOG_FILENAME, "Final Log Closing", asctime( time_GMT ) );
-			fclose(globalFile);
-			globalFile = NULL;
+			LocalFile << Scope << " " << GetTimestamp() << "\n";
+		}
+		else
+		{
+			throw std::runtime_error( "Log: " + LogFilename + " log file stream creation failed" );
 		}
 	}
-
-	counter--;
 }
 
-void Log::Message( const char* s, const bool show, const bool print )
+void Log::Message( const std::string& String, const bool StdOutput, const bool WriteToFile )
 {
-	UpdateTime();
-
-	if( show )
+	if( StdOutput )
 	{
-		Show(s);
+		StandardOutput( String );
 	}
 
-	if( print )
+	if( WriteToFile )
 	{
-		Print(s);
+		WriteToLogFile( String );
 	}
 }
 
-void Log::Show(const char *s)
+void Log::operator()( const std::string& String, const bool StdOutput, const bool WriteToFile )
 {
-	char temp[MAX_PATH];
-	sprintf( temp, "\n%s: %s", scope, s );
-	OutputDebugStringA(temp);	//Show in debug output
-}
-
-void Log::Print(const char *s)
-{
-	if( strlen(s) != 0 )
+	if( StdOutput )
 	{
-		fprintf( globalFile, "\n%s: %s\t%s", scope, s, asctime( time_GMT ) );	//Print to master file
-		fprintf( localFile, "\n%s: %s\t%s", scope, s, asctime( time_GMT ) );	//Print to local file
+		StandardOutput( String );
+	}
+
+	if( WriteToFile )
+	{
+		WriteToLogFile( String );
 	}
 }
 
-void Log::UpdateTime( void )
+void Log::StandardOutput( const std::string& String )
 {
-	rawTime = time(NULL);
-	time_GMT = localtime( &rawTime );
+	std::cout << Scope << ": " << String << "\t" << GetTimestamp() << "\n";
 }
 
-//#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
-//#define  _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT 1
-//#define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 0
-//ifdef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
-//#undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
-//#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
-//#endif //_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
+void Log::WriteToLogFile( const std::string& String )
+{
+	if( LocalFile )
+	{
+		LocalFile << Scope << ": " << String << "\t" << GetTimestamp() << "\n";
+	}
+}
+
+std::string Log::GetTimestamp( void )
+{
+	auto now = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+	std::tm* timeObj = std::localtime( &now );
+
+	int year 	= ( timeObj->tm_year + 1900 );
+	int month 	= ( timeObj->tm_mon + 1 );
+	int day 	= timeObj->tm_mday;
+	int hour 	= timeObj->tm_hour;
+	int min 	= timeObj->tm_min;
+	int sec 	= timeObj->tm_sec;
+
+	std::ostringstream timeStamp;
+
+	timeStamp << year << "-";
+
+	if( month < 10 )
+	{
+		timeStamp << "0";
+	}
+
+	timeStamp << month << "-";
+
+	if( day < 10 )
+	{
+		timeStamp << "0";
+	}
+
+	timeStamp << day << " ";
+
+	if( hour < 10 )
+	{
+		timeStamp << "0";
+	}
+
+	timeStamp << hour << ":";
+
+	if( min < 10 )
+	{
+		timeStamp << "0";
+	}
+
+	timeStamp << min << ":";
+
+	if( sec < 10 )
+	{
+		timeStamp << "0";
+	}
+
+	timeStamp << sec;
+
+	return timeStamp.str();
+}
