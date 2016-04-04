@@ -6,11 +6,6 @@ Entity::Entity( void )
 {
 }
 
-Entity::Entity( const char* name ) : ID( entityCounter ), Name( name )
-{
-	entityCounter++;
-}
-
 Entity::Entity( const std::string& name ) : ID( entityCounter ), Name( name )
 {
 	entityCounter++;
@@ -30,4 +25,9 @@ Entity& Entity::operator=( const Entity& entity )
 
 Entity::~Entity( void )
 {
+}
+
+bool Entity::Has( unsigned int ComponentTypeID )
+{
+	return ComponentFlags.test( ComponentTypeID );
 }
