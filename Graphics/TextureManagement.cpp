@@ -32,7 +32,8 @@ void Graphics::ReleaseTextures( void )
 	{
 		if( it->second )
 		{
-			ErrorCheck( it->second->Release(), "Releasing Textures" );
+			//Release is from the IUnknown interface, return value is the number of remaining referenes to the object
+			it->second->Release();
 
 			it->second = NULL; //Always null your pointers
 		}
