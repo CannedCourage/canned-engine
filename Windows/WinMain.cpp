@@ -12,10 +12,10 @@ System* sys = NULL;
 //lpCmdLine( command line arguments, not including program name ), nCmdShow( specifies initial window state, i.e. minimised, maximised, this is set in shortcut properties )
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	sys = new System();
-
 	try
 	{
+		sys = new System();
+
 		if( !sys )
 		{
 			MessageBox( NULL, TEXT( "Error during construction" ), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
