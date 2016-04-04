@@ -6,9 +6,9 @@ SpriteAdder::SpriteAdder( SpriteProcessor& s ) : sprites( s )
 {
 }
 
-void SpriteAdder::operator()( const Entity& entity, IDirect3DTexture9* texture )
+void SpriteAdder::operator()( const Entity& entity, const std::string& TextureAssetName )
 {
-	sprites.AddSpriteComponent( entity.ID, texture );
+	sprites.AddSpriteComponent( entity.ID, TextureAssetName );
 }
 
 //GET COMPONENT//

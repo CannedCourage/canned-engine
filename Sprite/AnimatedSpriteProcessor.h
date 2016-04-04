@@ -61,6 +61,9 @@ public:
 	void AddAnimatedSpriteComponent( const unsigned int entityID );
 	AnimatedSpriteComponent& GetAnimatedSpriteComponent( const unsigned int entityID );
 
+	//TODO: Frame factory methods
+	Frame NewFrame( EngineDuration duration, const std::string& TextureAssetName );
+
 	void Start( void );
 	void Update( const EngineDuration& deltaT );
 	void End( void );

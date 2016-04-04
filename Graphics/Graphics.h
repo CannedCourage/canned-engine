@@ -15,6 +15,7 @@
 #include "Logging/Log.h"
 
 #include <vector>
+#include <unordered_map>
 
 class System;
 class Settings;
@@ -23,6 +24,8 @@ class iWindow;
 enum ASPECT { FourThree = 43, SixteenNine = 169, SixteenTen = 1610 };
 enum BUFFER { ThirtyTwo = 21, TwentyFour = 22, Sixteen = 23 };
 enum DEPTH { D32 = 71, D24S8 = 75, D15S1 = 73, D16 = 80 };
+
+typedef std::unordered_map<std::string, IDirect3DTexture9*> ListOfTextureAssets;
 
 class Graphics
 {
@@ -104,6 +107,10 @@ protected:
 
 	void SetFullscreen( void );
 	void SetWindowed( void );
+
+	ListOfTextureAssets Textures;
+
+	void ReleaseTextures( void );
 public:
 
 	Graphics( System& s );
@@ -117,6 +124,9 @@ public:
 	void Init( void );
 	void CleanUp( void );
 
+	//void StartFrame( void );
+	//void EndFrame( void );
+
 	void SetDebugStates( void );
 
 	void Refresh( void );
@@ -128,7 +138,12 @@ public:
 	void SetResolution( const int& width, const int& height );
 	void ToggleFullscreen( void );
 
-	void ErrorCheck( HRESULT result, const char* const info );
+	void ErrorCheck( HRESULT result, const std::string& info );
+
+	//Texture Assets
+	
+	void LoadTexture( const std::string& Filename, const std::string& AssetName );
+	IDirect3DTexture9* GetTexture( const std::string& AssetName );
 };
 
 #endif //_GRAPHICS_H_

@@ -124,11 +124,11 @@ SpriteProcessor::~SpriteProcessor( void )
 	}
 }
 
-void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* texture )
+void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, const std::string& TextureAssetName )
 {
 	SpriteComponent s;
 
-	s.Texture = texture;
+	s.Texture = graphics.GetTexture( TextureAssetName );
 
 	spriteComponents[entityID] = s;
 }

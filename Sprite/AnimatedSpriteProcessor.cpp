@@ -136,10 +136,19 @@ AnimatedSpriteComponent& AnimatedSpriteProcessor::GetAnimatedSpriteComponent( co
 	return spriteComponents[ entityID ];
 }
 
+Frame AnimatedSpriteProcessor::NewFrame( EngineDuration duration, const std::string& TextureAssetName )
+{
+	Frame* temp = new Frame( duration );
+
+	temp->Texture = graphics.GetTexture( TextureAssetName );
+
+	return ( *temp );
+}
+
 void AnimatedSpriteProcessor::Start( void )
 {
 }
-#include <string>
+
 void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const AnimatedSpriteComponent& sprite )
 {
 	D3DXMATRIX world, textureTransformation; //Passed to shader

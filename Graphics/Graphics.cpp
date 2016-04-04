@@ -21,6 +21,8 @@ Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( syste
 
 Graphics::~Graphics( void )
 {
+	ReleaseTextures();
+	
 	WriteSettings();
 }
 
@@ -67,6 +69,8 @@ void Graphics::SetDebugStates( void )
 
 void Graphics::CleanUp( void )
 {
+	ReleaseTextures();
+
 	if( modes !=  NULL )
 	{
 		delete[] modes;
@@ -247,7 +251,7 @@ void Graphics::ToggleFullscreen( void )
 	}
 }
 
-void Graphics::ErrorCheck( HRESULT result, const char* const info )
+void Graphics::ErrorCheck( HRESULT result, const std::string& info )
 {
 	if( result == D3D_OK )
 		return;
@@ -277,20 +281,11 @@ void Graphics::ErrorCheck( HRESULT result, const char* const info )
 		case E_OUTOFMEMORY:
 			text = "E_OUTOFMEMORY: Out of Memory";
 		default:
-			ostringstream s;
-			s << "Unknown Error: " << result;
-			text = s.str();
+			text = "Unknown Error: " + result;
 			break;
 	}
 
-	ostringstream e;
+	string error = "Graphics: " + text + "\n" + info;
 
-	//e << "Graphics: " << info << "\r\n" << text;
-	e << "Graphics: " << text << std::endl << info;
-
-	string error = e.str();
-
-	std::exception ex( error.c_str() );
-
-	throw( ex );
+	throw std::exception( error.c_str() );
 }

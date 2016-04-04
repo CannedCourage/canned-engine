@@ -21,24 +21,12 @@ class TestScene : public IScene
 private:
 protected:
 
-	D3DXMATRIX matWorld;
-	D3DXMATRIX matView;
-	D3DXMATRIX matProj;
-
-	LPDIRECT3DVERTEXBUFFER9 cubeBuffer;
-	LPDIRECT3DTEXTURE9 cubeTex;
-
-	LPD3DXFONT font;
-	RECT FontPosition;
-
 	Keyboard keys;
 	Mouse logiMouse;
 	XboxController player1;
 	LogicalDevice test1;
 
-	VertexBuffer<Vertex3dTx> buffer;
-
-	FMOD::Channel* channel;
+	FMOD::Channel* channel = NULL;
 
 	//Processors
 	TransformProcessor transforms;
@@ -57,7 +45,6 @@ protected:
 	void Update( void ); //Remove
 
 	void PreRender( void );
-	void Render( void );
 	void PostRender( void );
 public:
 
@@ -67,6 +54,8 @@ public:
 	void Unload( void );
 	void OnLost( void );
 	void OnRecover( void );
+	void Start( void );
+	void End( void );
 };
 
 #endif //_TESTSCENE_H_

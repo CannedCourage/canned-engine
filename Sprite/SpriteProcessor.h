@@ -62,7 +62,7 @@ public:
 	SpriteProcessor( Graphics& g, TransformProcessor& t );
 	~SpriteProcessor( void );
 
-	void AddSpriteComponent( const unsigned int entityID, IDirect3DTexture9* _texture );
+	void AddSpriteComponent( const unsigned int entityID, const std::string& TextureAssetName );
 	SpriteComponent& GetSpriteComponent( const unsigned int entityID );
 
 	void Start( void );
@@ -82,7 +82,7 @@ public:
 
 	SpriteAdder( SpriteProcessor& s );
 
-	void operator()( const Entity& entity, IDirect3DTexture9* texture );
+	void operator()( const Entity& entity, const std::string& TextureAssetName );
 };
 
 class SpriteGetter
