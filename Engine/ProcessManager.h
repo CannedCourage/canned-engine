@@ -6,7 +6,16 @@
 
 class iProcess;
 
-enum Priority{ PRE_UPDATE = 10, UPDATE = 20, FIXED_UPDATE = 30, POST_UPDATE = 40, PRE_RENDER = 50, RENDER = 60, POST_RENDER = 70 };
+enum class Priority : unsigned int
+{
+	PRE_UPDATE,
+	UPDATE,
+	FIXED_UPDATE,
+	POST_UPDATE,
+	PRE_RENDER,
+	RENDER,
+	POST_RENDER
+};
 
 class ProcessManager
 {
