@@ -151,3 +151,11 @@ void SplashScreen::RenderMain( void )
 
     graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
 }
+
+void SplashScreen::Start( void )
+{
+}
+
+void SplashScreen::End( void )
+{
+}

@@ -39,6 +39,9 @@ public:
 	void Unload( void );
 	void OnLost( void );
 	void OnRecover( void );
+
+	void Start( void );
+	void End( void );
 };
 
 #endif //_SPLASHSCREEN_H_
