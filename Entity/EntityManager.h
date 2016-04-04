@@ -2,11 +2,13 @@
 #define _ENTITYMANAGER_H_
 
 #include "Logging/Log.h"
+#include "Entity/Entity.h"
+
 #include <unordered_map>
 #include <string>
 
-#include "Entity/Entity.h"
 
+//TODO: Make this a vector?
 //typedef std::map<const unsigned int,Entity* const> ListOfEntities;
 typedef std::unordered_map<unsigned int,Entity> ListOfEntities;
 typedef std::unordered_map<std::string,const unsigned int> IndexOfEntities;
@@ -44,18 +46,15 @@ public:
 	EntityManager( void );
 	~EntityManager( void );
 
-	Entity& New( const char* name );
 	Entity& New( const std::string& name );
 	
 	void Delete( const unsigned int ID );
-	void Delete( const char* name );
+	void Delete( const std::string& name );
 
 	Entity& operator[]( const unsigned int ID );
-	Entity& operator[]( const char* name );
 	Entity& operator[]( const std::string& name );
 
 	const Entity& operator[]( const unsigned int ID ) const;
-	const Entity& operator[]( const char* name ) const;
 	const Entity& operator[]( const std::string& name ) const;
 };
 

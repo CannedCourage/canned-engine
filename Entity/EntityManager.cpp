@@ -8,22 +8,25 @@ EntityManager::~EntityManager( void )
 {
 }
 
-Entity& EntityManager::New( const char* name )
+Entity& EntityManager::New( const std::string& Name )
 {
-	const std::string tempName( name );
+	auto result = index.find( Name );
 
-	return New( tempName );
-}
+	if( result != index.end() )
+	{
+		std::string error = "Entity with the following name already exists: " + Name;
+		throw std::invalid_argument( error );
+	}
 
-Entity& EntityManager::New( const std::string& name )
-{
-	Entity e( name );
+	//If the implementation switches to vector, use vector::emplace() or vector::emplace_back()
+	//Then the name and ID values in the Entity can become const again
+	Entity e( Name );
 
 	entities[e.ID] = e;
 	//entities.insert( EntityPair( e.ID, e ) );
 
-	//index[name] = ( e->ID );
-	index.insert( IndexPair( name, e.ID ) );
+	//index[Name] = ( e->ID );
+	index.insert( IndexPair( Name, e.ID ) );
 
 	return entities[e.ID];
 }
@@ -49,11 +52,9 @@ void EntityManager::Delete( const unsigned int ID )
 	}
 }
 
-void EntityManager::Delete( const char* name )
+void EntityManager::Delete( const std::string& Name )
 {
-	std::string entityName( name );
-
-	IndexOfEntities::iterator ix = index.find( entityName );
+	IndexOfEntities::iterator ix = index.find( Name );
 
 	if( ix != index.end() )
 	{
@@ -70,6 +71,7 @@ void EntityManager::Delete( const char* name )
 	}
 }
 
+//TODO: Replace with use of "at" method?
 Entity& EntityManager::operator[]( const unsigned int ID )
 {
 	ListOfEntities::iterator it = entities.find( ID );
@@ -84,16 +86,14 @@ Entity& EntityManager::operator[]( const unsigned int ID )
 	return ( it->second );
 }
 
-Entity& EntityManager::operator[]( const char* name )
+Entity& EntityManager::operator[]( const std::string& Name )
 {
-	std::string nameStr( name );
-
-	IndexOfEntities::iterator it = index.find( nameStr );
+	IndexOfEntities::iterator it = index.find( Name );
 
 	if( it == index.end() )
 	{
 		std::string message( "An entitiy with the name: " );
-		message.append( name );
+		message.append( Name );
 		message.append( " does not exist." );
 		
 		std::exception ex( message.c_str() );
@@ -101,25 +101,7 @@ Entity& EntityManager::operator[]( const char* name )
 		throw( ex );
 	}
 
-	return (*this)[it->second];
-}
-
-Entity& EntityManager::operator[]( const std::string& name )
-{
-	IndexOfEntities::iterator it = index.find( name );
-
-	if( it == index.end() )
-	{
-		std::string message( "An entitiy with the name: " );
-		message.append( name );
-		message.append( " does not exist." );
-		
-		std::exception ex( message.c_str() );
-
-		throw( ex );
-	}
-
-	return (*this)[it->second];
+	return ( *this )[it->second];
 }
 
 const Entity& EntityManager::operator[]( const unsigned int ID ) const
@@ -134,26 +116,6 @@ const Entity& EntityManager::operator[]( const unsigned int ID ) const
 	}
 
 	return ( it->second );
-}
-
-const Entity& EntityManager::operator[]( const char* name ) const
-{
-	std::string nameStr( name );
-
-	IndexOfEntities::const_iterator it = index.find( nameStr );
-
-	if( it == index.end() )
-	{
-		std::string message( "An entitiy with the name: " );
-		message.append( name );
-		message.append( " does not exist." );
-		
-		std::exception ex( message.c_str() );
-
-		throw( ex );
-	}
-
-	return (*this)[it->second];
 }
 
 const Entity& EntityManager::operator[]( const std::string& name ) const
@@ -171,5 +133,5 @@ const Entity& EntityManager::operator[]( const std::string& name ) const
 		throw( ex );
 	}
 
-	return (*this)[it->second];
+	return ( *this )[it->second];
 }
