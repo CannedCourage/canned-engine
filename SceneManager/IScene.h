@@ -10,12 +10,12 @@
 #include <string>
 
 class System;
-class SceneManager;
 class Settings;
 class Graphics;
 class Input;
 class Sound;
 class AssetManager;
+class SceneManager;
 
 enum class SceneState : unsigned int
 {

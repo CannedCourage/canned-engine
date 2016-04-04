@@ -1,14 +1,13 @@
-//Base scene functionality
 #include "SceneManager/IScene.h"
 #include "System/System.h"
 
-IScene::IScene( System &sys, const std::string& N ) : 	system( sys ),
-														manager( sys.sceneManager ),
-														settings( sys.settings ),
-														graphics( sys.graphics ),
-														input( sys.input ),
-														sound( sys.sound ),
-														assets( sys.assets ),
+IScene::IScene( System& Sys, const std::string& N ) : 	system( Sys ),
+														manager( Sys.sceneManager ),
+														settings( Sys.settings ),
+														graphics( Sys.graphics ),
+														input( Sys.input ),
+														sound( Sys.sound ),
+														assets( Sys.assets ),
 														log( N ),
 														Name( N )
 {
