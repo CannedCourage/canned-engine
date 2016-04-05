@@ -22,9 +22,9 @@ public:
 
 	//This will become a transformation matrix that transforms the hard-coded texture coordinates
 	RectangleFloat TextureDimensions; //Scale and Translate
-	float TextureRotation; //Rotation about Z-axis
+	float TextureRotation = 0.0f; //Rotation about Z-axis
 	
-	IDirect3DTexture9* Texture; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
+	IDirect3DTexture9* Texture = NULL; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
 
 	SpriteComponent( void );
 };

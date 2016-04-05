@@ -4,18 +4,7 @@
 
 #include <assert.h>
 
-AnimatedSpriteProcessor::AnimatedSpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ),
-																		vBuffer( NULL ),
-																		iBuffer( NULL ),
-																		vDecl( NULL ),
-																		numVerts( 4 ),
-																		posOffset( 0*sizeof( float ) ),
-																		texOffset( 3*sizeof( float ) ),
-																		stride( 5*sizeof( float ) ),
-																		effect( NULL ),
-																		effectFile( "W:/engine/code/Sprite/TestShader.fx" ),
-																		shaderFlags( D3DXSHADER_USE_LEGACY_D3DX9_31_DLL ),
-																		log( "AnimatedSpriteProcessor" )
+AnimatedSpriteProcessor::AnimatedSpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ), log( "AnimatedSpriteProcessor" )
 {
 	D3DVERTEXELEMENT9 pos = { 0, posOffset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
 	D3DVERTEXELEMENT9 tex = { 0, texOffset, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 };
@@ -90,7 +79,7 @@ AnimatedSpriteProcessor::AnimatedSpriteProcessor( Graphics& g, TransformProcesso
 	D3DXMatrixLookAtLH( &viewMat, &(D3DXVECTOR3( 0.0f, 0.0f, -1.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
 	
 	//TODO: Get screen info from Graphics class(?) - This is a good reason to abstract this code away into the graphics class
-	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 1.0f );
+	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 10.0f );
 
 	//Set View Matrix
 	effect->SetMatrix( viewHandle, &viewMat );
@@ -153,13 +142,13 @@ void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const Ani
 {
 	D3DXMATRIX world, textureTransformation; //Passed to shader
 	D3DXMATRIX translation, localRotationX, localRotationY, localRotationZ, scaling; //Geometry
-	D3DXMATRIX textureScaling, textureTranslation; //Texture Coordinates
+	D3DXMATRIX textureScaling, textureRotation, textureTranslation; //Texture Coordinates
 
 	D3DXMatrixIdentity( &world ); D3DXMatrixIdentity( &textureTransformation );
 	D3DXMatrixIdentity( &translation );
 	D3DXMatrixIdentity( &localRotationX ); D3DXMatrixIdentity( &localRotationY ); D3DXMatrixIdentity( &localRotationZ );
 	D3DXMatrixIdentity( &scaling );
-	D3DXMatrixIdentity( &textureScaling ); D3DXMatrixIdentity( &textureTranslation );
+	D3DXMatrixIdentity( &textureScaling ); D3DXMatrixIdentity( &textureRotation ); D3DXMatrixIdentity( &textureTranslation );
 
 	const TransformComponent& tForm = transforms.GetTransformComponent( entityID );
 	const Frame& currentFrame = sprite.GetCurrentAnimation().GetCurrentFrame();
@@ -187,10 +176,10 @@ void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const Ani
 
 	//This transforms the texture coordinates that are hard coded in the vertex array
 	D3DXMatrixScaling( &textureScaling, widthScaling, heightScaling, 1 );
-	//D3DXMatrixRotationZ( &textureRotation, currentFrame.TextureRotation );
+	D3DXMatrixRotationZ( &textureRotation, currentFrame.TextureRotation );
 	D3DXMatrixTranslation( &textureTranslation, currentFrame.TextureDimensions.left, currentFrame.TextureDimensions.top, 0 );
 	
-	textureTransformation = textureScaling * textureTranslation;
+	textureTransformation = textureScaling * textureRotation * textureTranslation;
 
 	effect->SetMatrix( texTransHandle, &textureTransformation );
 	
@@ -219,13 +208,11 @@ void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const Ani
 
 void AnimatedSpriteProcessor::Update( const EngineDuration& deltaT )
 {
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Disabling Lighting" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), "Enabling Culling" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_FALSE ), "Disabling Z-writes" );
-	//graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, TRUE ), "Setting sprite render state" );
-
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Disabling Lighting Failed" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE ), "Disabling Culling" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_FALSE ), "Disabling Depth Testing" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE ), "Enabling Z-writes" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), "Enabling Depth Testing" );
 
 	graphics.ErrorCheck( graphics.Device()->SetVertexDeclaration( vDecl ), "Setting vertex declaration" );
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, vBuffer, 0, stride ), "Setting stream source" );

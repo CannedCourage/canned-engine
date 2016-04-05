@@ -12,7 +12,7 @@ Frame::Frame( const EngineDuration& _Duration ) : Interval( _Duration )
 }
 
 //ANIMATION2D//
-Animation2D::Animation2D( const std::string& _Name ) : Frames(), CurrentFrame( 0 ), ElapsedTime( EngineDuration::zero() ), Speed( 1.0f ), Mode( Animation2D::PlaybackMode::ONCE ), Name( _Name ), Playing( false ), Direction( 1 )
+Animation2D::Animation2D( const std::string& _Name ) : Frames(), Name( _Name )
 {
 }
 
@@ -29,7 +29,6 @@ void Animation2D::Update( const EngineDuration& DeltaT )
 		return;
 	}
 
-	//EngineDuration displayDelta( std::chrono::duration_cast<EngineDuration>( DeltaT ) );
 	EngineDuration displayDelta = DeltaT;
 
 	const Frame& frame = Frames[CurrentFrame];
@@ -157,7 +156,7 @@ const EngineDuration& Animation2D::Length( void ) const
 }
 
 //ANIMATEDSPRITECOMPONENT//
-AnimatedSpriteComponent::AnimatedSpriteComponent( void ) : Animations(), CurrentAnimation( -1 ), NextAnimation( -1 )
+AnimatedSpriteComponent::AnimatedSpriteComponent( void ) : Animations()
 {
 }
 

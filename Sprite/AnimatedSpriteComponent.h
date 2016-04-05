@@ -24,11 +24,11 @@ class Animation2D
 private:
 protected:
 
-	unsigned int CurrentFrame;
+	unsigned int CurrentFrame = 0;
 
-	EngineDuration ElapsedTime;
+	EngineDuration ElapsedTime = EngineDuration::zero();
 
-	short int Direction;
+	short int Direction = 1;
 
 	void NextFrame( void );
 public:
@@ -39,11 +39,11 @@ public:
 
 	std::string Name;
 	
-	float Speed; //frames per second? Multiplier on time delta?
+	float Speed = 1.0f; //frames per second? Multiplier on time delta?
 
-	PlaybackMode Mode;
+	PlaybackMode Mode = Animation2D::PlaybackMode::ONCE;
 
-	bool Playing;
+	bool Playing = false;
 
 	Animation2D( const std::string& _Name );
 
@@ -67,8 +67,8 @@ public:
 
 	std::vector<Animation2D> Animations;
 	
-	int CurrentAnimation;
-	int NextAnimation;
+	int CurrentAnimation = -1;
+	int NextAnimation = -1;
 
 	AnimatedSpriteComponent( void );
 

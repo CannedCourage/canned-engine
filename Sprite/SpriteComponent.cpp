@@ -2,12 +2,10 @@
 
 #include <d3dx9.h>
 
-SpriteComponent::SpriteComponent( void ) : Texture( NULL )
+SpriteComponent::SpriteComponent( void )
 {
 	TextureDimensions.left = 0.0f;
 	TextureDimensions.top = 0.0f;
 	TextureDimensions.right = 1.0f;
 	TextureDimensions.bottom = 1.0f;
-
-	TextureRotation = 0.0f;
 }

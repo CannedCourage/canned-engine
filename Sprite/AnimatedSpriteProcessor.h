@@ -26,22 +26,22 @@ protected:
 
 	ListOfAnimatedSprites spriteComponents; //entity id as key
 
-	IDirect3DVertexBuffer9* vBuffer;
-	IDirect3DVertexDeclaration9* vDecl;
-	IDirect3DIndexBuffer9* iBuffer;
+	IDirect3DVertexBuffer9* vBuffer = NULL;
+	IDirect3DVertexDeclaration9* vDecl = NULL;
+	IDirect3DIndexBuffer9* iBuffer = NULL;
 	
 	std::vector<VFormat> verts;
 	std::vector<unsigned short int> indicies;
 	std::vector<D3DVERTEXELEMENT9> vElements;
 	
-	const int numVerts;
-	const int posOffset;
-	const int texOffset;
-	const int stride;
+	const int numVerts = 4;
+	const int posOffset = ( 0 * sizeof( float ) );
+	const int texOffset = ( 3 * sizeof( float ) );
+	const int stride = ( 5 * sizeof( float ) );
 
-	ID3DXEffect* effect;
-	const char* effectFile;
-	DWORD shaderFlags;
+	ID3DXEffect* effect = NULL;
+	const char* effectFile = "W:/engine/code/Sprite/TestShader.fx";
+	DWORD shaderFlags = D3DXSHADER_USE_LEGACY_D3DX9_31_DLL;
 	D3DXHANDLE worldHandle, viewHandle, projHandle;
 	D3DXHANDLE texTransHandle;
 	D3DXHANDLE textureHandle;

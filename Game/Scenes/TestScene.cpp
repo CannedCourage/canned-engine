@@ -70,6 +70,8 @@ void TestScene::Start( void )
 	AddTransform( qMark );
 	AddSprite( qMark, "MarioQuestionBlockTexture");
 
+	GetTransform( qMark ).translation.z = 5;
+
 	GetTransform( qMark ).scale.x = 512;
 	GetTransform( qMark ).scale.y = 512;
 
@@ -79,12 +81,14 @@ void TestScene::Start( void )
 	//TESTING ANIMATED SPRITES//
 
 	Entity& animTest = entityManager.New( "animTest" );
+	
 	AddTransform( animTest );
 	AddAnimatedSprite( animTest );
 
 	Transform& animTransform = GetTransform( animTest );
 	animTransform.translation.x = -300;
 	animTransform.translation.y = -200;
+	animTransform.translation.z = 6;
 	animTransform.scale.x = 100;
 	animTransform.scale.y = 100;
 
