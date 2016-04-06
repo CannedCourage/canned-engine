@@ -44,7 +44,7 @@ protected:
 	const int stride = ( 5 * sizeof( float ) );
 
 	ID3DXEffect* effect = NULL;
-	const char* effectFile = "W:/engine/code/Sprite/TestShader.fx";
+	const char* effectFile = "W:/engine/code/Sprite/SpriteShader.fx";
 	DWORD shaderFlags = D3DXSHADER_USE_LEGACY_D3DX9_31_DLL;
 	D3DXHANDLE worldHandle, viewHandle, projHandle;
 	D3DXHANDLE texTransHandle;

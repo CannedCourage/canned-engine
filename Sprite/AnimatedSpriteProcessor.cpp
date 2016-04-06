@@ -62,7 +62,7 @@ AnimatedSpriteProcessor::AnimatedSpriteProcessor( Graphics& g, TransformProcesso
 	NULL, // LPD3DXEFFECTPOOL pPool,
     &effect, 
     NULL ),
-	"Error creating Sprite Shader" );
+	"Error creating Animated Sprite shader" );
 	
 	worldHandle = effect->GetParameterBySemantic( NULL, "WORLD" );
 	viewHandle = effect->GetParameterBySemantic( NULL, "VIEW" );
@@ -208,11 +208,15 @@ void AnimatedSpriteProcessor::DrawSprite( const unsigned int entityID, const Ani
 
 void AnimatedSpriteProcessor::Update( const EngineDuration& deltaT )
 {
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_LIGHTING, false ), "Disabling Lighting" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), "Enabling Culling" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ), "Setting sprite render state" );
+	
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE ), "Enabling Z-writes" );
 	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), "Enabling Depth Testing" );
+	
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, true ), "Setting sprite render state" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHATESTENABLE, false ), "Disabling alpha testing" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA ), "Setting Source blend factor" );
+	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA ), "Setting Destination blend factor" );
 
 	graphics.ErrorCheck( graphics.Device()->SetVertexDeclaration( vDecl ), "Setting vertex declaration" );
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, vBuffer, 0, stride ), "Setting stream source" );

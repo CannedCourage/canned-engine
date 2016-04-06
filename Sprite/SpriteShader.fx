@@ -1,16 +1,17 @@
-// Global variables
-float4 colour = {1.0f, 1.0f, 1.0f, 1.0f};      // Material's ambient color
-texture texMain;   			// Color texture for mesh
-float4x4 matWorld : WORLD; 	// World matrix for object
-float4x4 matView : VIEW;    // View matrix/Camera
-float4x4 matProj : PROJECTION;
-float4x4 matTex;   			// UV transformation matrix
+//Global variables (uniform & const by default)
 
-// Texture samplers
-sampler TextureSampler = 
+texture g_MeshTexture;
+
+uniform float4x4 g_mWorld           : WORLD;
+uniform float4x4 g_mView            : VIEW;
+uniform float4x4 g_mProjection      : PROJECTION;
+uniform float4x4 g_mTexTransform    : TEXTRANSFROM;
+
+//Texture samplers
+sampler MeshTextureSampler =
 sampler_state
 {
-    Texture = <texMain>;
+    Texture = <g_MeshTexture>;
     MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
@@ -18,44 +19,38 @@ sampler_state
 
 struct VS_OUTPUT
 {
-    float4 Position   : POSITION;   // vertex position 
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
-    float4 Diffuse    : COLOR0;     // vertex diffuse color
+    float4 Position   : POSITION;   //vertex position
+    float2 TextureUV  : TEXCOORD0;  //vertex texture coords
 };
 
-VS_OUTPUT RenderSpriteVS( float4 vPos : POSITION, float2 vTexCoord0 : TEXCOORD0, uniform bool bTexture )
+VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
+                         float2 vTexCoord0 : TEXCOORD0 )
 {
     VS_OUTPUT Output;
 	
-	//Output.Position = mul( vPos, matWorld * matView );
-    Output.Position = vPos;
-        
-    Output.Diffuse.rgb = colour;
-    Output.Diffuse.a = 1.0f;
+	float4x4 wvp = mul( mul( g_mWorld, g_mView ), g_mProjection );
     
-    // Just copy the texture coordinate through
-    if( bTexture ) 
-        Output.TextureUV = mul( vTexCoord0, matTex );
-    else
-        Output.TextureUV = 0; 
-    
-    return Output;    
+    //Transform the position from object space to homogeneous projection space
+    Output.Position = mul( vPos, wvp );
+	
+    //Transform the texture coordinates
+    //Texture coordinate must be in homogeneous coordinates i.e. float4 with w == 1
+    Output.TextureUV = mul( float4( vTexCoord0, 0.0f, 1.0f ), g_mTexTransform );
+
+    return Output;
 }
 
 struct PS_OUTPUT
 {
-    float4 RGBColor : COLOR0;  // Pixel color    
+    float4 RGBColor : COLOR0;  //Pixel color
 };
 
-PS_OUTPUT RenderSpritePS( VS_OUTPUT In, uniform bool bTexture ) 
-{ 
+PS_OUTPUT RenderScenePS( VS_OUTPUT In )
+{
     PS_OUTPUT Output;
 
-    // Lookup texture and modulate it with diffuse
-    if( bTexture )
-        Output.RGBColor = tex2D( TextureSampler, In.TextureUV ) * In.Diffuse;
-    else
-        Output.RGBColor = In.Diffuse;
+    //Lookup mesh texture
+    Output.RGBColor = tex2D( MeshTextureSampler, In.TextureUV );
 
     return Output;
 }
@@ -63,17 +58,8 @@ PS_OUTPUT RenderSpritePS( VS_OUTPUT In, uniform bool bTexture )
 technique RenderSpriteWithTexture
 {
     pass P0
-    {          
-        VertexShader = compile vs_1_1 RenderSpriteVS( true );
-        PixelShader  = compile ps_1_1 RenderSpritePS( true );
-    }
-}
-
-technique RenderSpriteWithoutTexture
-{
-    pass P0
-    {          
-        VertexShader = compile vs_1_1 RenderSpriteVS( false );
-        PixelShader  = compile ps_1_1 RenderSpritePS( false );
+    {
+        VertexShader = compile vs_1_1 RenderSceneVS();
+        PixelShader  = compile ps_1_1 RenderScenePS();
     }
 }

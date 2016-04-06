@@ -1,9 +1,6 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
 
-#define DRUMLOOP "w:/game/sounds/drumloop.wav"
-#define TIGER "w:/game/meshes/tiger.x"
-
 int RegisterTestScene( void )
 {
 	SceneManager::GetSceneList()["TestScene"] = []( System& Sys ){ return new TestScene( Sys ); };
@@ -50,10 +47,11 @@ void TestScene::Load( void )
 {
 	log.Message( "Loading", true );
 
-	assets.LoadSoundSample( DRUMLOOP );
+	assets.LoadSoundSample( "w:/game/sounds/drumloop.wav" );
 	
 	graphics.LoadTexture( "w:/game/textures/qMark.bmp", "MarioQuestionBlockTexture" );
 	graphics.LoadTexture( "w:/game/textures/uvtemplate.bmp", "uvtest" );
+	graphics.LoadTexture( "w:/game/textures/transparency_test.png", "fucknope" );
 
 	//Always set state and report
 	State = SceneState::INIT;
@@ -114,6 +112,16 @@ void TestScene::Start( void )
 
 	GetAnimatedSprite( animTest ).AddAnimation( testAnimation );
 	GetAnimatedSprite( animTest ).PlayAnimation( "test", Animation2D::PlaybackMode::LOOP );
+
+	//TRANSPARENCY TEST//
+	Entity& tTest = entityManager.New( "tTest" );
+
+	AddTransform( tTest );
+	AddSprite( tTest, "fucknope" );
+
+	GetTransform( tTest ).scale.x = 79;
+	GetTransform( tTest ).scale.y = 103;
+	GetTransform( tTest ).translation.z = 4;
 
 	State = SceneState::UPDATE;
 }
