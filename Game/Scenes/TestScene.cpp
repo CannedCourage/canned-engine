@@ -1,14 +1,7 @@
 #include "Game/Scenes/TestScene.h"
 #include "System/System.h"
 
-int RegisterTestScene( void )
-{
-	SceneManager::GetSceneList()["TestScene"] = []( System& Sys ){ return new TestScene( Sys ); };
-
-	return 0;
-}
-
-int Reg = RegisterTestScene();
+bool regTestScene = RegisterScene<TestScene>( "TestScene" );
 
 //Globals for scene variables?
 //Would multiple instances of this scene share global variables?

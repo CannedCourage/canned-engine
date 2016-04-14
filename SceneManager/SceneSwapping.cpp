@@ -3,40 +3,39 @@
 
 #include <algorithm>
 
+std::unique_ptr<IScene> SceneManager::GetScene( const std::string& SceneName )
+{
+	//Method "at" is bounds-checked, will throw if no key called "SceneName" exists
+	return GetSceneList().at( SceneName )( system );
+}
+
 void SceneManager::SwapSceneBuffers( void )
 {
-	log.Message( "Buffers Swapping" );
+	log( "Buffers Swapping" );
 
-	currentScene = nextScene;
-	nextScene = NULL;
+	currentScene = std::move( nextScene );
+
+	nextScene.reset();
 }
 
 void SceneManager::ChangeScene( const std::string& SceneName )
 {
-	if( currentScene != NULL )
+	if( currentScene )
 	{
 		currentScene->End();
 		currentScene->Unload();
 	}
 
-	SceneList& sceneList = GetSceneList();
-
-	auto SceneFactory = sceneList.at( SceneName ); //'at' method is bounds-checked
-	
-	currentScene = SceneFactory( system );
+	currentScene = GetScene( SceneName );
 
 	currentScene->Load();
 }
 
 void SceneManager::QueueScene( const std::string& SceneName )
 {
-	//TODO: Add code to destroy existing nextScene, if not null
+	nextScene.reset();
 
-	SceneList& sceneList = GetSceneList();
-
-	auto SceneFactory = sceneList.at( SceneName ); //'at' method is bounds-checked
-	
-	nextScene = SceneFactory( system );
+	nextScene = GetScene( SceneName );
 
 	nextScene->Load();
 }

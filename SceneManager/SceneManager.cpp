@@ -6,9 +6,9 @@
 
 SceneList& SceneManager::GetSceneList( void )
 {
-	static SceneList* scenes = new SceneList();
+	static SceneList scenes;
 
-	return ( *scenes );
+	return scenes;
 }
 
 SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
@@ -17,7 +17,7 @@ SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 
 void SceneManager::Init( void )
 {
-	log.Message( "SceneManager initialisation" );
+	log( "SceneManager initialisation" );
 	
 	//TODO: Determine default starting scene then initialise
 	//With new SceneList implementation, this can be read from a settings file as a string
@@ -26,40 +26,15 @@ void SceneManager::Init( void )
 	PushGUI( new MainMenu( system, "Main Menu" ) );
 }
 
-void SceneManager::Shutdown( void )
-{
-	log.Message( "Scene Shutdown Method", true );
-
-	if( nextScene != NULL )
-	{
-		nextScene->Unload();
-		nextScene = NULL;
-	}
-
-	if( currentScene != NULL )
-	{
-		currentScene->Unload();
-		currentScene = NULL;
-	}
-
-	ClearGUIStack();
-
-	update = false;
-	render = false;
-}
-
 void SceneManager::Prepare( void )
 {
-	if( currentScene != NULL )
+	if( currentScene && nextScene )
 	{
 		if( currentScene->State == SceneState::END )
 		{
-			if( nextScene != NULL )
+			if( nextScene->IsLoaded() )
 			{
-				if( nextScene->IsLoaded() )
-				{
-					SwapSceneBuffers();
-				}
+				SwapSceneBuffers();
 			}
 		}
 	}
@@ -70,7 +45,7 @@ bool SceneManager::Update( void )
 {
 	if( !update ){ return false; }
 	
-	if( currentScene != NULL )
+	if( currentScene )
 	{
 		if( currentScene->IsLoaded() )
 		{
@@ -109,7 +84,7 @@ bool SceneManager::FixedUpdate( void )
 {
 	if( !update ){ return false; }
 
-	if( currentScene != NULL )
+	if( currentScene )
 	{
 		if( currentScene->IsLoaded() )
 		{
@@ -126,13 +101,13 @@ void SceneManager::Render()
 
 	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{
-		log.Message( "Device Lost", true );
+		log( "Device Lost", true );
 
 		system.graphics.Refresh();
 	}
 	else	//Draw
 	{
-		if( currentScene != NULL )
+		if( currentScene )
 		{
 			if( currentScene->IsLoaded() )
 			{
@@ -160,7 +135,7 @@ void SceneManager::Render()
 
 void SceneManager::OnLost( void )
 {
-	if( currentScene != NULL )
+	if( currentScene )
 	{
 		if( currentScene->IsLoaded() )
 		{
@@ -168,7 +143,7 @@ void SceneManager::OnLost( void )
 		}
 	}
 
-	if( nextScene != NULL )
+	if( nextScene )
 	{
 		if( nextScene->IsLoaded() )
 		{
@@ -179,7 +154,7 @@ void SceneManager::OnLost( void )
 
 void SceneManager::OnRecover( void )
 {
-	if( currentScene != NULL )
+	if( currentScene )
 	{
 		if( currentScene->IsLoaded() )
 		{
@@ -187,13 +162,35 @@ void SceneManager::OnRecover( void )
 		}
 	}
 
-	if( nextScene != NULL )
+	if( nextScene )
 	{
 		if( nextScene->IsLoaded() )
 		{
 			nextScene->OnRecover();
 		}
 	}
+}
+
+void SceneManager::Shutdown( void )
+{
+	log( "Scene Shutdown Method", true );
+
+	if( nextScene )
+	{
+		nextScene->Unload();
+		nextScene.reset();
+	}
+
+	if( currentScene )
+	{
+		currentScene->Unload();
+		currentScene.reset();
+	}
+
+	ClearGUIStack();
+
+	update = false;
+	render = false;
 }
 
 SceneManager::~SceneManager( void )

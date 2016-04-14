@@ -2,7 +2,8 @@
 #include "SceneManager/SplashScreen.h"
 #include "SceneManager/SceneManager.h"
 #include "System/System.h"
-#include "SceneManager/Scenes.h"
+
+bool regSplashScreen = RegisterScene<SplashScreen>( "SplashScreen" );
 
 SplashScreen::SplashScreen( System &s, const char* n ) : IScene( s, n ), vertexBuffer( NULL ), texture( NULL ), time( 0.0f )
 {
@@ -116,7 +117,7 @@ void SplashScreen::MainLoop( void )
 {
 	if( time > maxTime )
 	{
-		//system.sceneManager.ChangeScene( new TestScene( system ) );
+		system.sceneManager.ChangeScene( "TestScene" );
 	}
 	else
 	{
