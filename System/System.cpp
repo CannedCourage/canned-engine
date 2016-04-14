@@ -52,8 +52,6 @@ int System::Run( void )
 			break;
 		}
 
-		sceneManager.Prepare();
-
 		GameLoop();
 
 		time.FrameEnd();
@@ -66,6 +64,8 @@ int System::Run( void )
 int System::GameLoop( void )
 {
 	time.AddToPhysicsAccumulator( time.DeltaTimeActual() );
+
+	sceneManager.Prepare();
 
 	input.Update();
 	sceneManager.Update();
