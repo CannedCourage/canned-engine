@@ -4,7 +4,7 @@
 #include "Graphics/Graphics.h"
 #include "Sound/Sound.h"
 
-AssetManager::AssetManager( System& sys ) : log( "AssetManager" ), graphics( sys.graphics ), sound( sys.sound )
+AssetManager::AssetManager( System& sys ) : log( "AssetManager" ), graphics( sys.graphics )
 {
 }
 
@@ -36,8 +36,6 @@ void AssetManager::ReleaseAllMeshes( void )
 void AssetManager::CleanUp( void )
 {
 	ReleaseAllMeshes();
-
-	ReleaseSounds();
 
 	ReleaseTextures();
 }

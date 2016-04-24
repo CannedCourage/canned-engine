@@ -14,6 +14,9 @@
 
 #include "Logging/Log.h"
 
+#include <string>
+#include <unordered_map>
+
 class Sound
 {
 private:
@@ -21,9 +24,13 @@ protected:
 
 	Log log;
 
-	FMOD::Studio::System* studio;
-	FMOD::System* lowlevel;
-	unsigned int version;
+	FMOD::Studio::System* studio = NULL;
+	FMOD::System* lowlevel = NULL;
+	unsigned int version = 0;
+
+	std::unordered_map<std::string, FMOD::Sound*> SoundAssets;
+	
+	void ReleaseSounds( void );
 public:
 
 	Sound( void );
@@ -36,7 +43,11 @@ public:
 	void Update( void );
 	void CleanUp( void );
 
-	void ErrorCheck( FMOD_RESULT result, const char* const info );
+	bool LoadSoundSample( const std::string& File, const std::string& Name );
+	bool LoadSoundStream( const std::string& File, const std::string& Name );
+	FMOD::Sound* GetSound( const std::string& Name );
+
+	void ErrorCheck( FMOD_RESULT result, const std::string& Info );
 };
 
 #endif //_SOUND_H_

@@ -23,7 +23,6 @@
 
 class System;
 class Graphics;
-class Sound;
 
 class AssetManager
 {
@@ -31,7 +30,6 @@ private:
 protected:
 
 	Graphics& graphics;
-	Sound& sound;
 
 	Log log;
 
@@ -46,12 +44,6 @@ protected:
 	void AccquireAllMeshes( void );
 	void ReleaseMeshResources( Mesh& mesh );
 	void ReleaseAllMeshes( void );
-
-	//Sounds
-	
-	void ReleaseSounds( void );
-	
-	std::map<std::string, FMOD::Sound*> soundAssets;
 
 	//Textures
 
@@ -72,12 +64,6 @@ public:
 
 	bool LoadMesh( const char* file );
 	const Mesh& GetMesh( const char* name );
-
-	//Sounds
-	
-	bool LoadSoundSample( const char* file );
-	bool LoadSoundStream( const char* file );
-	FMOD::Sound* GetSound( const char* name );
 
 	//Textures
 	

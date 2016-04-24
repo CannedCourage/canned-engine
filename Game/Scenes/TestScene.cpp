@@ -40,7 +40,7 @@ void TestScene::Load( void )
 {
 	log.Message( "Loading", true );
 
-	assets.LoadSoundSample( "w:/game/sounds/drumloop.wav" );
+	sound.LoadSoundSample( "w:/game/sounds/drumloop.wav", "drumloop" );
 	
 	graphics.LoadTexture( "w:/game/textures/qMark.bmp", "MarioQuestionBlockTexture" );
 	graphics.LoadTexture( "w:/game/textures/uvtemplate.bmp", "uvtest" );
