@@ -1,20 +1,18 @@
 #include "Maths/Vector.h"
-
-Vector2D::Vector2D( void ) : x( 0.0f ), y( 0.0f )
-{
-}
+#include <cmath>
 
 Vector2D::Vector2D( double _x, double _y ) : x( _x ), y( _y )
 {
 }
 
-Vector2D::~Vector2D( void )
+double Vector2D::MagnitudeSquared( void ) const
 {
+    return ( ( x * x ) + ( y * y ) );
 }
 
-double Vector2D::Magnitude( void )
+double Vector2D::Magnitude( void ) const
 {
-	return sqrt( ( x * x ) + ( y * y ) );
+	return std::sqrt( ( x * x ) + ( y * y ) );
 }
 
 void Vector2D::Normalise( void )
@@ -25,16 +23,23 @@ void Vector2D::Normalise( void )
     y /= t;
 }
 
-const Vector2D Vector2D::Normalised( void )
+Vector2D Vector2D::Normalised( void )
 {
 	Vector2D temp( *this );
 
-	double t = Magnitude();
-    
-    temp.x /= t;
-    temp.y /= t;
+	temp.Normalise();
 
     return temp;
+}
+
+Vector2D Vector2D::LeftNormal( void )
+{
+    return Vector2D( -y, x );
+}
+
+Vector2D Vector2D::RightNormal( void )
+{
+    return Vector2D( y, -x );
 }
 
 Vector2D& Vector2D::operator+=( const Vector2D& rhs )
@@ -51,16 +56,6 @@ Vector2D& Vector2D::operator-=( const Vector2D& rhs )
     y -= rhs.y;
     
     return ( *this );
-}
-
-const Vector2D Vector2D::operator+( const Vector2D& rhs )
-{
-	return Vector2D( *this ) += rhs;
-}
-
-const Vector2D Vector2D::operator-( const Vector2D& rhs )
-{
-	return Vector2D( *this ) -= rhs;
 }
 
 Vector2D& Vector2D::operator*=( const double& scalar )
@@ -89,19 +84,45 @@ bool Vector2D::operator!=( const Vector2D &rhs ) const
 	return !( *this == rhs );
 }
 
-const Vector2D operator*( const double& scalar, const Vector2D& a )
+Vector2D operator+( const Vector2D& lhs, const Vector2D& rhs )
 {
-	return Vector2D( a ) *= scalar;
+    return ( Vector2D( lhs ) += rhs );
 }
 
-const Vector2D operator*( const Vector2D& a, const double& scalar )
+Vector2D operator-( const Vector2D& lhs, const Vector2D& rhs )
 {
-	return ( scalar * a );
+    return ( Vector2D( lhs ) -= rhs );
 }
 
-double DotProduct( Vector2D a, Vector2D b )
+Vector2D operator*( const double& scalar, const Vector2D& a )
+{
+	return ( Vector2D( a ) *= scalar );
+}
+
+Vector2D operator*( const Vector2D& a, const double& scalar )
+{
+	return ( Vector2D( a ) *= scalar );
+}
+
+double DotProduct( const Vector2D& a, const Vector2D& b )
 {
 	return ( ( a.x * b.x ) + ( a.y * b.y ) );
+}
+
+Vector2D ProjectVector( const Vector2D& A, const Vector2D& B )
+{
+    //Scalar Projection = |A|cos(Theta)
+    //OR
+    //Scalar Projection = (A.B) / |B|
+    double scalarProjection = ( DotProduct( A, B ) / B.MagnitudeSquared() );
+
+    //Vector Projection = Scalar Projection * B
+    Vector2D vectorProjection;
+
+    vectorProjection.x = ( scalarProjection * B.x );
+    vectorProjection.y = ( scalarProjection * B.y );
+
+    return vectorProjection;
 }
 
 std::ostream& operator<<( std::ostream& os, const Vector2D& a )

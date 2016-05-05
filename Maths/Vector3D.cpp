@@ -1,4 +1,5 @@
 #include "Maths/Vector.h"
+#include <math.h>
 
 Vector3D::Vector3D( void ) : x( 0.0f ), y( 0.0f ), z( 0.0f )
 {
