@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <initializer_list>
 
 class Matrix
 {
@@ -20,6 +21,8 @@ public:
 	Matrix( const unsigned int r = 2, const unsigned int c = 2 );
 	Matrix( const Matrix& mat );
 	Matrix& operator=( const Matrix& rhs );
+
+	Matrix( std::initializer_list<std::vector<double>> InitList );
 
 	double& operator()( const unsigned int row, const unsigned int column );
 	const double operator()( const unsigned int row, const unsigned int column ) const;

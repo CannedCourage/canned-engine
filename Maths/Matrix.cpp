@@ -44,12 +44,34 @@ Matrix::Matrix( const Matrix& mat ) : rows( mat.rows ), columns( mat.columns )
     }
 }
 
+Matrix::Matrix( std::initializer_list<std::vector<double>> InitList ) : Matrix( InitList.size(), InitList.begin()->size() )
+{
+    int rowNum = 0, columnNum = 0;
+   
+    for( const auto& row : InitList )
+    {
+        if( row.size() != rows )
+        {
+            throw invalid_argument( "All matrix rows must have the same number of elements!" );
+        }
+
+        for( const auto& element : row )
+        {
+            elements[rowNum][columnNum] = element;
+            columnNum++;
+        }
+ 
+        columnNum = 0;
+        rowNum++;
+    }
+}
+
 void Matrix::MakeIdentity( void )
 {
 	//This only really makes sense for n x n matrices
 	for( unsigned int i = 0; i < rows; i++ )
 	{
-		elements[i][i] = 1.0f;
+		elements[i][i] = 1.0f; //TODO: Add a check so this doesn't overflow
 	}
 }
 
@@ -203,7 +225,7 @@ double Matrix::Trace( void )
 
     for( unsigned int i = 0; i < rows; i++ )
 	{
-		trace += elements[i][i];
+		trace += elements[i][i]; //TODO: Add a check so this doesn't overflow
 	}
 
 	return trace;
@@ -294,8 +316,6 @@ Matrix& Matrix::operator-=( const Matrix& rhs )
 	return ( *this );
 }
 
-/////Non-member Operators/////
-
 double& Matrix::operator()( const unsigned int row, const unsigned int column )
 {
     if( row >= rows || column >= columns )
@@ -316,6 +336,10 @@ const double Matrix::operator()( const unsigned int row, const unsigned int colu
     return elements[row][column];
 }
 
+/////Non-member Operators/////
+
+//TODO: Normally, binary operators are implemented in terms of the corresponding compound operator
+//i.e. "*" in terms of "*="
 const Matrix operator*( const Matrix& lhs, const Matrix& rhs )
 {
     if( lhs.columns != rhs.rows )
