@@ -13,13 +13,8 @@
 #include <map>
 #include <string>
 
-#include "Mesh/Mesh.h"
-
-#include "fmod.hpp"
-
 #include "Logging\Log.h"
-
-#include <d3dx9.h>
+#include "Mesh/Mesh.h"
 
 class System;
 class Graphics;
@@ -44,12 +39,6 @@ protected:
 	void AccquireAllMeshes( void );
 	void ReleaseMeshResources( Mesh& mesh );
 	void ReleaseAllMeshes( void );
-
-	//Textures
-
-	std::map<std::string, IDirect3DTexture9*> textureAssets;
-
-	void ReleaseTextures( void );
 public:
 
 	AssetManager( System& sys );
@@ -64,11 +53,6 @@ public:
 
 	bool LoadMesh( const char* file );
 	const Mesh& GetMesh( const char* name );
-
-	//Textures
-	
-	void LoadTexture( const char* filename );
-	IDirect3DTexture9* GetTexture( const char* filename );
 };
 
 #endif //_ASSETMANAGER_H_
