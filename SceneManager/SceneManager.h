@@ -15,10 +15,10 @@ class System;
 class IScene;
 class GUI;
 
-//typedef std::function<IScene* ( System &s )> SceneFactoryFunction;
 typedef std::function<std::unique_ptr<IScene> ( System& Sys )> SceneFactoryFunction;
 typedef std::unordered_map<std::string, SceneFactoryFunction> SceneList;
 
+//TODO: Add messaging system for scene, processes register with SceneManager
 class SceneManager
 {
 private:
@@ -28,8 +28,6 @@ protected:
 
 	System& system;
 
-	//IScene* currentScene = NULL;
-	//IScene* nextScene = NULL;
 	std::unique_ptr<IScene> currentScene;
 	std::unique_ptr<IScene> nextScene;
 
