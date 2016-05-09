@@ -18,7 +18,7 @@ void ProcessManager::RemoveProcess( iProcess* Process )
 
 void ProcessManager::UpdateProcesses( const EngineDuration& DeltaT, Priority ProcessPriority )
 {
-	for( auto&& itr : Processes )
+	for( auto& itr : Processes )
 	{
 		if( itr.second == ProcessPriority )
 		{
