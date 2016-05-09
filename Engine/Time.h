@@ -12,44 +12,51 @@ class Time
 private:
 protected:
 
-	EngineTime StartOfFrame, EndOfFrame;
+	EngineTime StartOfFrame{};
+	EngineTime EndOfFrame{};
 
-	EngineDuration FrameDeltaTime, FixedPhysicsStep, PhysicsAcc;
-	double TimeScaleFactor;
+	EngineDuration FrameDeltaTime{ 0 };
+	EngineDuration PhysicsAcc{ 0 };
+	EngineDuration FixedPhysicsStep{ 100 };
 
-	const EngineDuration MAXDELTATIME;
+	double TimeScaleFactor = 1.0f;
+
+	const EngineDuration MAXDELTATIME{ 250 };
 public:
 
-	Time( void );
-	~Time( void );
+	Time( void ) = default;
+	~Time( void ) = default;
 
 	void FrameBegin( void );
+	
 	EngineDuration FrameEnd( void ); //Stops timer, stores the time, and returns the elapsed time as deltaTime
 
-	//Get the dt in seconds
+	//Get the dt in milliseconds
 	EngineDuration DeltaTimeActual( void );
-	//Get the dt in seconds (s), this is multiplied by timeScale before being returned
-	EngineDuration DeltaTime( void );
+	
+	//Get the dt in seconds (ms), this is multiplied by TimeScaleFactor before being returned
+	EngineDuration DeltaTimeScaled( void );
 
-	//Get the fixed physics step in seconds (s)
+	//Get the fixed physics step in seconds (ms)
 	EngineDuration FixedStepActual( void );
-	//Get the fixed physics step in seconds (s), this is multiplied by timeScale before being returned
-	EngineDuration FixedStep( void );
+	
+	//Get the fixed physics step in seconds (ms), this is multiplied by TimeScaleFactor before being returned
+	EngineDuration FixedStepScaled( void );
 
 	//Set the fixed physics step (shouldn't be lower than 1/100?)
-	void FixedStep( int milliseconds );
+	void SetFixedStep( int Milliseconds );
 
-	//Set the timeScale
-	void TimeScale( double multiplier );
+	//Set the TimeScaleFactor
+	void SetTimeScale( double Multiplier );
 
-	//Get the current timeScale
-	double TimeScale( void );
+	//Get the current TimeScaleFactor
+	double GetTimeScale( void );
 
-	EngineDuration PhysicsAccumulator( void );
+	EngineDuration GetPhysicsAccumulator( void );
 
-	void AddToPhysicsAccumulator( EngineDuration time );
+	void AddToPhysicsAccumulator( EngineDuration TimeToAdd );
 
-	void SubtractFromPhysicsAccumulator( EngineDuration time );
+	void SubtractFromPhysicsAccumulator( EngineDuration TimeToSubtract );
 };
 
 #endif //_TIMER_H_

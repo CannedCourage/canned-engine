@@ -1,14 +1,4 @@
 #include "Engine/Time.h"
-#include "Maths/Clamp.h"
-
-Time::Time( void ) : StartOfFrame(), EndOfFrame(), FrameDeltaTime( 0 ), FixedPhysicsStep( 10 ),
-						PhysicsAcc( 0 ), TimeScaleFactor( 1.0f ), MAXDELTATIME( 250 )
-{
-}
-
-Time::~Time( void )
-{
-}
 
 void Time::FrameBegin( void )
 {
@@ -41,7 +31,7 @@ EngineDuration Time::DeltaTimeActual( void )
 	return FrameDeltaTime;
 }
 
-EngineDuration Time::DeltaTime( void )
+EngineDuration Time::DeltaTimeScaled( void )
 {
 	return std::chrono::duration_cast<EngineDuration>( DeltaTimeActual() * TimeScaleFactor );
 }
@@ -51,43 +41,43 @@ EngineDuration Time::FixedStepActual( void )
 	return FixedPhysicsStep;
 }
 
-EngineDuration Time::FixedStep( void )
+EngineDuration Time::FixedStepScaled( void )
 {
 	return std::chrono::duration_cast<EngineDuration>( FixedPhysicsStep * TimeScaleFactor ); //Should physics timestep also be affected by timeScale?
 }
 
-void Time::FixedStep( int milliseconds )
+void Time::SetFixedStep( int Milliseconds )
 {
-	if( milliseconds > 0 )
+	if( Milliseconds > 0 )
 	{
-		FixedPhysicsStep = EngineDuration( milliseconds );
+		FixedPhysicsStep = EngineDuration( Milliseconds );
 	}
 }
 
-double Time::TimeScale( void )
+double Time::GetTimeScale( void )
 {
 	return TimeScaleFactor;
 }
 
-void Time::TimeScale( double multiplier )
+void Time::SetTimeScale( double Multiplier )
 {
-	if( multiplier > 0 )
+	if( Multiplier > 0 )
 	{
-		TimeScaleFactor = multiplier;
+		TimeScaleFactor = Multiplier;
 	}
 }
 
-EngineDuration Time::PhysicsAccumulator( void )
+EngineDuration Time::GetPhysicsAccumulator( void )
 {
 	return PhysicsAcc;
 }
 
-void Time::AddToPhysicsAccumulator( EngineDuration time )
+void Time::AddToPhysicsAccumulator( EngineDuration TimeToAdd )
 {
-	PhysicsAcc += time;
+	PhysicsAcc += TimeToAdd;
 }
 
-void Time::SubtractFromPhysicsAccumulator( EngineDuration time )
+void Time::SubtractFromPhysicsAccumulator( EngineDuration TimeToSubtract )
 {
-	PhysicsAcc -= time;
+	PhysicsAcc -= TimeToSubtract;
 }

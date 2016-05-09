@@ -1,14 +1,12 @@
 #include "StringFunctions.h"
 
 using std::string;
-using std::cout;
-using std::endl;
 
-string Piece( const string& str, const string& delimiter, int piece )
+string Piece( const string& Str, const string& Delimiter, int PieceIndex )
 {
-	if( piece < 0 )
+	if( PieceIndex < 0 )
 	{
-		return str;
+		return Str;
 	}
 
 	size_t posBeg = 0;
@@ -20,34 +18,34 @@ string Piece( const string& str, const string& delimiter, int piece )
 	{
 		if( looped )
 		{
-			posBeg = posEnd + delimiter.length();
+			posBeg = posEnd + Delimiter.length();
 		}
 
-		if( ( posEnd = str.find( delimiter, posBeg ) ) == string::npos )
+		if( ( posEnd = Str.find( Delimiter, posBeg ) ) == string::npos )
 		{
-			posEnd = ( str.length() );
+			posEnd = ( Str.length() );
 		}
 
-		piece--;
+		PieceIndex--;
 		looped = true;
 	}
-	while( piece >= 0 );
+	while( PieceIndex >= 0 );
 
 	if( posBeg < 0 )
 	{
 		posBeg = 0;
 	}
 
-	token = str.substr( posBeg, ( posEnd - posBeg ) );
+	token = Str.substr( posBeg, ( posEnd - posBeg ) );
 
 	return token;
 }
 
-string StripPiece( string& str, const string& delimiter, int piece )
+string StripPiece( string& Str, const string& Delimiter, int PieceIndex )
 {
-	if( piece < 0 )
+	if( PieceIndex < 0 )
 	{
-		return str;
+		return Str;
 	}
 
 	size_t posBeg = 0;
@@ -59,27 +57,27 @@ string StripPiece( string& str, const string& delimiter, int piece )
 	{
 		if( looped )
 		{
-			posBeg = posEnd + delimiter.length();
+			posBeg = posEnd + Delimiter.length();
 		}
 
-		if( ( posEnd = str.find( delimiter, posBeg ) ) == string::npos )
+		if( ( posEnd = Str.find( Delimiter, posBeg ) ) == string::npos )
 		{
-			posEnd = ( str.length() );
+			posEnd = ( Str.length() );
 		}
 
-		piece--;
+		PieceIndex--;
 		looped = true;
 	}
-	while( piece >= 0 );
+	while( PieceIndex >= 0 );
 
 	if( posBeg < 0 )
 	{
 		posBeg = 0;
 	}
 
-	token = str.substr( posBeg, ( posEnd - posBeg ) );
+	token = Str.substr( posBeg, ( posEnd - posBeg ) );
 
-    str.erase( posBeg, ( posEnd - posBeg ) + delimiter.length() );
+    Str.erase( posBeg, ( posEnd - posBeg ) + Delimiter.length() );
 
     return token;
 }

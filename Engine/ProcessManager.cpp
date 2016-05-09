@@ -1,33 +1,31 @@
 #include "Engine/ProcessManager.h"
 #include "Engine/iProcess.h"
 
-ProcessManager::ProcessManager( void ) : processes( ), mapIt( )
+void ProcessManager::AddProcess( iProcess* Process, Priority ProcessPriority )
 {
+	Processes.insert( std::pair<iProcess*, Priority>( Process, ProcessPriority ) );
+
+	Process->Start();
 }
 
-ProcessManager::~ProcessManager( void )
+//TODO: Should this destruct the Process object?
+void ProcessManager::RemoveProcess( iProcess* Process )
 {
+	Process->End();
+
+	Processes.erase( Process );
 }
 
-void ProcessManager::AddProcess( iProcess* process, Priority priority )
+void ProcessManager::UpdateProcesses( const EngineDuration& DeltaT, Priority ProcessPriority )
 {
-	processes.insert( std::pair<iProcess*, Priority>( process, priority ) );
-	process->Start();
-}
-
-void ProcessManager::RemoveProcess( iProcess* process )
-{
-	process->End();
-	processes.erase( process );
-}
-
-void ProcessManager::UpdateProcesses( const EngineDuration& deltaT, Priority priority )
-{
-	for( mapIt = processes.begin(); mapIt != processes.end(); mapIt++ )
+	for( auto&& itr : Processes )
 	{
-		if( mapIt->second == priority )
+		if( itr.second == ProcessPriority )
 		{
-			if( mapIt->first != NULL ){ mapIt->first->Update( deltaT ); }
+			if( itr.first != NULL )
+			{
+				itr.first->Update( DeltaT );
+			}
 		}
 	}
 }

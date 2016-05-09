@@ -1,10 +1,10 @@
-#ifndef _STRINGFUNCS_H_
-#define _STRINGFUNCS_H_
+#ifndef _STRINGFUNCTIONS_H_
+#define _STRINGFUNCTIONS_H_
 
 #include <iostream>
 
-std::string Piece( const std::string& str, const std::string& delimiter, int piece = 0 );
+std::string Piece( const std::string& Str, const std::string& Delimiter, int PieceIndex = 0 );
 
-std::string StripPiece( std::string& str, const std::string& delimiter, int piece = 0 );
+std::string StripPiece( std::string& Str, const std::string& Delimiter, int PieceIndex = 0 );
 
-#endif _STRINGFUNCS_H_
+#endif _STRINGFUNCTIONS_H_

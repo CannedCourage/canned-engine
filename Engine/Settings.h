@@ -1,57 +1,47 @@
-//Settings class
-
 #ifndef _SETTINGS_H_
 #define _SETTINGS_H_
 
 #include <iostream>
+#include <string>
 #include <JsonBox.h>
 
 class Settings
 {
-public:
-
-	Settings( const char* _filename = "", const char* _delimiter = "/" );
-	~Settings( void );
-	
-	void SetDouble( std::string name, const double& value );
-	void SetInteger( std::string name, const int& value );
-	void SetString( std::string name, const std::string& value );
-	void SetBool( std::string name, const bool value );
-
-	void SetDouble( const char* name, const double& value );
-	void SetInteger( const char* name, const int& value );
-	void SetString( const char* name, const std::string& value );
-	void SetBool( const char* name, const bool value );
-
-	double GetDouble( std::string name );
-	int GetInteger( std::string name );
-	std::string GetString( std::string name );
-	bool GetBool( std::string name );
-
-	double GetDouble( const char* name );
-	int GetInteger( const char* name );
-	std::string GetString( const char* name );
-	bool GetBool( const char* name );
-	
-	void WriteFile( void );
-	void ReadFile( void );
+private:
 protected:
 
-	const char* filename;
-	JsonBox::Object root;
-	std::string delimiter;
+	const std::string Filename;
 	
-	void SetDoubleInObject( std::string& name, const double& value, JsonBox::Value& object );
-	void SetIntegerInObject( std::string& name, const int& value, JsonBox::Value& object );
-	void SetStringInObject( std::string& name, const std::string& value, JsonBox::Value& object );
-	void SetBoolInObject( std::string& name, const bool value, JsonBox::Value& object );
-	
-	double GetDoubleFromObject( std::string& name, const JsonBox::Value& object );
-	int GetIntegerFromObject( std::string& name, const JsonBox::Value& object );
-	std::string GetStringFromObject( std::string& name, const JsonBox::Value& object );
-	bool GetBoolFromObject( std::string& name, const JsonBox::Value& object );
-private:
+	std::string Delimiter;
 
+	JsonBox::Object Root{};
+	
+	void SetDoubleInObject( std::string& Name, const double& Val, JsonBox::Value& Obj );
+	void SetIntegerInObject( std::string& Name, const int& Val, JsonBox::Value& Obj );
+	void SetStringInObject( std::string& Name, const std::string& Val, JsonBox::Value& Obj );
+	void SetBoolInObject( std::string& Name, const bool& Val, JsonBox::Value& Obj );
+	
+	double GetDoubleFromObject( std::string& Name, const JsonBox::Value& Obj );
+	int GetIntegerFromObject( std::string& Name, const JsonBox::Value& Obj );
+	std::string GetStringFromObject( std::string& Name, const JsonBox::Value& Obj );
+	bool GetBoolFromObject( std::string& Name, const JsonBox::Value& Obj );
+public:
+
+	Settings( const std::string& Filename = "", const std::string& Delimiter = "/" );
+	~Settings( void );
+	
+	void SetDouble( const std::string& Name, const double& Val );
+	void SetInteger( const std::string& Name, const int& Val );
+	void SetString( const std::string& Name, const std::string& Val );
+	void SetBool( const std::string& Name, const bool Val );
+
+	double GetDouble( const std::string& Name );
+	int GetInteger( const std::string& Name );
+	std::string GetString( const std::string& Name );
+	bool GetBool( const std::string& Name );
+
+	void WriteFile( void );
+	void ReadFile( void );
 };
 
 #endif //_SETTINGS_H_

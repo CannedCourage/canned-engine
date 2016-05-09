@@ -157,7 +157,7 @@ void TestScene::Unload( void )
 //TODO: Add "End" clean-up method(?)
 void TestScene::Update( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTimeActual(), Priority::UPDATE );
 
 	//TODO: Add overload that accepts just string, that will then do the lookup for you?
 	GetTransform( entityManager["qMark"] ).localRotation.z -= ( 0.01 );
@@ -182,12 +182,12 @@ void TestScene::PreRender( void )
 	graphics.Device()->BeginScene();
 
 	//Should this be called before the scene begins?
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::PRE_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTimeActual(), Priority::PRE_RENDER );
 }
 
 void TestScene::PostRender( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::POST_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTimeActual(), Priority::POST_RENDER );
 
 	graphics.Device()->EndScene();
 

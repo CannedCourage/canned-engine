@@ -70,12 +70,12 @@ int System::GameLoop( void )
 	input.Update();
 	sceneManager.Update();
 
-	while( time.PhysicsAccumulator() > time.FixedStep() )
+	while( time.GetPhysicsAccumulator() > time.FixedStepActual() )
 	{
-		if( time.FixedStep() == EngineDuration::zero() ){ break; }
+		if( time.FixedStepActual() == EngineDuration::zero() ){ break; }
 		//physics.Integrate( time.FixedStep() );
 		sceneManager.FixedUpdate();
-		time.SubtractFromPhysicsAccumulator( time.FixedStep() );
+		time.SubtractFromPhysicsAccumulator( time.FixedStepActual() );
 	}
 
 	input.PostUpdate();

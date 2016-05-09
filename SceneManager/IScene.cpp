@@ -19,37 +19,37 @@ IScene::~IScene( void )
 
 void IScene::PreUpdate( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::PRE_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::PRE_UPDATE );
 }
 
 void IScene::Update( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::UPDATE );
 }
 
 void IScene::FixedUpdate( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::FIXED_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::FIXED_UPDATE );
 }
 
 void IScene::PostUpdate( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::POST_UPDATE );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::POST_UPDATE );
 }
 
 void IScene::PreRender( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::PRE_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::PRE_RENDER );
 }
 
 void IScene::Render( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::RENDER );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::RENDER );
 }
 
 void IScene::PostRender( void )
 {
-	engine.UpdateProcesses( system.time.DeltaTime(), Priority::POST_RENDER );
+	engine.UpdateProcesses( system.time.DeltaTimeScaled(), Priority::POST_RENDER );
 }
 
 inline const bool IScene::IsLoaded( void ) const

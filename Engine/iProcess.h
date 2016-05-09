@@ -10,7 +10,7 @@ protected:
 public:
 
 	virtual void Start( void ) = 0;
-	virtual void Update( const EngineDuration& deltaT ) = 0;
+	virtual void Update( const EngineDuration& DeltaT ) = 0;
 	virtual void End( void ) = 0;
 };
 

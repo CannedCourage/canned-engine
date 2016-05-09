@@ -1,7 +1,7 @@
 #ifndef _PROCESSMANAGER_H_
 #define _PROCESSMANAGER_H_
 
-#include <map>
+#include <unordered_map>
 #include "Engine/Time.h"
 
 class iProcess;
@@ -17,22 +17,23 @@ enum class Priority : unsigned int
 	POST_RENDER
 };
 
+typedef std::unordered_map<iProcess*, Priority> ProcessMap;
+
 class ProcessManager
 {
 private:
 protected:
 
-	std::map<iProcess*, Priority> processes;
-	std::map<iProcess*, Priority>::iterator mapIt;
+	 ProcessMap Processes{};
 public:
 
-	ProcessManager( void );
-	~ProcessManager( void );
+	ProcessManager( void ) = default;
+	~ProcessManager( void ) = default;
 
-	void AddProcess( iProcess* process, Priority priority );
-	void RemoveProcess( iProcess* process );
+	void AddProcess( iProcess* Process, Priority ProcessPriority );
+	void RemoveProcess( iProcess* Process );
 
-	void UpdateProcesses( const EngineDuration& deltaT, Priority priority );
+	void UpdateProcesses( const EngineDuration& DeltaT, Priority ProcessPriority );
 };
 
 #endif //_PROCESSMANAGER_H_

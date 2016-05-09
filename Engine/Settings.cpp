@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 #include "Settings.h"
 #include "StringFunctions.h"
@@ -7,7 +8,7 @@ using std::string;
 using JsonBox::Value;
 using JsonBox::Object;
 
-Settings::Settings( const char* _filename, const char* _delimiter ) : filename( _filename ), root(), delimiter( _delimiter )
+Settings::Settings( const string& Filename, const string& Delimiter ) : Filename( Filename ), Delimiter( Delimiter )
 {
 	ReadFile();
 }
@@ -19,130 +20,82 @@ Settings::~Settings( void )
 
 void Settings::WriteFile( void )
 {
-	Value out( root );
+	Value out( Root );
 
-	//out.writeToStream( cout, true, true );
-
-	out.writeToFile( filename );
+	out.writeToFile( Filename );
 }
 
 void Settings::ReadFile( void )
 {
 	Value in;
 
-	in.loadFromFile( filename );
-
-	//string copy( filename );
-	//copy.resize( copy.length() - 5 );
-	//copy.append( "_COPY.json");
-	
-	string copy( "C:/Users/Scott/Programming/Projects/GitHub/canned-engine/Settings/MainSettings_COPY.json" );
-
-	in.writeToFile( copy );	//Preserve the original
-
-	//in.writeToStream( cout, true, true );
+	in.loadFromFile( Filename );
 
 	if( in.isObject() )
 	{
-		root = in.getObject();
+		Root = in.getObject();
 	}
 	else
 	{
-		//Throw
+		throw std::runtime_error{ "Opening JSON file failed: " + Filename };
 	}
 }
 
-void Settings::SetDouble( string name, const double& value )
+void Settings::SetDouble( const std::string& Name, const double& Val )
 {
-	Value v( root );
+	Value v( Root );
 
-	SetDoubleInObject( name, value, v );
+	SetDoubleInObject( string( Name ), Val, v );
 
-	root = v.getObject();
+	Root = v.getObject();
 }
 
-void Settings::SetInteger( string name, const int& value )
+void Settings::SetInteger( const std::string& Name, const int& Val )
 {
-	Value v( root );
+	Value v( Root );
 
-	SetIntegerInObject( name, value, v );
+	SetIntegerInObject( string( Name ), Val, v );
 
-	root = v.getObject();
+	Root = v.getObject();
 }
 
-void Settings::SetString( string name, const string& value )
+void Settings::SetString( const std::string& Name, const string& Val )
 {
-	Value v( root );
+	Value v( Root );
 
-	SetStringInObject( name, value, v );
+	SetStringInObject( string( Name ), Val, v );
 
-	root = v.getObject();
+	Root = v.getObject();
 }
 
-void Settings::SetBool( string name, const bool value )
+void Settings::SetBool( const std::string& Name, const bool Val )
 {
-	Value v( root );
+	Value v( Root );
 
-	SetBoolInObject( name, value, v );
+	SetBoolInObject( string( Name ), Val, v );
 
-	root = v.getObject();
+	Root = v.getObject();
 }
 
-void Settings::SetDouble( const char* name, const double& value )
+void Settings::SetDoubleInObject( string& Name, const double& Val, JsonBox::Value& JsonObject )
 {
-	Value v( root );
-
-	SetDoubleInObject( string( name ), value, v );
-
-	root = v.getObject();
-}
-
-void Settings::SetInteger( const char* name, const int& value )
-{
-	Value v( root );
-
-	SetIntegerInObject( string( name ), value, v );
-
-	root = v.getObject();
-}
-
-void Settings::SetString( const char* name, const string& value )
-{
-	Value v( root );
-
-	SetStringInObject( string( name ), value, v );
-
-	root = v.getObject();
-}
-
-void Settings::SetBool( const char* name, const bool value )
-{
-	Value v( root );
-
-	SetBoolInObject( string( name ), value, v );
-
-	root = v.getObject();
-}
-
-void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Value& object )
-{
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
 	{
 		//No
 			//Create Value, initialise with value
-			Value v = Value( value );
+			Value v = Value( Val );
 
 			//Is there a value called first substring already?
 			if( obj.find( first.c_str() ) == obj.end() )
@@ -150,7 +103,7 @@ void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Va
 				//No
 					//Set object[ first substring ] equal to the new Value
 					obj[ first.c_str() ] = v;
-					object = Value( obj );
+					JsonObject = Value( obj );
 			}
 			else
 			{
@@ -165,11 +118,12 @@ void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Va
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
 				//Set object[ first substring ] equal to the new Value
 				obj[ first.c_str() ] = v;
-				object = obj;
+				JsonObject = obj;
 			}
 	}
 	else
@@ -183,12 +137,12 @@ void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Va
 					Object o;
 					Value v( o );
 
-					//Call SetDoubleInObject, pass name, value and new object
-					SetDoubleInObject( name, value, v );
+					//Call SetDoubleInObject, pass Name, value and new object
+					SetDoubleInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to new object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 			else
 			{
@@ -206,37 +160,38 @@ void Settings::SetDoubleInObject( string& name, const double& value, JsonBox::Va
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
-					//Call SetDoubleInObject, pass name, value and object
-					SetDoubleInObject( name, value, v );
+					//Call SetDoubleInObject, pass Name, value and object
+					SetDoubleInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 	}
 }
 
-void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Value& object )
+void Settings::SetIntegerInObject( string& Name, const int& Val, JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
 	{
 		//No
 			//Create Value, initialise with value
-			Value v = Value( value );
+			Value v = Value( Val );
 
 			//Is there a value called first substring already?
 			if( obj.find( first.c_str() ) == obj.end() )
@@ -244,7 +199,7 @@ void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Valu
 				//No
 					//Set object[ first substring ] equal to the new Value
 					obj[ first.c_str() ] = v;
-					object = Value( obj );
+					JsonObject = Value( obj );
 			}
 			else
 			{
@@ -259,11 +214,12 @@ void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Valu
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
 				//Set object[ first substring ] equal to the new Value
 				obj[ first.c_str() ] = v;
-				object = obj;
+				JsonObject = obj;
 			}
 	}
 	else
@@ -277,12 +233,12 @@ void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Valu
 					Object o;
 					Value v( o );
 
-					//Call SetIntegerInObject, pass name, value and new object
-					SetIntegerInObject( name, value, v );
+					//Call SetIntegerInObject, pass Name, value and new object
+					SetIntegerInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to new object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 			else
 			{
@@ -300,37 +256,38 @@ void Settings::SetIntegerInObject( string& name, const int& value, JsonBox::Valu
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
-					//Call SetIntegerInObject, pass name, value and object
-					SetIntegerInObject( name, value, v );
+					//Call SetIntegerInObject, pass Name, value and object
+					SetIntegerInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 	}
 }
 
-void Settings::SetStringInObject( string& name, const string& value, JsonBox::Value& object )
+void Settings::SetStringInObject( string& Name, const string& Val, JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
 	{
 		//No
 			//Create Value, initialise with value
-			Value v = Value( value );
+			Value v = Value( Val );
 
 			//Is there a value called first substring already?
 			if( obj.find( first.c_str() ) == obj.end() )
@@ -338,7 +295,7 @@ void Settings::SetStringInObject( string& name, const string& value, JsonBox::Va
 				//No
 					//Set object[ first substring ] equal to the new Value
 					obj[ first.c_str() ] = v;
-					object = Value( obj );
+					JsonObject = Value( obj );
 			}
 			else
 			{
@@ -353,11 +310,12 @@ void Settings::SetStringInObject( string& name, const string& value, JsonBox::Va
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
 				//Set object[ first substring ] equal to the new Value
 				obj[ first.c_str() ] = v;
-				object = obj;
+				JsonObject = obj;
 			}
 	}
 	else
@@ -371,12 +329,12 @@ void Settings::SetStringInObject( string& name, const string& value, JsonBox::Va
 					Object o;
 					Value v( o );
 
-					//Call SetStringInObject, pass name, value and new object
-					SetStringInObject( name, value, v );
+					//Call SetStringInObject, pass Name, value and new object
+					SetStringInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to new object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 			else
 			{
@@ -394,37 +352,38 @@ void Settings::SetStringInObject( string& name, const string& value, JsonBox::Va
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
-					//Call SetStringInObject, pass name, value and object
-					SetStringInObject( name, value, v );
+					//Call SetStringInObject, pass Name, value and object
+					SetStringInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 	}
 }
 
-void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& object )
+void Settings::SetBoolInObject( string& Name, const bool& Val, JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
 	{
 		//No
 			//Create Value, initialise with value
-			Value v = Value( value );
+			Value v = Value( Val );
 
 			//Is there a value called first substring already?
 			if( obj.find( first.c_str() ) == obj.end() )
@@ -432,7 +391,7 @@ void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& 
 				//No
 					//Set object[ first substring ] equal to the new Value
 					obj[ first.c_str() ] = v;
-					object = Value( obj );
+					JsonObject = Value( obj );
 			}
 			else
 			{
@@ -447,11 +406,12 @@ void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& 
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
 					//Set object[ first substring ] equal to the new Value
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 	}
 	else
@@ -465,12 +425,12 @@ void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& 
 					Object o;
 					Value v( o );
 
-					//Call SetBoolInObject, pass name, value and new object
-					SetBoolInObject( name, value, v );
+					//Call SetBoolInObject, pass Name, value and new object
+					SetBoolInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to new object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 			else
 			{
@@ -488,70 +448,51 @@ void Settings::SetBoolInObject( string& name, const bool value, JsonBox::Value& 
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 
-					//Call SetBoolInObject, pass name, value and object
-					SetBoolInObject( name, value, v );
+					//Call SetBoolInObject, pass Name, value and object
+					SetBoolInObject( Name, Val, v );
 
 					//Set object[ first substring ] equal to object
 					obj[ first.c_str() ] = v;
-					object = obj;
+					JsonObject = obj;
 			}
 	}
 }
 
-double Settings::GetDouble( string name )
+double Settings::GetDouble( const std::string& Name )
 {
-	return GetDoubleFromObject( name, root );
+	return GetDoubleFromObject( string( Name ), Root );
 }
 
-int Settings::GetInteger( string name )
+int Settings::GetInteger( const std::string& Name )
 {
-	return GetIntegerFromObject( name, root );
+	return GetIntegerFromObject( string( Name ), Root );
 }
 
-string Settings::GetString( string name )
+string Settings::GetString( const std::string& Name )
 {
-	return GetStringFromObject( name, root );
+	return GetStringFromObject( string( Name ), Root );
 }
 
-bool Settings::GetBool( string name )
+bool Settings::GetBool( const std::string& Name )
 {
-	return GetBoolFromObject( name, root );
-}
-
-double Settings::GetDouble( const char* name )
-{
-	return GetDoubleFromObject( string( name ), root );
-}
-
-int Settings::GetInteger( const char* name )
-{
-	return GetIntegerFromObject( string( name ), root );
-}
-
-string Settings::GetString( const char* name )
-{
-	return GetStringFromObject( string( name ), root );
-}
-
-bool Settings::GetBool( const char* name )
-{
-	return GetBoolFromObject( string ( name ), root );
+	return GetBoolFromObject( string( Name ), Root );
 }
 	
-double Settings::GetDoubleFromObject( string& name, const JsonBox::Value& object )
+double Settings::GetDoubleFromObject( string& Name, const JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
@@ -578,6 +519,7 @@ double Settings::GetDoubleFromObject( string& name, const JsonBox::Value& object
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -600,13 +542,14 @@ double Settings::GetDoubleFromObject( string& name, const JsonBox::Value& object
 					if( v.isObject() )
 					{
 						//Yes
-							//Call GetDoubleFromObject, pass name and object
-							return GetDoubleFromObject( name, v );
+							//Call GetDoubleFromObject, pass Name and object
+							return GetDoubleFromObject( Name, v );
 					}
 					else
 					{
 						//No
 							//Throw error, no sub object
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -614,18 +557,18 @@ double Settings::GetDoubleFromObject( string& name, const JsonBox::Value& object
 	return 0.0;
 }
 
-int Settings::GetIntegerFromObject( string& name, const JsonBox::Value& object )
+int Settings::GetIntegerFromObject( string& Name, const JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
@@ -652,6 +595,7 @@ int Settings::GetIntegerFromObject( string& name, const JsonBox::Value& object )
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -674,13 +618,14 @@ int Settings::GetIntegerFromObject( string& name, const JsonBox::Value& object )
 					if( v.isObject() )
 					{
 						//Yes
-							//Call GetIntegerFromObject, pass name and object
-							return GetIntegerFromObject( name, v );
+							//Call GetIntegerFromObject, pass Name and object
+							return GetIntegerFromObject( Name, v );
 					}
 					else
 					{
 						//No
 							//Throw error, no sub object
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -688,18 +633,18 @@ int Settings::GetIntegerFromObject( string& name, const JsonBox::Value& object )
 	return 0;
 }
 
-string Settings::GetStringFromObject( string& name, const JsonBox::Value& object )
+string Settings::GetStringFromObject( string& Name, const JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
@@ -726,6 +671,7 @@ string Settings::GetStringFromObject( string& name, const JsonBox::Value& object
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -748,13 +694,14 @@ string Settings::GetStringFromObject( string& name, const JsonBox::Value& object
 					if( v.isObject() )
 					{
 						//Yes
-							//Call GetStringFromObject, pass name and object
-							return GetStringFromObject( name, v );
+							//Call GetStringFromObject, pass Name and object
+							return GetStringFromObject( Name, v );
 					}
 					else
 					{
 						//No
 							//Throw error, no sub object
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -762,18 +709,18 @@ string Settings::GetStringFromObject( string& name, const JsonBox::Value& object
 	return string( "" );
 }
 
-bool Settings::GetBoolFromObject( string& name, const JsonBox::Value& object )
+bool Settings::GetBoolFromObject( string& Name, const JsonBox::Value& JsonObject )
 {
-	Object obj = object.getObject();
+	Object obj = JsonObject.getObject();
 
 	string first( "" );
 	string second( "" );
 
 	//Get first substring
-	first = StripPiece( name, delimiter, 0 );
+	first = StripPiece( Name, Delimiter, 0 );
 
 	//Get second substring
-	second = Piece( name, delimiter, 0 );
+	second = Piece( Name, Delimiter, 0 );
 	
 	//Is there a second substring?
 	if( second.length() == 0 )
@@ -800,6 +747,7 @@ bool Settings::GetBoolFromObject( string& name, const JsonBox::Value& object )
 					{
 						//No
 							//Throw error, don't change type
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
@@ -822,13 +770,14 @@ bool Settings::GetBoolFromObject( string& name, const JsonBox::Value& object )
 					if( v.isObject() )
 					{
 						//Yes
-							//Call GetBoolFromObject, pass name and object
-							return GetBoolFromObject( name, v );
+							//Call GetBoolFromObject, pass Name and object
+							return GetBoolFromObject( Name, v );
 					}
 					else
 					{
 						//No
 							//Throw error, no sub object
+						throw std::runtime_error{ "Error - Attempting to change setting data type: " + first };
 					}
 			}
 	}
