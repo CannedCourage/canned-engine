@@ -9,7 +9,7 @@ class Entity
 private:
 protected:
 
-	static unsigned int entityCounter;
+	static unsigned int EntityCounter;
 
 	std::bitset<64> ComponentFlags;
 public:
@@ -18,16 +18,14 @@ public:
 	unsigned int ID;
 	std::string Name;
 
-	Entity( void );
-	Entity( const std::string& name );
-	
-	Entity( const Entity& entity );
+	Entity( void ) = delete;
+	Entity( const std::string& Name );
+	Entity( const Entity& Entity ) = default;
+	~Entity( void ) = default;
 
-	Entity& operator=( const Entity& entity );
-	
-	~Entity( void );
+	Entity& operator=( const Entity& rhs ) = default;
 
-	bool Has( unsigned int ComponentTypeID );
+	bool Has( const unsigned int ComponentTypeID ) const;
 
 	//TODO: Create clone method? This would dupicate components as well.
 };

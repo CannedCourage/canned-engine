@@ -1,137 +1,93 @@
 #include "Entity/EntityManager.h"
 
-EntityManager::EntityManager( void ) : log( "EntityManager" ), entities(), index()
-{
-}
-
-EntityManager::~EntityManager( void )
-{
-}
+#include <algorithm>
 
 Entity& EntityManager::New( const std::string& Name )
 {
-	auto result = index.find( Name );
+	//TODO: Switch to set, enforces key uniqueness
+	auto result = std::find_if( Entities.begin(), Entities.end(), [&Name]( const Entity& Obj ){ return ( Obj.Name == Name ); } );
 
-	if( result != index.end() )
+	if( result != Entities.end() )
 	{
 		std::string error = "Entity with the following name already exists: " + Name;
 		throw std::invalid_argument( error );
 	}
 
-	//If the implementation switches to vector, use vector::emplace() or vector::emplace_back()
-	//Then the name and ID values in the Entity can become const again
-	Entity e( Name );
+	auto iteratorToNewEntity = Entities.emplace( Entities.end(), Entity( Name ) );
 
-	entities[e.ID] = e;
-	//entities.insert( EntityPair( e.ID, e ) );
-
-	//index[Name] = ( e->ID );
-	index.insert( IndexPair( Name, e.ID ) );
-
-	return entities[e.ID];
+	return ( *iteratorToNewEntity );
 }
 
+//Delete entry in entity list based on ID
 void EntityManager::Delete( const unsigned int ID )
 {
-	//Delete entry in entity list
-	ListOfEntities::iterator it = entities.find( ID );
-
-	if( it != entities.end() )
-	{
-		std::string entityName = it->second.Name;
-
-		entities.erase( it );
-
-		//Delete entry in index
-		IndexOfEntities::iterator ix = index.find( entityName );
-
-		if( ix != index.end() )
-		{
-			index.erase( ix );
-		}
-	}
+	std::remove_if( Entities.begin(), Entities.end(), [&ID]( const Entity& Obj ){ return ( Obj.ID == ID ); } );
 }
 
+//Delete entry in entity list based on Name
 void EntityManager::Delete( const std::string& Name )
 {
-	IndexOfEntities::iterator ix = index.find( Name );
-
-	if( ix != index.end() )
-	{
-		unsigned int ID = ix->second;
-
-		index.erase( ix );
-
-		ListOfEntities::iterator it = entities.find( ID );
-
-		if( it != entities.end() )
-		{
-			entities.erase( it );
-		}
-	}
+	std::remove_if( Entities.begin(), Entities.end(), [&Name]( const Entity& Obj ){ return ( Obj.Name == Name ); } );
 }
 
-//TODO: Replace with use of "at" method?
+//Get reference to Entity based on ID, throw if Entity does not exist
 Entity& EntityManager::operator[]( const unsigned int ID )
 {
-	ListOfEntities::iterator it = entities.find( ID );
+	auto result = std::find_if( Entities.begin(), Entities.end(), [&ID]( const Entity& Obj ){ return ( Obj.ID == ID ); } );
 
-	if( it == entities.end() )
+	if( result != Entities.end() )
 	{
-		std::exception ex( "Invalid ID passed to EntityManager" );
-
-		throw( ex );
+		return ( *result );
 	}
-
-	return ( it->second );
+	else
+	{
+		std::string error = "Entity with the following ID does not exist: " + std::to_string( ID );
+		throw std::invalid_argument( error );
+	}
 }
 
+//Get reference to Entity based on Name, throw if Entity does not exist
 Entity& EntityManager::operator[]( const std::string& Name )
 {
-	IndexOfEntities::iterator it = index.find( Name );
+	auto result = std::find_if( Entities.begin(), Entities.end(), [&Name]( const Entity& Obj ){ return ( Obj.Name == Name ); } );
 
-	if( it == index.end() )
+	if( result != Entities.end() )
 	{
-		std::string message( "An entitiy with the name: " );
-		message.append( Name );
-		message.append( " does not exist." );
-		
-		std::exception ex( message.c_str() );
-
-		throw( ex );
+		return ( *result );
 	}
-
-	return ( *this )[it->second];
+	else
+	{
+		std::string error = "Entity with the following Name does not exist: " + Name;
+		throw std::invalid_argument( error );
+	}
 }
 
 const Entity& EntityManager::operator[]( const unsigned int ID ) const
 {
-	const ListOfEntities::const_iterator it = entities.find( ID );
+	const auto result = std::find_if( Entities.begin(), Entities.end(), [&ID]( const Entity& Obj ){ return ( Obj.ID == ID ); } );
 
-	if( it == entities.end() )
+	if( result != Entities.end() )
 	{
-		std::exception ex( "Invalid ID passed to EntityManager" );
-
-		throw( ex );
+		return ( *result );
 	}
-
-	return ( it->second );
+	else
+	{
+		std::string error = "Entity with the following ID does not exist: " + std::to_string( ID );
+		throw std::invalid_argument( error );
+	}
 }
 
-const Entity& EntityManager::operator[]( const std::string& name ) const
+const Entity& EntityManager::operator[]( const std::string& Name ) const
 {
-	IndexOfEntities::const_iterator it = index.find( name );
+	const auto result = std::find_if( Entities.begin(), Entities.end(), [&Name]( const Entity& Obj ){ return ( Obj.Name == Name ); } );
 
-	if( it == index.end() )
+	if( result != Entities.end() )
 	{
-		std::string message( "An entitiy with the name: " );
-		message.append( name );
-		message.append( " does not exist." );
-		
-		std::exception ex( message.c_str() );
-
-		throw( ex );
+		return ( *result );
 	}
-
-	return ( *this )[it->second];
+	else
+	{
+		std::string error = "Entity with the following Name does not exist: " + Name;
+		throw std::invalid_argument( error );
+	}
 }

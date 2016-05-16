@@ -4,18 +4,10 @@
 #include "Logging/Log.h"
 #include "Entity/Entity.h"
 
-#include <unordered_map>
+#include <vector>
 #include <string>
 
-
-//TODO: Make this a vector?
-//typedef std::map<const unsigned int,Entity* const> ListOfEntities;
-typedef std::unordered_map<unsigned int,Entity> ListOfEntities;
-typedef std::unordered_map<std::string,const unsigned int> IndexOfEntities;
-
-//typedef std::pair<const unsigned int,Entity* const> EntityPair;
-typedef std::pair<unsigned int,Entity> EntityPair;
-typedef std::pair<std::string,const unsigned int> IndexPair;
+typedef std::vector<Entity> ListOfEntities;
 
 //TODO: Make methods that return a non-const reference to Entity private
 //TODO: Add const versions of New() methods
@@ -37,14 +29,13 @@ class EntityManager
 private:
 protected:
 
-	Log log;
+	Log log{ "EntityManager" };
 
-	ListOfEntities entities;
-	IndexOfEntities index;
+	ListOfEntities Entities;
 public:
 
-	EntityManager( void );
-	~EntityManager( void );
+	EntityManager( void ) = default;
+	~EntityManager( void ) = default;
 
 	Entity& New( const std::string& name );
 	
