@@ -24,14 +24,13 @@ public:
 
 	Matrix( std::initializer_list<std::vector<double>> InitList );
 
-	double& operator()( const unsigned int row, const unsigned int column );
-	const double operator()( const unsigned int row, const unsigned int column ) const;
+	double& operator()( const unsigned int row, const unsigned int column ); //Used to assign values to specific elements
+	double operator()( const unsigned int row, const unsigned int column ) const;
 
 	friend const Matrix operator*( const Matrix& lhs, const Matrix& rhs );
 	friend const Matrix operator*( const double lhs, const Matrix& rhs );
 	friend const Matrix operator*( const Matrix& lhs, const double rhs );
 
-	Matrix& operator*=( const Matrix& rhs );
 	Matrix& operator*=( const double rhs );
 
 	Matrix& operator+=( const Matrix& rhs );
@@ -43,10 +42,10 @@ public:
 	void MakeIdentity( void );
 
 	void Invert( void );
-	const Matrix Inverse( void );
+	Matrix Inverse( void );
 
 	void Transpose( void );
-	const Matrix Transposed( void );
+	Matrix Transposed( void );
 
 	friend double MatrixDeterminant( const Matrix& mat );
 
@@ -54,7 +53,7 @@ public:
 
 	double Trace( void );
 
-	const bool IsSquare( void ) const;
+	bool IsSquare( void ) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Matrix& mat);
 };

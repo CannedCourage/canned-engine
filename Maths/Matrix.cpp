@@ -80,7 +80,7 @@ void Matrix::Invert( void )
 	( *this ) = Inverse();
 }
 
-const Matrix Matrix::Inverse( void )
+Matrix Matrix::Inverse( void )
 {
     if( !( IsSquare() ) ){ throw std::exception( "Can only calculate inverse of a square matrix" ); }
         
@@ -143,7 +143,7 @@ void Matrix::Transpose( void )
 	( *this ) = Transposed();
 }
 
-const Matrix Matrix::Transposed( void )
+Matrix Matrix::Transposed( void )
 {
     Matrix temp( columns, rows );
 
@@ -231,7 +231,7 @@ double Matrix::Trace( void )
 	return trace;
 }
 
-const bool Matrix::IsSquare( void ) const
+bool Matrix::IsSquare( void ) const
 {
     return ( rows == columns );
 }
@@ -266,13 +266,6 @@ Matrix& Matrix::operator=( const Matrix& rhs )
     {
         throw invalid_argument( "Matrix cannot have rows/columns less that one" );
     }
-    
-    return ( *this );
-}
-
-Matrix& Matrix::operator*=( const Matrix& rhs )
-{
-   ( *this ) = ( ( *this ) * rhs );
     
     return ( *this );
 }
@@ -326,7 +319,7 @@ double& Matrix::operator()( const unsigned int row, const unsigned int column )
     return elements[row][column];
 }
 
-const double Matrix::operator()( const unsigned int row, const unsigned int column ) const
+double Matrix::operator()( const unsigned int row, const unsigned int column ) const
 {
     if( row >= rows || column >= columns )
     {
