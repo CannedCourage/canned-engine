@@ -1,20 +1,19 @@
-#ifndef _CONSOLEADAPTER_H_
-#define _CONSOLEADAPTER_H_
-
-#define CONSOLE_INPUT 0x00000001
-#define CONSOLE_OUTPUT 0x00000010
+#ifndef _CONSOLE_ADAPTER_H_
+#define _CONSOLE_ADAPTER_H_
 
 class ConsoleAdapter
 {
 private:
 protected:
-	
+
 	void SetupStandardStreams( void );
 public:
 
-	unsigned long ConsoleType;
+	bool RedirectOutput = true;
+	bool RedirectInput = true;
 
-	ConsoleAdapter( unsigned long type = CONSOLE_INPUT | CONSOLE_OUTPUT );
+	ConsoleAdapter( void ) = default;
+	ConsoleAdapter( bool Ouptut, bool Input );
 	~ConsoleAdapter( void );
 
 	void CreateConsole( void );
@@ -23,4 +22,4 @@ public:
 	void AttachParentConsole( void );
 };
 
-#endif //_CONSOLEADAPTER_H_
+#endif //_CONSOLE_ADAPTER_H_

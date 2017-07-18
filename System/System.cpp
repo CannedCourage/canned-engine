@@ -13,6 +13,16 @@ System::~System( void )
 
 int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
+	//TODO: Why is this implemented using exceptions? Move this logic into the ConsoleAdapter class
+	try
+	{
+		Console.AttachParentConsole();
+	}
+	catch( const std::exception& )
+	{
+		Console.CreateConsole();
+	}
+
 	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
 	
 	input.Init();

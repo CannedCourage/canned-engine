@@ -3,20 +3,22 @@
 #include <Fcntl.h>
 #include <io.h>
 #include <iostream>
+#include <exception>
 
-ConsoleAdapter::ConsoleAdapter( unsigned long type ) : ConsoleType( type )
+ConsoleAdapter::ConsoleAdapter( bool Output, bool Input ) : RedirectOutput( Output ), RedirectInput( Input )
 {
 }
 
 ConsoleAdapter::~ConsoleAdapter( void )
 {
+	DestroyConsole();
 }
 
 void ConsoleAdapter::CreateConsole( void )
 {
 	if( !AllocConsole() )
 	{
-		throw "AllocConsole has failed";
+		throw std::exception( "AllocConsole has failed" );
 	}
 	else
 	{
@@ -26,7 +28,7 @@ void ConsoleAdapter::CreateConsole( void )
 
 void ConsoleAdapter::SetupStandardStreams( void )
 {
-	if( ConsoleType & CONSOLE_INPUT )
+	if( RedirectInput )
 	{
 		//Setup stdin
 		HANDLE handle_stdin = GetStdHandle( STD_INPUT_HANDLE );
@@ -35,14 +37,14 @@ void ConsoleAdapter::SetupStandardStreams( void )
 
 		if( fileDesc_stdin == -1 )
 		{
-			throw "fileDesc_stdin is not valid";
+			throw std::exception( "fileDesc_stdin is not valid" );
 		}
 
 		FILE* new_stdin = _fdopen( fileDesc_stdin, "w" );
 
 		if( !new_stdin )
 		{
-			throw "new_stdin is not valid";
+			throw std::exception( "new_stdin is not valid" );
 		}
 
 		// printf( typeid( *stdin ).name() );
@@ -52,7 +54,7 @@ void ConsoleAdapter::SetupStandardStreams( void )
 		std::cin.clear();
 	}
 
-	if( ConsoleType & CONSOLE_OUTPUT )
+	if( RedirectOutput )
 	{
 		//Setup stdout
 		HANDLE handle_stdout = GetStdHandle( STD_OUTPUT_HANDLE );
@@ -61,14 +63,14 @@ void ConsoleAdapter::SetupStandardStreams( void )
 
 		if( fileDesc_stdout == -1 )
 		{
-			throw "fileDesc_stdout is not valid";
+			throw std::exception( "fileDesc_stdout is not valid" );
 		}
-		
+
 		FILE* new_stdout = _fdopen( fileDesc_stdout, "w" );
 
 		if( !new_stdout )
 		{
-			throw "new_stdout is not valid";
+			throw std::exception( "new_stdout is not valid" );
 		}
 
 		// printf( typeid( *stdout ).name() );
@@ -83,7 +85,10 @@ void ConsoleAdapter::DestroyConsole( void )
 {
 	if( !FreeConsole() )
 	{
-		throw "FreeConsole has failed";
+		if( GetLastError() != ERROR_INVALID_PARAMETER )
+		{
+			throw std::exception( "FreeConsole has failed" );
+		}
 	}
 }
 
@@ -91,7 +96,7 @@ void ConsoleAdapter::AttachParentConsole( void )
 {
 	if( !AttachConsole( ATTACH_PARENT_PROCESS ) )
 	{
-		throw "AttachConsole has failed";
+		throw std::exception( "AttachConsole has failed" );
 	}
 	else
 	{

@@ -1,9 +1,12 @@
+#pragma once
+
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
 
 #include <Windows.h>
 
 #include "Logging/Log.h"
+#include "Window/ConsoleAdapter.h"
 #include "SceneManager/SceneManager.h"
 #include "Engine/Settings.h"
 #include "Window/WindowMS.h"
@@ -23,6 +26,7 @@ protected:
 public:
 
 	Time time;
+	ConsoleAdapter Console;
 
 	//Engine
 	Settings settings;
