@@ -18,11 +18,11 @@ See: http://stackoverflow.com/questions/4044255/passing-a-string-literal-to-a-fu
 
 const std::string Log::GlobalFilename( "logs/ScottEngine_Log.txt" );
 
-Log::Log( void ) : Scope( "" ), LocalFile()
+Log::Log( void ) : Scope( "" ), LocalFile{}, LogFileStream{}
 {
 }
 
-Log::Log( const std::string& LogFilename ) : Scope( LogFilename ), LocalFile( "logs/" + LogFilename + ".txt", std::ios_base::out )
+Log::Log( const std::string& LogFilename ) : Scope( LogFilename ), LocalFile( "logs/" + LogFilename + ".txt", std::ios_base::out ), LogFileStream{ "logs/" + LogFilename + ".txt" }
 {
 	if( LocalFile )
 	{
