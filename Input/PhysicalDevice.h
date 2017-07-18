@@ -1,15 +1,20 @@
 #ifndef _PHYSICALDEVICE_H_
 #define _PHYSICALDEVICE_H_
 
+#include <windows.h>
+
 class PhysicalDevice
 {
 private:
 protected:
 public:
 
-	virtual bool IsPressed( int input ) = 0;
-	virtual bool WentDown( int input ) = 0;
-	virtual bool WentUp( int input ) = 0;
+	virtual void PreUpdate( void ) = 0;
+	virtual void Update( void ) = 0;
+	virtual void PostUpdate( void ) = 0;
+
+	virtual void RegisterForRawInput( HWND hWnd ){}
+	virtual void ReceiveRawInput( const RAWINPUT& input ){}
 };
 
 #endif //_PHYSICALDEVICE_H_

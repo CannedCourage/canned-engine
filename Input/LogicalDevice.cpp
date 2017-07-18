@@ -2,6 +2,8 @@
 #include "Input/PhysicalDevice.h"
 #include "Input/Input.h"
 
+#include <algorithm>
+
 LogicalDevice::LogicalDevice( void ) : anyPressed( false ), chordPressed( false )
 {
 }
@@ -11,27 +13,24 @@ LogicalDevice::LogicalDevice( Input& input ) : anyPressed( false ), chordPressed
 	input.Register( this );
 }
 
-void LogicalDevice::AddInput( PhysicalDevice* k, MethodPointer f, const int& arg )
+void LogicalDevice::AddInput( InputFunction func )
 {
-	devices.push_back( k );
-	functions.push_back( f );
-	args.push_back( arg );
+	inputs.push_back( func );
 }
 
 void LogicalDevice::EvaluateInputs( void )
 {
-	const int numInputs = devices.size();
+	const int numInputs = inputs.size();
 
 	int triggeredInputs = 0;
 
-	for( int i = 0; i < numInputs; i++ )
+	std::for_each( inputs.begin(), inputs.end(), [&triggeredInputs]( InputFunction func )
 	{
-		//Note brackets around class->method pointer
-		if( ( devices[i]->*functions[i] )( args[i] ) )
+		if( func() )
 		{
 			triggeredInputs++;
 		}
-	}
+	});
 
 	if( triggeredInputs > 0 )
 	{

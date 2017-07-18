@@ -27,11 +27,16 @@ void Keyboard::RegisterForRawInput( HWND hWnd )
     RegisterRawInputDevices( Rid, 1, sizeof( Rid[0] ) );
 }
 
-void Keyboard::ReceiveRawInput( const RAWKEYBOARD& input )
+void Keyboard::ReceiveRawInput( const RAWINPUT& input )
 {
-	UINT vKey = input.VKey;
-	UINT scanCode = input.MakeCode;
-	UINT flags = input.Flags;
+	if( input.header.dwType != RIM_TYPEKEYBOARD )
+	{
+		return;
+	}
+
+	UINT vKey = input.data.keyboard.VKey;
+	UINT scanCode = input.data.keyboard.MakeCode;
+	UINT flags = input.data.keyboard.Flags;
 
 	ProcessInput( vKey, scanCode, flags );
 
@@ -181,6 +186,10 @@ void Keyboard::HandleEscapedSequences( UINT& virtualKey, UINT& scanCode, UINT& f
 	      virtualKey = Keys::NUMPAD_5;
 	    break;
 	}
+}
+
+void Keyboard::PreUpdate( void )
+{
 }
 
 void Keyboard::Update( void )

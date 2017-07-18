@@ -1,10 +1,9 @@
 #include "Input/Input.h"
 #include "System/System.h"
-
-#include "Input/XboxController.h"
-#include "Input/Mouse.h"
-#include "Input/Keyboard.h"
+#include "Input/PhysicalDevice.h"
 #include "Input/LogicalDevice.h"
+
+#include <algorithm>
 
 Input::Input( System& s ) : log( "Input" ), system( s ) , settings( system.settings )
 {
@@ -18,73 +17,40 @@ void Input::Init( void )
 {
 }
 
+void Input::PreUpdate( void )
+{
+	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
+	{
+		device->PreUpdate();
+	});
+}
+
 void Input::Update( void )
 {
-	std::vector<Mouse*>::iterator mouseIt;
-	std::vector<Keyboard*>::iterator keyIt;
-	std::vector<XboxController*>::iterator padIt;
-	std::vector<LogicalDevice*>::iterator logIt;
+	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
+	{
+		device->Update();
+	});
 	
-	for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
+	std::for_each( logicalDevices.begin(), logicalDevices.end(), []( LogicalDevice* device )
 	{
-		(*mouseIt)->Update();
-	}
-
-	for( keyIt = keyboards.begin(); keyIt != keyboards.end(); keyIt++ )
-	{
-		(*keyIt)->Update();
-	}
-
-	for( padIt = pads.begin(); padIt != pads.end(); padIt++ )
-	{
-		(*padIt)->Update();
-	}
-
-	for( logIt = logicalDevices.begin(); logIt != logicalDevices.end(); logIt++ )
-	{
-		(*logIt)->EvaluateInputs();
-	}
+		device->EvaluateInputs();
+	});
 }
 
 void Input::PostUpdate( void )
 {
-	std::vector<Mouse*>::iterator mouseIt;
-	std::vector<Keyboard*>::iterator keyIt;
-	std::vector<XboxController*>::iterator padIt;
-
-	for( mouseIt = mice.begin(); mouseIt != mice.end(); mouseIt++ )
+	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
 	{
-		(*mouseIt)->PostUpdate();
-	}
-
-	for( keyIt = keyboards.begin(); keyIt != keyboards.end(); keyIt++ )
-	{
-		(*keyIt)->PostUpdate();
-	}
-
-	/*for( padIt = pads.begin(); padIt != pads.end(); padIt++ )
-	{
-		(*padIt)->PreUpdate();
-	}*/
+		device->PostUpdate();
+	});
 }
 
-void Input::Register( Mouse* mouse )
+void Input::Register( PhysicalDevice* physDevice )
 {
-	mouse->RegisterForRawInput( system.window.getHandle() );
-	
-	mice.push_back( mouse );
-}
+	physicalDevices.push_back( physDevice );
 
-void Input::Register( Keyboard* keyboard )
-{
-	keyboard->RegisterForRawInput( system.window.getHandle() );
-	
-	keyboards.push_back( keyboard );
-}
-
-void Input::Register( XboxController* pad )
-{
-	pads.push_back( pad );
+	physDevice->RegisterForRawInput( system.window.getHandle() );
 }
 
 void Input::Register( LogicalDevice* intent )
@@ -94,23 +60,8 @@ void Input::Register( LogicalDevice* intent )
 
 void Input::ReceiveRawInput( RAWINPUT* in )
 {
-	if( in->header.dwType == RIM_TYPEMOUSE )
+	std::for_each( physicalDevices.begin(), physicalDevices.end(), [in]( PhysicalDevice* device )
 	{
-		std::vector<Mouse*>::iterator mouseIt;
-
-		for( mouseIt = mice.begin(); mouseIt < mice.end(); mouseIt++ )
-		{
-			(*mouseIt)->ReceiveRawInput( in->data.mouse );
-		}
-	}
-	
-	if( in->header.dwType == RIM_TYPEKEYBOARD )
-	{
-		std::vector<Keyboard*>::iterator keyboardIt;
-
-		for( keyboardIt = keyboards.begin(); keyboardIt < keyboards.end(); keyboardIt++ )
-		{
-			(*keyboardIt)->ReceiveRawInput( in->data.keyboard );
-		}
-	}
+		device->ReceiveRawInput( *in );
+	});
 }

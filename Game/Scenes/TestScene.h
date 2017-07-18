@@ -2,7 +2,7 @@
 #define _TESTSCENE_H_
 
 #include "SceneManager/IScene.h"
-#include "Graphics/VertexBuffer.h"
+#include "Sound/Sound.h"
 
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
@@ -23,6 +23,7 @@ protected:
 
 	Keyboard keys;
 	Mouse logiMouse;
+
 	XboxController player1;
 	LogicalDevice test1;
 

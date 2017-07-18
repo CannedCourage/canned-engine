@@ -50,7 +50,10 @@ public:
 
 	bool PadConnected( void );
 	void GetPadState( void );
+
+	void PreUpdate( void );
 	void Update( void );
+	void PostUpdate( void );
 
 	void Vibrate( int leftVal = 0, int rightVal = 0 );
 

@@ -44,6 +44,10 @@ void XboxController::GetPadState( void )
 	}
 }
 
+void XboxController::PreUpdate( void )
+{
+}
+
 void XboxController::Update( void )
 {
 	previousState = currentState;
@@ -64,6 +68,10 @@ void XboxController::Update( void )
 	adjLY = AdjustNormOutput( normLY, deadLY );
 	adjRX = AdjustNormOutput( normRX, deadRX );
 	adjRY = AdjustNormOutput( normRY, deadRY );
+}
+
+void XboxController::PostUpdate( void )
+{
 }
 
 void XboxController::Vibrate( int left, int right )

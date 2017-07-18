@@ -2,20 +2,17 @@
 #define _LOGICALDEVICE_H_
 
 #include <vector>
+#include <functional>
 
 class Input;
-class PhysicalDevice;
-
-typedef bool (PhysicalDevice::*MethodPointer)(int);
 
 class LogicalDevice
 {
 private:
 protected:
 
-	std::vector <PhysicalDevice*> devices;
-	std::vector <MethodPointer> functions;
-	std::vector <const int> args;
+	using InputFunction = std::function<bool ( void )>;
+	std::vector<InputFunction> inputs;
 
 	bool anyPressed, chordPressed;
 public:
@@ -23,7 +20,7 @@ public:
 	LogicalDevice( void );
 	LogicalDevice( Input& input );
 
-	void AddInput( PhysicalDevice* k, MethodPointer f, const int& arg );
+	void AddInput( InputFunction func );
 	void EvaluateInputs( void );
 
 	bool IsAnyPressed( void );

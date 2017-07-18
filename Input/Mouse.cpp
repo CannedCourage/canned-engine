@@ -24,9 +24,14 @@ void Mouse::RegisterForRawInput( HWND hWnd )
     RegisterRawInputDevices( Rid, 1, sizeof( Rid[0] ) );
 }
 
-void Mouse::ReceiveRawInput( const RAWMOUSE& input )
+void Mouse::ReceiveRawInput( const RAWINPUT& input )
 {
-	currentMouse = input;
+	if( input.header.dwType != RIM_TYPEMOUSE )
+	{
+		return;
+	}
+
+	currentMouse = input.data.mouse;
 
 	if( ( currentMouse.usButtonFlags & Button::LEFT ) == Button::LEFT ){ buttonStates[ Button::LEFT ] = true; }
 	if( ( currentMouse.usButtonFlags & ( Button::LEFT * 2 ) ) == ( Button::LEFT * 2 ) ){ buttonStates[ Button::LEFT ] = false; }
@@ -42,6 +47,10 @@ void Mouse::ReceiveRawInput( const RAWMOUSE& input )
 
 	if( ( currentMouse.usButtonFlags & Button::MOUSE5 ) == Button::MOUSE5 ){ buttonStates[ Button::MOUSE5 ] = true; }
 	if( ( currentMouse.usButtonFlags & ( Button::MOUSE5 * 2 ) ) == ( Button::MOUSE5 * 2 ) ){ buttonStates[ Button::MOUSE5 ] = false; }
+}
+
+void Mouse::PreUpdate( void )
+{
 }
 
 void Mouse::Update( void )

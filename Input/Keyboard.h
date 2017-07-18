@@ -55,14 +55,15 @@ public:
 	Keyboard( Input& input );
 
 	void RegisterForRawInput( HWND hWnd );
-	void ReceiveRawInput( const RAWKEYBOARD& input );
+	void ReceiveRawInput( const RAWINPUT& input );
 
+	void PreUpdate( void );
 	void Update( void );
 	void PostUpdate( void );
 
-	virtual bool IsPressed( int key );
-	virtual bool WentDown( int key );
-	virtual bool WentUp( int key );
+	bool IsPressed( int key );
+	bool WentDown( int key );
+	bool WentUp( int key );
 
 	std::string GetKeyName( UINT virtualKey, UINT scanCode, UINT flags );
 };

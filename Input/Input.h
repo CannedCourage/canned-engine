@@ -1,20 +1,20 @@
 //Input Class
 //Handle keyboard, mouse and gamepad input (maybe more)
 
+#pragma once
+
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
 #include "Logging/Log.h"
+#include "Engine/Event.h"
 
 #include <vector>
-
 #include <windows.h>
 
 class System;
 class Settings;
-class Mouse;
-class Keyboard;
-class XboxController;
+class PhysicalDevice;
 class LogicalDevice;
 
 class Input
@@ -27,10 +27,12 @@ protected:
 	System& system;
 	Settings& settings;
 
-	std::vector<Mouse*> mice;
-	std::vector<Keyboard*> keyboards;
-	std::vector<XboxController*> pads;
+	std::vector<PhysicalDevice*> physicalDevices;
 	std::vector<LogicalDevice*> logicalDevices;
+
+	// Event<void ( const RAWKEYBOARD& )> KeyboardRawInput;
+	// Event<void ( void )> UpdatePhysicalDevices;
+	// Event<void ( void )> EvaluateLogicalDevices;
 public:
 
 	Input( System& s );
@@ -38,12 +40,11 @@ public:
 
 	void Init( void );
 
+	void PreUpdate( void );
 	void Update( void );
 	void PostUpdate( void );
 
-	void Register( Mouse* mouse );
-	void Register( Keyboard* keyboard );
-	void Register( XboxController* pad );
+	void Register( PhysicalDevice* physDevice );
 	void Register( LogicalDevice* logiDevice );
 
 	void ReceiveRawInput( RAWINPUT* in );

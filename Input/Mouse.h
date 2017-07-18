@@ -40,13 +40,14 @@ public:
 	Mouse( Input& input );
 
 	void RegisterForRawInput( HWND hWnd );
-	void ReceiveRawInput( const RAWMOUSE& input );
+	void ReceiveRawInput( const RAWINPUT& input );
 
 	long GetMouseXRelative( void );
 	long GetMouseYRelative( void );
 
 	short GetWheelDelta( void );
 
+	void PreUpdate( void );
 	void Update( void );
 	void PostUpdate( void );
 
