@@ -17,9 +17,8 @@ public:
 	~ConsoleAdapter( void );
 
 	void CreateConsole( void );
+	void CreateConsole( bool Ouptut, bool Input );
 	void DestroyConsole( void );
-
-	void AttachParentConsole( void );
 };
 
 #endif //_CONSOLE_ADAPTER_H_

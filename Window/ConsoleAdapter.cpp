@@ -14,15 +14,43 @@ ConsoleAdapter::~ConsoleAdapter( void )
 	DestroyConsole();
 }
 
+void ConsoleAdapter::CreateConsole( bool Output, bool Input )
+{
+	RedirectOutput = Output;
+	RedirectInput = Input;
+
+	CreateConsole();
+}
+
 void ConsoleAdapter::CreateConsole( void )
 {
-	if( !AllocConsole() )
+	//Attempt to attach to parent console (if it exists)
+	if( !AttachConsole( ATTACH_PARENT_PROCESS ) )
 	{
-		throw std::exception( "AllocConsole has failed" );
+		//If there is no parent console, create one
+		if( !AllocConsole() )
+		{
+			throw std::exception( "AllocConsole has failed" );
+		}
+		else
+		{
+			SetupStandardStreams();
+		}
 	}
 	else
 	{
 		SetupStandardStreams();
+	}
+}
+
+void ConsoleAdapter::DestroyConsole( void )
+{
+	if( !FreeConsole() )
+	{
+		if( GetLastError() != ERROR_INVALID_PARAMETER )
+		{
+			throw std::exception( "FreeConsole has failed" );
+		}
 	}
 }
 
@@ -78,28 +106,5 @@ void ConsoleAdapter::SetupStandardStreams( void )
 		*stdout = *new_stdout;
 
 		std::cout.clear();
-	}
-}
-
-void ConsoleAdapter::DestroyConsole( void )
-{
-	if( !FreeConsole() )
-	{
-		if( GetLastError() != ERROR_INVALID_PARAMETER )
-		{
-			throw std::exception( "FreeConsole has failed" );
-		}
-	}
-}
-
-void ConsoleAdapter::AttachParentConsole( void )
-{
-	if( !AttachConsole( ATTACH_PARENT_PROCESS ) )
-	{
-		throw std::exception( "AttachConsole has failed" );
-	}
-	else
-	{
-		SetupStandardStreams();
 	}
 }
