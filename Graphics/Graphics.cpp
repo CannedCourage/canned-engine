@@ -97,26 +97,26 @@ void Graphics::CheckDevice( void )
 
 bool Graphics::Reset( void )
 {
-	log.Message( "Attempting Reset", true );
+	TRACE( "Attempting Reset" );
 	HRESULT result = mDevice->Reset( presentParameters );
 
 	if( result == D3D_OK )
 	{
-		log.Message( "Device reset", true );
+		TRACE( "Device reset" );
 	}
 	else
 	{
-		log.Message( "Device not ok", true );
+		TRACE( "Device not ok" );
 	}
 
 	if( result == D3DERR_DEVICELOST )
 	{
-		log.Message( "Device Lost", true );
+		TRACE( "Device Lost" );
 	}
 
 	if( result == D3DERR_DEVICENOTRESET )
 	{
-		log.Message( "Device not reset", true );
+		TRACE( "Device not reset" );
 	}
 
 	return ( D3D_OK == result );
@@ -136,7 +136,7 @@ void Graphics::Refresh( void )
 
 	if( Reset() )
 	{
-		log.Message( "Recovering", true );
+		TRACE( "Recovering" );
 		
 		system.assets.OnRecover();
 		system.sceneManager.OnRecover();
@@ -206,7 +206,7 @@ void Graphics::SetFullscreen( void )
 	}
 	else
 	{
-		log.Message( "Already Fullscreen, command ignored" );
+		TRACE( "Already Fullscreen, command ignored" );
 	}
 }
 
@@ -226,7 +226,7 @@ void Graphics::SetWindowed( void )
 	}
 	else
 	{
-		log.Message( "Already Windowed, command ignored" );
+		TRACE( "Already Windowed, command ignored" );
 	}
 }
 
@@ -251,6 +251,7 @@ void Graphics::ToggleFullscreen( void )
 	}
 }
 
+//TODO: Move to free function (ErrorCheck_DX9 ?)
 void Graphics::ErrorCheck( HRESULT result, const std::string& info )
 {
 	if( result == D3D_OK )

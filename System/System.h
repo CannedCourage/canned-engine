@@ -4,6 +4,7 @@
 #define _SYSTEM_H_
 
 #include <Windows.h>
+#include <codecvt>
 
 #include "Logging/Log.h"
 #include "Window/ConsoleAdapter.h"
@@ -15,6 +16,16 @@
 #include "Input/Input.h"
 #include "Assets/AssetManager.h"
 #include "Sound/Sound.h"
+
+//static_assert(sizeof(float) == 4, "float size check");
+
+#define ASSERT _ASSERTE
+ 
+#ifdef _DEBUG
+#define VERIFY ASSERT
+#else
+#define VERIFY(expression) (expression)
+#endif
 
 class System
 {

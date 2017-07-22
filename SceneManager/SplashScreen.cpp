@@ -53,7 +53,7 @@ void SplashScreen::Unload( void )
 {
 	if( loaded )
 	{
-		log.Message( "Unloading", true );
+		TRACE( "Unloading" );
 		if( vertexBuffer != NULL )
 		{
 			vertexBuffer->Release();

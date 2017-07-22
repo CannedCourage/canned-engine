@@ -12,7 +12,7 @@ bool AssetManager::LoadMesh( const char* file )
 
 	if( scene == NULL )
 	{
-		log.Message( modelImporter.GetErrorString() );
+		TRACE( modelImporter.GetErrorString() );
 
 		return false;
 	}
@@ -124,7 +124,7 @@ void AssetManager::BuildMesh( const aiScene* sc, const char* name )
 
 	for( int m = 0; m < numMeshes; m++ )
 	{
-		log.Message( "Building Mesh" );
+		TRACE( "Building Mesh" );
 		meshAssets[ nameString ] = Mesh();
 
 		MeshData& data = meshAssets[ nameString ].data;
@@ -237,7 +237,7 @@ void AssetManager::BuildMesh( const aiScene* sc, const char* name )
 
 void AssetManager::AccquireMeshResources( Mesh& mesh )
 {
-	log.Message( "Accquiring Resources" );
+	TRACE( "Accquiring Resources" );
 
 	graphics.Device()->CreateVertexDeclaration( &mesh.data.vertexElements[0], &mesh.vertexDeclaration );
 
@@ -272,8 +272,8 @@ void AssetManager::AccquireMeshResources( Mesh& mesh )
 			
 			buf->Release();
 
-			log.Message( errorTitle );
-			log.Message( errorText );
+			TRACE( errorTitle );
+			TRACE( errorText );
 			throw( errorTitle );
 		}
 		else 
@@ -305,7 +305,7 @@ void AssetManager::AccquireMeshResources( Mesh& mesh )
 
 void AssetManager::ReleaseMeshResources( Mesh& mesh )
 {
-	log.Message( "Releasing Resources" );
+	TRACE( "Releasing Resources" );
 
 	if( mesh.effect )
 	{

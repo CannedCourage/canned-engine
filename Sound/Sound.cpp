@@ -21,7 +21,7 @@ FMOD::System* Sound::System( void )
 
 void Sound::Init( void )
 {
-    log( "Sound Initialisation" );
+    TRACE( "Sound Initialisation" );
     
 	ErrorCheck( FMOD::Studio::System::create( &studio ), "Creating System" );
 
@@ -118,7 +118,7 @@ void Sound::ErrorCheck( FMOD_RESULT result, const std::string& Info )
         message += FMOD_ErrorString( result );
         message += ": " + Info;
 
-        log( message, true );
+        TRACE( message );
 
         throw std::exception( message.c_str() );
     }

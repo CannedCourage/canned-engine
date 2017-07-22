@@ -16,7 +16,7 @@ XboxController::XboxController( int playerID, float _deadLX, float _deadLY, floa
 
 	o << "XUSER_MAX_COUNT = " << XUSER_MAX_COUNT << ", Pad " << PID << " Connected: " << padConnected;
 
-	log.Message( o.str().c_str() );
+	TRACE( o.str().c_str() );
 }
 
 XboxController::XboxController( Input& input, int playerID, float _deadLX, float _deadLY, float _deadRX, float _deadRY ) : PID( playerID ), deadLX( _deadLX ), deadLY( _deadLY ), deadRX( _deadRX ), deadRY( _deadRY )
@@ -27,7 +27,7 @@ XboxController::XboxController( Input& input, int playerID, float _deadLX, float
 
 	o << "XUSER_MAX_COUNT = " << XUSER_MAX_COUNT << ", Pad " << PID << " Connected: " << padConnected;
 
-	log.Message( o.str().c_str() );
+	TRACE( o.str().c_str() );
 
 	input.Register( this );
 }

@@ -40,7 +40,7 @@ void Graphics::GetModesFromInterface( void )
 
 	char temp[256];
 
-	log.Message( "Checking Modes" );
+	TRACE( "Checking Modes" );
 
 	for( UINT i = 0; i < modeCount; i++ )
 	{
@@ -52,7 +52,7 @@ void Graphics::GetModesFromInterface( void )
 
 		string temp = o.str();
 
-		log.Message( temp.c_str() );
+		TRACE( temp.c_str() );
 	}
 }
 

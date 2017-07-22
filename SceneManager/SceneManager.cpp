@@ -17,7 +17,7 @@ SceneManager::SceneManager( System &s ) : system( s ), log( "SceneManager" )
 
 void SceneManager::Init( void )
 {
-	log( "SceneManager initialisation" );
+	TRACE( "SceneManager initialisation" );
 	
 	//TODO: Determine default starting scene then initialise
 	//With new SceneList implementation, this can be read from a settings file as a string
@@ -101,7 +101,7 @@ void SceneManager::Render()
 
 	if( system.graphics.IsDeviceLost() )	//Device is lost
 	{
-		log( "Device Lost", true );
+		TRACE( "Device Lost" );
 
 		system.graphics.Refresh();
 	}
@@ -173,7 +173,7 @@ void SceneManager::OnRecover( void )
 
 void SceneManager::Shutdown( void )
 {
-	log( "Scene Shutdown Method", true );
+	TRACE( "Scene Shutdown Method" );
 
 	if( nextScene )
 	{

@@ -7,6 +7,8 @@
 #include <ctime>
 #include <exception>
 
+#include <windows.h>
+
 /*
 If a method/function expects a const reference to string, it will also accept a string literal, e.g.
  
@@ -16,17 +18,25 @@ a.Method( “literal” );
 See: http://stackoverflow.com/questions/4044255/passing-a-string-literal-to-a-function-that-takes-a-stdstring
 //*/
 
-const std::string Log::GlobalFilename( "logs/ScottEngine_Log.txt" );
+//TODO: Add support for format strings
+void Trace( const std::string& File, unsigned int Line, const std::string& Msg )
+{
+	std::string msg = File + "(" + std::to_string(Line) + "): " + Msg + "\n";
 
-Log::Log( void ) : Scope( "" ), LocalFile{}, LogFileStream{}
+	std::cout << msg;
+
+	OutputDebugStringA( msg.c_str() );
+}
+
+Log::Log( void ) : Scope( "" ), LocalFile{}
 {
 }
 
-Log::Log( const std::string& LogFilename ) : Scope( LogFilename ), LocalFile( "logs/" + LogFilename + ".txt", std::ios_base::out ), LogFileStream{ "logs/" + LogFilename + ".txt" }
+Log::Log( const std::string& LogFilename ) : Scope( LogFilename ), LocalFile( "logs/" + LogFilename + ".txt", std::ios_base::out )
 {
 	if( LocalFile )
 	{
-		LocalFile << Scope << " " << GetTimestamp() << "\n";
+		Message( Scope );
 	}
 	else
 	{
@@ -47,7 +57,7 @@ void Log::Open( const std::string& LogFilename )
 
 		if( LocalFile )
 		{
-			LocalFile << Scope << " " << GetTimestamp() << "\n";
+			Message( Scope );
 		}
 		else
 		{
@@ -56,43 +66,33 @@ void Log::Open( const std::string& LogFilename )
 	}
 }
 
-void Log::Message( const std::string& String, const bool StdOutput, const bool WriteToFile )
+void Log::Message( const std::string& Msg )
 {
-	if( StdOutput )
+	std::string msg = Msg + "\t" + GetTimestamp() + "\n";
+
+	if( WriteToStdOutput )
 	{
-		StandardOutput( String );
+		std::cout << msg;
 	}
 
-	if( WriteToFile )
+	if( WriteToLogFile )
 	{
-		WriteToLogFile( String );
+
+		if( LocalFile )
+		{
+			LocalFile << msg;
+		}
+	}
+
+	if( WriteToDebugOutput )
+	{
+		OutputDebugStringA( msg.c_str() );
 	}
 }
 
-void Log::operator()( const std::string& String, const bool StdOutput, const bool WriteToFile )
+void Log::operator()( const std::string& Msg )
 {
-	if( StdOutput )
-	{
-		StandardOutput( String );
-	}
-
-	if( WriteToFile )
-	{
-		WriteToLogFile( String );
-	}
-}
-
-void Log::StandardOutput( const std::string& String )
-{
-	std::cout << Scope << ": " << String << "\t" << GetTimestamp() << "\n";
-}
-
-void Log::WriteToLogFile( const std::string& String )
-{
-	if( LocalFile )
-	{
-		LocalFile << Scope << ": " << String << "\t" << GetTimestamp() << "\n";
-	}
+	Message( Msg );
 }
 
 std::string Log::GetTimestamp( void )

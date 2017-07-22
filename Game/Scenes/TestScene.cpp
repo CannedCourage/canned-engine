@@ -39,7 +39,7 @@ TestScene::~TestScene( void )
 
 void TestScene::Load( void )
 {
-	log.Message( "Loading", true );
+	TRACE( "Loading" );
 
 	sound.LoadSoundSample( "w:/game/sounds/drumloop.wav", "drumloop" );
 	
@@ -54,7 +54,7 @@ void TestScene::Load( void )
 
 void TestScene::Start( void )
 {
-	log( "TestScene Start method!" );
+	TRACE( "TestScene Start method!" );
 
 	Entity& qMark = entityManager.New( "qMark" );
 
@@ -124,7 +124,7 @@ void TestScene::OnLost( void )
 {
 	if( !lost )
 	{
-		log.Message( "Lost, releasing resources", true );
+		TRACE( "Lost, releasing resources" );
 
 		lost = true;
 	}
@@ -134,7 +134,7 @@ void TestScene::OnRecover( void )
 {
 	if( lost )
 	{
-		log.Message( "Reloading", true );
+		TRACE( "Reloading" );
 
 		lost = false;
 	}
@@ -165,7 +165,7 @@ void TestScene::Update( void )
 
 	if( test1.IsChordPressed() )
 	{
-		log("Chord Pressed", true, true);
+		TRACE("Chord Pressed");
 		// bool Playing = false;
 		// bool Paused = false;
 		// if( channel )

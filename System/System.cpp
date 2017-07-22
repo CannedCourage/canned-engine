@@ -13,15 +13,7 @@ System::~System( void )
 
 int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
-	//TODO: Why is this implemented using exceptions? Move this logic into the ConsoleAdapter class
-	try
-	{
-		Console.AttachParentConsole();
-	}
-	catch( const std::exception& )
-	{
-		Console.CreateConsole();
-	}
+	Console.CreateConsole( true, false );
 
 	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
 	
@@ -57,7 +49,7 @@ int System::Run( void )
 
 		if( msg.message == WM_QUIT )
 		{
-			log.Message( "QUITTING", true );
+			TRACE( "QUITTING" );
 			time.FrameEnd();
 			break;
 		}
@@ -145,7 +137,7 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				switch( wParam )
 				{
 					case VK_UP:
-						log.Message( "Up received" );
+						TRACE( "Up received" );
 						graphics.ToggleFullscreen();
 						break;
 				}

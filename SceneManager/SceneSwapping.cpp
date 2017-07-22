@@ -11,7 +11,7 @@ std::unique_ptr<IScene> SceneManager::GetScene( const std::string& SceneName )
 
 void SceneManager::SwapSceneBuffers( void )
 {
-	log( "Buffers Swapping" );
+	TRACE( "Buffers Swapping" );
 
 	currentScene = std::move( nextScene );
 

@@ -43,7 +43,7 @@ void MeshProcessor::Update( const EngineDuration& deltaT )
 
 	for( it = meshComponents.begin(); it != meshComponents.end(); it++ )
 	{
-		//log.Message( "Rendering mesh" );
+		TRACE( "Rendering mesh" );
 		
 		const MeshComponent& mesh = it->second; //meshComponents[m];
 

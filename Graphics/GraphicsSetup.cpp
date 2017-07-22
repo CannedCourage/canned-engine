@@ -38,7 +38,7 @@ void Graphics::GetAdaptersFromInterface( void )
 
 		adapterList.push_back( a );
 
-		log.Message( ident.Description, i );
+		TRACE( ident.Description );
 	}
 }
 

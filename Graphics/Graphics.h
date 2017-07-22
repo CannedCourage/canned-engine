@@ -108,6 +108,8 @@ protected:
 	void SetFullscreen( void );
 	void SetWindowed( void );
 
+	//Texture Assets
+
 	ListOfTextureAssets Textures;
 
 	void ReleaseTextures( void );
