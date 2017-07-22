@@ -8,7 +8,7 @@
 
 #include "Logging/Log.h"
 #include "Window/ConsoleAdapter.h"
-#include "SceneManager/SceneManager.h"
+#include "Scene/SceneManager.h"
 #include "Engine/Settings.h"
 #include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"

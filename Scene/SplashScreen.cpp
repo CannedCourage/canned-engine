@@ -1,6 +1,6 @@
 //Implementation of test scene
-#include "SceneManager/SplashScreen.h"
-#include "SceneManager/SceneManager.h"
+#include "Scene/SplashScreen.h"
+#include "Scene/SceneManager.h"
 #include "System/System.h"
 
 bool regSplashScreen = RegisterScene<SplashScreen>( "SplashScreen" );

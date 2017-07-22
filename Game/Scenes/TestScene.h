@@ -1,7 +1,7 @@
 #ifndef _TESTSCENE_H_
 #define _TESTSCENE_H_
 
-#include "SceneManager/IScene.h"
+#include "Scene/IScene.h"
 #include "Sound/Sound.h"
 
 #include "Input/Keyboard.h"

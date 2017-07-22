@@ -1,5 +1,5 @@
-#include "SceneManager/SceneManager.h"
-#include "SceneManager/IScene.h"
+#include "Scene/SceneManager.h"
+#include "Scene/IScene.h"
 
 #include <algorithm>
 

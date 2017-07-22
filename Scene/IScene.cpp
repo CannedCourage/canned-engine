@@ -1,4 +1,4 @@
-#include "SceneManager/IScene.h"
+#include "Scene/IScene.h"
 #include "System/System.h"
 
 IScene::IScene( System& Sys, const std::string& N ) : 	system( Sys ),
