@@ -10,20 +10,7 @@
 typedef std::vector<Entity> ListOfEntities;
 
 //TODO: Make methods that return a non-const reference to Entity private
-//TODO: Add const versions of New() methods
-//TODO: Change implementation of subscript operator to use <algorithm> functions
-//i.e. (http://stackoverflow.com/questions/15517991/search-a-vector-of-objects-by-object-attribute)
-/*
-const Entity& operator[]( const std::string& name )
-{
-	auto result = std::find_if( entities.begin(), entities.end(), [&name]( const T& obj ){return obj.Name == name}; )
-
-	if( result != entities.end() )
-	{
-		return result->second;
-	}
-}
-//*/
+//TODO: Add const versions of New() method?
 class EntityManager
 {
 private:

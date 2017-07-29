@@ -12,7 +12,7 @@ namespace Collisions2D
 
 	public:
 		Point2D Centre;
-		double Radius = 0.0f;
+		double Radius = 0.0;
 
 		Circle( void ) = default;
 		~Circle( void ) = default;
@@ -25,7 +25,7 @@ namespace Collisions2D
 
 	public:
 		Point2D CenterA, CentreB;
-		double Radius = 0.0f;
+		double Radius = 0.0;
 
 		Capsule( void ) = default;
 		~Capsule( void ) = default;
@@ -57,13 +57,21 @@ namespace Collisions2D
 	private:
 	protected:
 
+		double Rotation = 0.0;
+		Vector2D RotatedXAxis, RotatedYAxis;
 	public:
+
 		Point2D Centre;
 		Vector2D Halfwidth;
-		double Rotation; //Should this be a direction vector?
 
-		OBB( void ) = default;
+		OBB( void );
 		~OBB( void ) = default;
+
+		void SetRotation( double Angle );
+		const Vector2D& LocalX( void ) const;
+		const Vector2D& LocalY( void ) const;
+
+		//TODO: Add methods to return maxX = centre + ( halfwidth.x * RotatedXAxis ) etc.
 	};
 }
 

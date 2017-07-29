@@ -33,6 +33,27 @@ float DistanceSquaredPointToAABB( const Point2D& Point, const AABB& Box )
 	return distanceSquared;
 }
 
+//POINT VS X//
+//TODO: Explain this
+bool IntersectionTest( const Point2D Point, const OBB& Box )
+{
+	Point2D projPointX = ProjectVector( Point, Box.LocalX() ) - Box.Centre;
+
+	if( ( Box.LocalX() * Box.Halfwidth.x ).MagnitudeSquared() < projPointX.MagnitudeSquared() )
+	{
+		return false;
+	}
+
+	Point2D projPointY = ProjectVector( Point, Box.LocalY() ) - Box.Centre;
+
+	if( ( Box.LocalY() * Box.Halfwidth.y ).MagnitudeSquared() < projPointY.MagnitudeSquared() )
+	{
+		return false;
+	}
+
+	return true;
+}
+
 //CIRCLE VS X//
 bool IntersectionTest( const Circle& A, const Circle& B )
 {
@@ -83,4 +104,28 @@ bool IntersectionTest( const AABB& A, const AABB& B )
 bool IntersectionTest( const AABB& A, const Circle& B )
 {
 	return IntersectionTest( B, A );
+}
+
+//OBB VS X//
+bool IntersectionTest( const OBB& A, const OBB& B )
+{
+	//Project B's corners onto each of the rotated axes
+	Vector2D rotatedHalfwidthX = ( B.LocalX() * B.Halfwidth.x );
+	Vector2D rotatedHalfwidthY = ( B.LocalY() * B.Halfwidth.y );
+
+	Point2D LowerLeft 	= B.Centre - rotatedHalfwidthX - rotatedHalfwidthY;
+	Point2D LowerRight 	= B.Centre + rotatedHalfwidthX - rotatedHalfwidthY;
+	Point2D UpperRight 	= B.Centre + rotatedHalfwidthX + rotatedHalfwidthY;
+	Point2D UpperLeft 	= B.Centre - rotatedHalfwidthX + rotatedHalfwidthY;	
+
+	//Test B's vertices against A
+	if( IntersectionTest( LowerLeft, A ) ){ return true; }
+	if( IntersectionTest( LowerRight, A ) ){ return true; }
+	if( IntersectionTest( UpperRight, A ) ){ return true; }
+	if( IntersectionTest( UpperLeft, A ) ){ return true; }
+
+	//Test A's vertices against B
+	//TODO
+
+	return true;
 }

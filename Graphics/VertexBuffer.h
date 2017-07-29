@@ -1,43 +1,43 @@
-#ifndef _VERTEXBUFFER_H_
-#define _VERTEXBUFFER_H_
+// #ifndef _VERTEXBUFFER_H_
+// #define _VERTEXBUFFER_H_
 
-#include <d3d9.h>
-#include <d3dx9.h>
+// #include <d3d9.h>
+// #include <d3dx9.h>
 
-class System;
-class Graphics;
+// class System;
+// class Graphics;
 
-template <class T>
-class VertexBuffer
-{
-private:
-protected:
+// template <class T>
+// class VertexBuffer
+// {
+// private:
+// protected:
 
-	Graphics& graphics;
-	LPDIRECT3DVERTEXBUFFER9 buffer;
+// 	Graphics& graphics;
+// 	LPDIRECT3DVERTEXBUFFER9 buffer;
 
-	DWORD usage, format;
-	D3DPOOL pool;
-public:
+// 	DWORD usage, format;
+// 	D3DPOOL pool;
+// public:
 
-	VOID* memory;
-	T* vertices;
+// 	VOID* memory;
+// 	T* vertices;
 
-	VertexBuffer( System &s );
-	~VertexBuffer( void );
+// 	VertexBuffer( System &s );
+// 	~VertexBuffer( void );
 
-	LPDIRECT3DVERTEXBUFFER9 getBuffer( void );
+// 	LPDIRECT3DVERTEXBUFFER9 getBuffer( void );
 
-	void Create( void );
-	void Destroy( void );
-	void OnLost( void );
-	void OnRecover( void );
+// 	void Create( void );
+// 	void Destroy( void );
+// 	void OnLost( void );
+// 	void OnRecover( void );
 
-	void Lock( void );
-	void Unlock( void );
-	void CopyToBuffer( void );
-};
+// 	void Lock( void );
+// 	void Unlock( void );
+// 	void CopyToBuffer( void );
+// };
 
-#include "Graphics\VertexBuffer.cpp"
+// #include "Graphics\VertexBuffer.cpp"
 
-#endif //_VERTEXBUFFER_H_
+// #endif //_VERTEXBUFFER_H_

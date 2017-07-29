@@ -3,6 +3,10 @@
 
 #include <string>
 #include <bitset>
+#include <memory>
+#include <vector>
+
+class Script;
 
 class Entity
 {
@@ -12,9 +16,12 @@ protected:
 	static unsigned int EntityCounter;
 
 	std::bitset<64> ComponentFlags;
+
+	std::vector<Script*> Scripts;
 public:
 	
 	//TODO: Consider the constness of this, might be ok if only const references returned
+	//These being const causes compilation error with certain <algorithm> functions?
 	unsigned int ID;
 	std::string Name;
 
@@ -26,6 +33,9 @@ public:
 	Entity& operator=( const Entity& rhs ) = default;
 
 	bool Has( const unsigned int ComponentTypeID ) const;
+
+	void AddScript( Script* ScriptInstance );
+	void DeleteScript( std::string& Name );
 
 	//TODO: Create clone method? This would dupicate components as well.
 };

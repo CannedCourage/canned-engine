@@ -18,6 +18,9 @@ namespace Collision2D
 
 	//CLOSEST POINT//
 
+	//POINT VS X//
+	bool IntersectionTest( const Point2D Point, const OBB& Box );
+
 	//CIRCLE VS X//
 	bool IntersectionTest( const Circle& A, const Circle& B );
 	bool IntersectionTest( const Circle& A, const Capsule& B );
@@ -30,7 +33,7 @@ namespace Collision2D
 	bool IntersectionTest( const Capsule& A, const AABB& B );
 	bool IntersectionTest( const Capsule& A, const OBB& B );
 
-	//AABB VS X//
+	//AABB VS X// 	
 	bool IntersectionTest( const AABB& A, const AABB& B );
 	bool IntersectionTest( const AABB& A, const Circle& B );
 	bool IntersectionTest( const AABB& A, const Capsule& B );
