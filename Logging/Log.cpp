@@ -25,7 +25,7 @@ void Trace( const std::string& File, unsigned int Line, const std::string& Msg )
 
 	std::cout << msg;
 
-	OutputDebugStringA( msg.c_str() );
+	OutputDebugString( msg.c_str() );
 }
 
 Log::Log( void ) : Scope( "" ), LocalFile{}
@@ -77,7 +77,6 @@ void Log::Message( const std::string& Msg )
 
 	if( WriteToLogFile )
 	{
-
 		if( LocalFile )
 		{
 			LocalFile << msg;

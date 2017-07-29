@@ -32,19 +32,23 @@ void ConsoleAdapter::CreateConsole( void )
 		{
 			throw std::exception( "AllocConsole has failed" );
 		}
-		else
-		{
-			SetupStandardStreams();
-		}
 	}
-	else
-	{
-		SetupStandardStreams();
-	}
+	
+	SetupStandardStreams();
 }
 
 void ConsoleAdapter::DestroyConsole( void )
 {
+	if( RedirectInput )
+	{
+		std::fclose( stdin );
+	}
+
+	if( RedirectOutput )
+	{
+		std::fclose( stdout );
+	}
+
 	if( !FreeConsole() )
 	{
 		if( GetLastError() != ERROR_INVALID_PARAMETER )
@@ -59,25 +63,7 @@ void ConsoleAdapter::SetupStandardStreams( void )
 	if( RedirectInput )
 	{
 		//Setup stdin
-		HANDLE handle_stdin = GetStdHandle( STD_INPUT_HANDLE );
-
-		int fileDesc_stdin = _open_osfhandle( (long)handle_stdin, _O_TEXT );
-
-		if( fileDesc_stdin == -1 )
-		{
-			throw std::exception( "fileDesc_stdin is not valid" );
-		}
-
-		FILE* new_stdin = _fdopen( fileDesc_stdin, "w" );
-
-		if( !new_stdin )
-		{
-			throw std::exception( "new_stdin is not valid" );
-		}
-
-		// printf( typeid( *stdin ).name() );
-		FILE old_stdin = *stdin;
-		*stdin = *new_stdin;
+		std::freopen("CONIN$", "r", stdin);
 
 		std::cin.clear();
 	}
@@ -85,25 +71,7 @@ void ConsoleAdapter::SetupStandardStreams( void )
 	if( RedirectOutput )
 	{
 		//Setup stdout
-		HANDLE handle_stdout = GetStdHandle( STD_OUTPUT_HANDLE );
-
-		int fileDesc_stdout = _open_osfhandle( (long)handle_stdout, _O_TEXT );
-
-		if( fileDesc_stdout == -1 )
-		{
-			throw std::exception( "fileDesc_stdout is not valid" );
-		}
-
-		FILE* new_stdout = _fdopen( fileDesc_stdout, "w" );
-
-		if( !new_stdout )
-		{
-			throw std::exception( "new_stdout is not valid" );
-		}
-
-		// printf( typeid( *stdout ).name() );
-		FILE old_stdout = *stdout;
-		*stdout = *new_stdout;
+		std::freopen("CONOUT$", "w", stdout);
 
 		std::cout.clear();
 	}
