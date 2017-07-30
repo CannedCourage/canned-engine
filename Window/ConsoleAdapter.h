@@ -10,7 +10,7 @@ protected:
 public:
 
 	bool RedirectOutput = true;
-	bool RedirectInput = true;
+	bool RedirectInput = false;
 
 	ConsoleAdapter( void ) = default;
 	ConsoleAdapter( bool Ouptut, bool Input );
