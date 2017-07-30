@@ -9,13 +9,19 @@
 #include "Logging/Log.h"
 #include "Window/ConsoleAdapter.h"
 #include "Scene/SceneManager.h"
-#include "Engine/Settings.h"
 #include "Window/WindowMS.h"
 #include "Graphics/Graphics.h"
 #include "Engine/Time.h"
 #include "Input/Input.h"
 #include "Assets/AssetManager.h"
 #include "Sound/Sound.h"
+
+#pragma warning( push )
+#pragma warning( disable : 4003 ) //v2.1.1 has 100s of warnings relating to min/max macros. Fixed in v3.
+#include "nlohmann/json.hpp"
+#pragma warning( pop )
+
+using json = nlohmann::json;
 
 //static_assert(sizeof(float) == 4, "float size check");
 
@@ -33,21 +39,22 @@ private:
 
 protected:
 
-	Log log;
+	Log log{ "System" };
+	ConsoleAdapter Console;
 public:
 
 	Time time;
-	ConsoleAdapter Console;
 
 	//Engine
-	Settings settings;
-	SceneManager sceneManager;
-	WindowMS window;
-	Graphics graphics;
-	Input input;
-	Sound sound;
+	json GlobalSettings;
+	//Settings settings;
+	SceneManager sceneManager{ *this };
+	WindowMS window{ *this };
+	Graphics graphics{ *this };
+	Input input{ *this };
+	Sound sound{};
 	
-	AssetManager assets;
+	AssetManager assets{ *this };
 	//EntityManager entityManager;?
 
 	System( void );

@@ -33,7 +33,6 @@ protected:
 	//Interface to engine modules (Services)
 	System& system;
 	SceneManager& manager;
-	Settings& settings;
 
 	//Services //Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
 	Graphics& graphics;

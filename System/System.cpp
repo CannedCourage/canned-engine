@@ -3,12 +3,18 @@
 #include "System/System.h"
 #include "StandardResources/resource.h"
 
-System::System( void ) : log( "System" ), settings( settingsFile, "/" ), sceneManager( *this ), window( *this ), graphics( *this ), input( *this ), assets( *this )
+System::System( void )
 {
+	std::ifstream mainSettingsFile{ settingsFile };
+	
+	mainSettingsFile >> GlobalSettings;
 }
 
 System::~System( void )
 {
+	std::ofstream mainSettingsFile{ settingsFile };
+
+	mainSettingsFile << std::setw(4) << GlobalSettings << std::endl;
 }
 
 int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )

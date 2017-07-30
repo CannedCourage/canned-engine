@@ -4,7 +4,6 @@
 #include "Logging/Log.h"
 
 class System;
-class Settings;
 
 class iWindow
 {
@@ -12,16 +11,15 @@ private:
 protected:
 
 	Log log;
+	System& system;
 
-	Settings &settings;
-
-	int windowX, windowY, windowWidth, windowHeight;
-	int clientX, clientY, clientWidth, clientHeight;
-	bool fullscreen;
+	int windowX = 0, windowY = 0, windowWidth = 0, windowHeight = 0;
+	int clientX = 0, clientY = 0, clientWidth = 0, clientHeight = 0;
+	bool fullscreen = false;
 public:
 
 	iWindow( System &s );
-	~iWindow( void );
+	~iWindow( void ) = default;
 
 	//virtual int Create( void ) = 0;
 	//virtual void Destroy( void ) = 0;

@@ -35,7 +35,6 @@ protected:
 	Log log;
 
 	System& system;
-	Settings& settings;
 	iWindow& window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX

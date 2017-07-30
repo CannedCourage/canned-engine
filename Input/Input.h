@@ -25,7 +25,6 @@ protected:
 	Log log;
 
 	System& system;
-	Settings& settings;
 
 	std::vector<PhysicalDevice*> physicalDevices;
 	std::vector<LogicalDevice*> logicalDevices;

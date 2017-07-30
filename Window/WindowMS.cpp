@@ -13,6 +13,9 @@ WindowMS::WindowMS( System &s ) : iWindow( s )
 
 WindowMS::~WindowMS( void )
 {
+	system.GlobalSettings["display"]["x"] = clientX;
+	system.GlobalSettings["display"]["y"] = clientY;
+	
 	Destroy();
 }
 
@@ -23,6 +26,8 @@ HWND const WindowMS::getHandle( void ) const
 
 int WindowMS::Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
+	fullscreen = system.GlobalSettings["display"]["fullscreen"];
+
 	//Register the window class
 	windowClass.cbSize = sizeof( WNDCLASSEX );									//The size of the structure
 	windowClass.style = CS_HREDRAW | CS_VREDRAW;								//The Class Style
@@ -134,8 +139,8 @@ void WindowMS::SetClientPosition( const int& X, const int& Y )
 	clientX = X;
 	clientY = Y;
 
-	settings.SetInteger( "display/x", clientX );
-	settings.SetInteger( "display/y", clientY );
+	system.GlobalSettings["display"]["x"] = clientX;
+	system.GlobalSettings["display"]["y"] = clientY;
 }
 
 void WindowMS::SetClientSize( const int& Width, const int& Height )
@@ -170,10 +175,10 @@ void WindowMS::AdjustWindow( void )
 {
 	DWORD style = WINDOWED;
 
-	clientX = settings.GetInteger( "display/x" );
-	clientY = settings.GetInteger( "display/y" );
-	clientWidth = settings.GetInteger( "display/xResolution" );
-	clientHeight = settings.GetInteger( "display/yResolution" );
+	clientX = system.GlobalSettings["display"]["x"];
+	clientY = system.GlobalSettings["display"]["y"];
+	clientWidth = system.GlobalSettings["display"]["xResolution"];
+	clientHeight = system.GlobalSettings["display"]["yResolution"];
 
 	RECT adjusted = { clientX, clientY, ( clientX + clientWidth ), ( clientY + clientHeight ) };
 

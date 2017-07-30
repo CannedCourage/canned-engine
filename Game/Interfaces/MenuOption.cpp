@@ -8,8 +8,8 @@ MenuOption::MenuOption( System& sys, const char* _name, GUI& _parent ) : Widget(
 
 	FontPosition.top = 0;
 	FontPosition.left = 0;
-	FontPosition.right = sys.settings.GetInteger( "display/xResolution" );
-	FontPosition.bottom = sys.settings.GetInteger( "display/yResolution" );
+	FontPosition.right = sys.GlobalSettings["display"]["xResolution"];
+	FontPosition.bottom = sys.GlobalSettings["display"]["yResolution"];
 	
 	graphics.ErrorCheck( D3DXCreateSprite( graphics.Device(), &sprite ), "Creating Font Sprite" );
 	font->DrawText( NULL, displayText, -1, &FontPosition, DT_CALCRECT, 0xffffffff );

@@ -10,13 +10,12 @@ using std::ostringstream;
 
 //TODO: Replace window references with message system
 
-Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), settings( system.settings ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
+Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
 									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ),
 									deviceType( D3DDEVTYPE_HAL ), backbufferFormat( D3DFMT_A8R8G8B8 ), depthFormat( D3DFMT_D16 ),
 									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
 									refresh( 0 ), aspect( FourThree ), showCursorFullscreen( false ), dModes(), adapterList()
 {
-	ReadSettings();
 }
 
 Graphics::~Graphics( void )
@@ -145,31 +144,31 @@ void Graphics::Refresh( void )
 
 void Graphics::ReadSettings( void )
 {
-	fullscreen = settings.GetBool( "display/fullscreen" );
-	xResolution = settings.GetInteger( "display/xResolution" );
-	yResolution = settings.GetInteger( "display/yResolution" );
-	aspect = (ASPECT)settings.GetInteger( "display/aspect" );
-	refresh = settings.GetInteger( "display/refresh" );
-	AA = (D3DMULTISAMPLE_TYPE)settings.GetInteger( "display/multisample" );
-	mode = settings.GetInteger( "display/displayMode" );
-	backbufferFormat = (D3DFORMAT)settings.GetInteger( "display/bufferFormat" );
-	depthFormat = (D3DFORMAT)settings.GetInteger( "display/depthFormat" );
-	adapter = settings.GetInteger( "display/adapter" );
+	fullscreen = system.GlobalSettings["display"]["fullscreen"];
+	xResolution = system.GlobalSettings["display"]["xResolution"];
+	yResolution = system.GlobalSettings["display"]["yResolution"];
+	aspect = (ASPECT)system.GlobalSettings["display"]["aspect"];
+	refresh = system.GlobalSettings["display"]["refresh"];
+	AA = (D3DMULTISAMPLE_TYPE)system.GlobalSettings["display"]["multisample"];
+	mode = system.GlobalSettings["display"]["displayMode"];
+	backbufferFormat = (D3DFORMAT)system.GlobalSettings["display"]["bufferFormat"];
+	depthFormat = (D3DFORMAT)system.GlobalSettings["display"]["depthFormat"];
+	adapter = system.GlobalSettings["display"]["adapter"];
 }
 
 void Graphics::WriteSettings( void )
 {
-	settings.SetBool( "display/fullscreen", fullscreen );
-	settings.SetInteger( "display/xResolution", xResolution );
-	settings.SetInteger( "display/yResolution", yResolution );
-	settings.SetInteger( "display/aspect", aspect );
-	settings.SetInteger( "display/refresh", refresh );
-	settings.SetInteger( "display/multisample", AA );
-	settings.SetInteger( "display/displayMode", mode );
-	settings.SetInteger( "display/bufferFormat", backbufferFormat );
-	settings.SetInteger( "display/depthFormat", depthFormat );
-	settings.SetInteger( "display/bufferCount", bufferCount );
-	settings.SetInteger( "display/adapter", adapter );
+	system.GlobalSettings["display"]["fullscreen"] = fullscreen;
+	system.GlobalSettings["display"]["xResolution"] = xResolution;
+	system.GlobalSettings["display"]["yResolution"] = yResolution;
+	system.GlobalSettings["display"]["aspect"] = aspect;
+	system.GlobalSettings["display"]["refresh"] = refresh;
+	system.GlobalSettings["display"]["multisample"] = AA;
+	system.GlobalSettings["display"]["displayMode"] = mode;
+	system.GlobalSettings["display"]["bufferFormat"] = backbufferFormat;
+	system.GlobalSettings["display"]["depthFormat"] = depthFormat;
+	system.GlobalSettings["display"]["bufferCount"] = bufferCount;
+	system.GlobalSettings["display"]["adapter"] = adapter;
 }
 
 void Graphics::ApplySettings( void )

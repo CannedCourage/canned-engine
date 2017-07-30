@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-Input::Input( System& s ) : log( "Input" ), system( s ) , settings( system.settings )
+Input::Input( System& s ) : log( "Input" ), system( s )
 {
 }
 
