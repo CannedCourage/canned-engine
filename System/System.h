@@ -36,7 +36,6 @@ using json = nlohmann::json;
 class System
 {
 private:
-
 protected:
 
 	Log log{ "System" };

@@ -1,15 +1,16 @@
-#include "GraphicsVK.h"
+#include "Graphics/GraphicsVK.h"
+#include "System/System.h"
+
+#include <unordered_set>
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
-GraphicsVK::GraphicsVK( System &s ) : log("GraphicsVK"), system( s ), settings( system.settings ), window( system.window )
+GraphicsVK::GraphicsVK( System &s ) : log("GraphicsVK"), system( s ), window( system.window )
 {
-	//ReadSettings();
 }
 
 GraphicsVK::~GraphicsVK( void )
 {
-	//WriteSettings();
 }
 
 void GraphicsVK::Init( void )
@@ -67,8 +68,6 @@ void GraphicsVK::CreateInstance( void )
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
 
-	const bool enableDebugLayers = true; //Get from settings file later
-
 	InstanceExtensions.push_back( VK_KHR_SURFACE_EXTENSION_NAME );
 	InstanceExtensions.push_back( VK_KHR_WIN32_SURFACE_EXTENSION_NAME );
 
@@ -78,7 +77,7 @@ void GraphicsVK::CreateInstance( void )
 	{
 		InstanceExtensions.push_back( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
 
-		ValidationLayers.push_back( VK_LAYER_LUNARG_standard_validation );
+		ValidationLayers.push_back( "VK_LAYER_LUNARG_standard_validation" );
 	}
 
 	//ValidateValidationLayers();???
@@ -90,7 +89,7 @@ void GraphicsVK::CreateInstance( void )
 
 	VERIFY( VK_SUCCESS == vkCreateInstance( &createInfo, NULL, &Instance) );
 
-	if( enableLayers )
+	if( enableDebugLayers )
 	{
 		//CreateDebugReportCallback();???
 	}
@@ -101,11 +100,11 @@ void GraphicsVK::CreateSurface( void )
 	VkWin32SurfaceCreateInfoKHR createInfo = {};
 
 	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	createInfo.hinstance = window.GetInstance();
-	createInfo.hwnd = window.GetHandle();
+	//createInfo.hinstance = window.GetInstance();
+	//createInfo.hwnd = window.GetHandle();
 
-	VERIFY( VK_SUCCESS == vkCreateWin32SurfaceKHR( Instance.get(), &createInfo, NULL, &Surface) );
-	ASSERT( tempSurface != nullptr, "Surface pointer is null" );
+	VERIFY( VK_SUCCESS == vkCreateWin32SurfaceKHR( Instance, &createInfo, NULL, &Surface) );
+	ASSERT( Surface != nullptr );
 }
 
 void GraphicsVK::EnumeratePhysicalDevices( void )
@@ -113,13 +112,13 @@ void GraphicsVK::EnumeratePhysicalDevices( void )
 	unsigned int numDevices = 0;
 	std::vector<VkPhysicalDevice> devices;
 
-	VERIFY( VK_SUCCESS == vkEnumeratePhysicalDevices( Instance.get(), &numDevices, NULL ) );
-	ASSERT( numDevices > 0, "vkEnumeratePhysicalDevices returned zero devices." );
+	VERIFY( VK_SUCCESS == vkEnumeratePhysicalDevices( Instance, &numDevices, NULL ) );
+	ASSERT( numDevices > 0 );
 
 	devices.reserve( numDevices );
 
-	VERIFY( VK_SUCCESS == vkEnumeratePhysicalDevices( Instance.get(), &numDevices, devices.data() ) );
-	ASSERT( numDevices > 0, "vkEnumeratePhysicalDevices returned zero devices." );
+	VERIFY( VK_SUCCESS == vkEnumeratePhysicalDevices( Instance, &numDevices, devices.data() ) );
+	ASSERT( numDevices > 0 );
 
 	GPUs.reserve( numDevices );
 
@@ -132,24 +131,24 @@ void GraphicsVK::EnumeratePhysicalDevices( void )
 			unsigned int numQueues = 0;
 
 			vkGetPhysicalDeviceQueueFamilyProperties( gpu.Device, &numQueues, NULL );
-			ASSERT( numQueues > 0, "vkGetPhysicalDeviceQueueFamilyProperties returned zero queues." );
+			ASSERT( numQueues > 0 );
 
 			gpu.QueueFamilyProperties.reserve( numQueues );
 
 			vkGetPhysicalDeviceQueueFamilyProperties( gpu.Device, &numQueues, gpu.QueueFamilyProperties.data() );
-			ASSERT( numQueues > 0, "vkGetPhysicalDeviceQueueFamilyProperties returned zero queues." );
+			ASSERT( numQueues > 0 );
 		}
 
 		{
 			unsigned int numExtensions = 0;
 
 			VERIFY( VK_SUCCESS == vkEnumerateDeviceExtensionProperties( gpu.Device, NULL, &numExtensions, NULL ) );
-			ASSERT( numExtensions > 0, "vkEnumerateDeviceExtensionProperties returned zero extensions." );
+			ASSERT( numExtensions > 0 );
 
 			gpu.ExtensionProperties.reserve( numExtensions );
 
 			VERIFY( VK_SUCCESS == vkEnumerateDeviceExtensionProperties( gpu.Device, NULL, &numExtensions, gpu.ExtensionProperties.data() ) );
-			ASSERT( numExtensions > 0, "vkEnumerateDeviceExtensionProperties returned zero extensions." );
+			ASSERT( numExtensions > 0 );
 		}
 
 		VERIFY( VK_SUCCESS == vkGetPhysicalDeviceSurfaceCapabilitiesKHR( gpu.Device, Surface, &(gpu.SurfaceCapabilities) ) );
@@ -158,24 +157,24 @@ void GraphicsVK::EnumeratePhysicalDevices( void )
 			unsigned int numFormats = 0;
 
 			VERIFY( VK_SUCCESS == vkGetPhysicalDeviceSurfaceFormatsKHR( gpu.Device, Surface, &numFormats, NULL ) );
-			ASSERT( numFormats > 0, "vkGetPhysicalDeviceSurfaceFormatsKHR returned zero surface formats." );
+			ASSERT( numFormats > 0 );
 
 			gpu.SurfaceFormats.reserve( numFormats );
 
 			VERIFY( VK_SUCCESS == vkGetPhysicalDeviceSurfaceFormatsKHR( gpu.Device, Surface, &numFormats, gpu.SurfaceFormats.data() ) );
-			ASSERT( numFormats > 0, "vkGetPhysicalDeviceSurfaceFormatsKHR returned zero surface formats." );
+			ASSERT( numFormats > 0 );
 		}
 
 		{
 			unsigned int numPresentModes = 0;
 
 			VERIFY( VK_SUCCESS == vkGetPhysicalDeviceSurfacePresentModesKHR( gpu.Device, Surface, &numPresentModes, NULL ) );
-			ASSERT( numPresentModes > 0, "vkGetPhysicalDeviceSurfacePresentModesKHR returned zero present modes." );
+			ASSERT( numPresentModes > 0 );
 
 			gpu.PresentModes.reserve( numPresentModes );
 
 			VERIFY( VK_SUCCESS == vkGetPhysicalDeviceSurfacePresentModesKHR( gpu.Device, Surface, &numPresentModes, gpu.PresentModes.data() ) );
-			ASSERT( numPresentModes > 0, "vkGetPhysicalDeviceSurfacePresentModesKHR returned zero present modes." );
+			ASSERT( numPresentModes > 0 );
 		}
 
 		vkGetPhysicalDeviceMemoryProperties( gpu.Device, &(gpu.MemoryProperties) );
@@ -186,13 +185,13 @@ void GraphicsVK::EnumeratePhysicalDevices( void )
 
 void GraphicsVK::SelectPhysicalDevice( void )
 {
-	for( const GPU& gpu : GPUs )
+	for( GPU& gpu : GPUs )
 	{
-		//???
 		int graphicsIdx = -1;
 		int presentIdx = -1;
 
-		/*???
+		//???
+		/*
 		if ( !CheckPhysicalDeviceExtensionSupport( gpu, DeviceExtensions ) ) {
 			continue;
 		}
@@ -226,8 +225,6 @@ void GraphicsVK::SelectPhysicalDevice( void )
 
 			vkGetPhysicalDeviceSurfaceSupportKHR( gpu.Device, ii, Surface, &supportsPresent );
 
-			if( props.queueFlags & )
-
 			if( supportsPresent )
 			{
 				presentIdx = ii;
@@ -240,14 +237,13 @@ void GraphicsVK::SelectPhysicalDevice( void )
 		{
 			GraphicsFamilyIndex = graphicsIdx;
 			PresentFamilyIndex = presentIdx;
-			PhysicalDevice = gpu.device;
+			PhysicalDevice = gpu.Device;
 			GPUInfo = &gpu;
 
 			return;
 		}
 	}
 
-	ASSERT( false, "Could not find a physical device which fits our desired profile" );
 	throw new std::runtime_error( "Could not find a physical device which fits our desired profile" );
 }
 
@@ -292,7 +288,7 @@ void GraphicsVK::CreateLogicalDeviceAndQueues( void )
 	info.pEnabledFeatures = &deviceFeatures;
 	info.enabledExtensionCount = DeviceExtensions.size();
 	info.ppEnabledExtensionNames = DeviceExtensions.data();
-	/*
+
 	if( enableDebugLayers )
 	{
 		info.enabledLayerCount = ValidationLayers.size();
@@ -302,11 +298,11 @@ void GraphicsVK::CreateLogicalDeviceAndQueues( void )
 	{
 		info.enabledLayerCount = 0;
 	}
-	//*/
+	
 	VERIFY( VK_SUCCESS == vkCreateDevice( PhysicalDevice, &info, NULL, &LogicalDevice ) );
 
-	vkGetDeviceQueue( LogicalDevice, GraphicsFamilyIndex, 0, GraphicsQueue );
-	vkGetDeviceQueue( LogicalDevice, PresentFamilyIndex, 0, PresentQueue );
+	vkGetDeviceQueue( LogicalDevice, GraphicsFamilyIndex, 0, &GraphicsQueue );
+	vkGetDeviceQueue( LogicalDevice, PresentFamilyIndex, 0, &PresentQueue );
 }
 
 void GraphicsVK::CreateSemaphores( void )
@@ -315,10 +311,10 @@ void GraphicsVK::CreateSemaphores( void )
 
 	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-	for( for int ii = 0; ii < bufferCount; i++ )
+	for( int ii = 0; ii < bufferCount; ii++ )
 	{
-		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, semaphoreCreateInfo, NULL, acquireSemaphores[ii] ) );
-		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, semaphoreCreateInfo, NULL, renderCompleteSemaphores[ii] ) );
+		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, &semaphoreCreateInfo, NULL, &AcquireSemaphores[ii] ) );
+		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, &semaphoreCreateInfo, NULL, &RenderCompleteSemaphores[ii] ) );
 	}
 }
 
@@ -330,7 +326,7 @@ void GraphicsVK::CreateCommandPool( void )
 	commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	commandPoolCreateInfo.queueFamilyIndex = GraphicsFamilyIndex;
 
-	VERIFY( VK_SUCCESS = vkCreateCommandPool( LogicalDevice, &commandPoolCreateInfo, NULL, CommandPool ) );
+	VERIFY( VK_SUCCESS == vkCreateCommandPool( LogicalDevice, &commandPoolCreateInfo, NULL, &CommandPool ) );
 }
 
 void GraphicsVK::CreateCommandBuffer( void )
@@ -343,18 +339,18 @@ void GraphicsVK::CreateCommandBuffer( void )
 	commandBufferAllocateInfo.commandPool = CommandPool;
 	commandBufferAllocateInfo.commandBufferCount = bufferCount;
 
-	VERIFY( VK_SUCCESS == vkAllocateCommandBuffers( LogicalDevice, commandBufferAllocateInfo, CommandBuffer.data() ) );
+	VERIFY( VK_SUCCESS == vkAllocateCommandBuffers( LogicalDevice, &commandBufferAllocateInfo, CommandBuffer.data() ) );
 
 	VkFenceCreateInfo fenceCreateInfo = {};
 	fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 
-	for( for int ii = 0; ii < bufferCount; i++ )
+	for( int ii = 0; ii < bufferCount; ii++ )
 	{
 		VERIFY( VK_SUCCESS == vkCreateFence( LogicalDevice, &fenceCreateInfo, NULL, &CommandBufferFences[ii] ) );
 	}
 }
 
-VkSurfaceFormatKHR  GraphicsVK::ChooseSurfaceFormat( void )
+VkSurfaceFormatKHR GraphicsVK::ChooseSurfaceFormat( void )
 {
 	if( ( GPUInfo->SurfaceFormats.size() == 1 ) && ( GPUInfo->SurfaceFormats[0].format == VK_FORMAT_UNDEFINED ) )
 	{
@@ -463,12 +459,12 @@ void GraphicsVK::CreateSwapChain( void )
 	std::vector<VkImage> swapChainImages{ bufferCount };
 
 	VERIFY( VK_SUCCESS == vkGetSwapchainImagesKHR( LogicalDevice, SwapChain, &numImages, NULL ) );
-	ASSERT( numImages > 0, "vkGetSwapchainImagesKHR returned a zero image count." );
+	ASSERT( numImages > 0 );
 
 	swapChainImages.reserve( numImages );
 
 	VERIFY( VK_SUCCESS == vkGetSwapchainImagesKHR( LogicalDevice, SwapChain, &numImages, swapChainImages.data() ) );
-	ASSERT( numImages > 0, "vkGetSwapchainImagesKHR returned a zero image count." );
+	ASSERT( numImages > 0 );
 
 	for( int ii = 0; ii < bufferCount; ii++ )
 	{
@@ -530,21 +526,21 @@ void GraphicsVK::CreateRenderTargets( void )
 
 	VkImageCreateInfo depthImageCreateInfo = {};
 
-	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-	imageInfo.imageType = VK_IMAGE_TYPE_2D;
-	imageInfo.extent.width = SwapChainExtent.width;
-	imageInfo.extent.height = SwapChainExtent.height;
-	imageInfo.extent.depth = 1;
-	imageInfo.mipLevels = 1;
-	imageInfo.arrayLayers = 1;
-	imageInfo.format = DepthFormat;
-	imageInfo.tiling = tiling;
-	imageInfo.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
-	imageInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+	depthImageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	depthImageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+	depthImageCreateInfo.extent.width = SwapChainExtent.width;
+	depthImageCreateInfo.extent.height = SwapChainExtent.height;
+	depthImageCreateInfo.extent.depth = 1;
+	depthImageCreateInfo.mipLevels = 1;
+	depthImageCreateInfo.arrayLayers = 1;
+	depthImageCreateInfo.format = DepthFormat;
+	depthImageCreateInfo.tiling = tiling;
+	depthImageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+	depthImageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 	
 	//???
-	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	depthImageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	depthImageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 	VERIFY( VK_SUCCESS == vkCreateImage( LogicalDevice, &depthImageCreateInfo, NULL, &DepthBuffer ) );
 
@@ -620,7 +616,7 @@ void GraphicsVK::CreateRenderPass( void )
 	renderPassCreateInfo.pSubpasses = &subpass;
 	renderPassCreateInfo.dependencyCount = 0;
 
-	VERIFY( VK_SUCCESS == vkCreateRenderPass( LogicalDevice, &renderPassCreateInfo, NULL, &RenderPass ))
+	VERIFY( VK_SUCCESS == vkCreateRenderPass( LogicalDevice, &renderPassCreateInfo, NULL, &RenderPass ) );
 }
 
 void GraphicsVK::CreateFrameBuffers( void )
@@ -634,7 +630,7 @@ void GraphicsVK::CreateFrameBuffers( void )
 	frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	frameBufferCreateInfo.renderPass = RenderPass;
 	frameBufferCreateInfo.attachmentCount = attachments.size();
-	frameBufferCreateInfo.pAttachments = attachments.data()
+	frameBufferCreateInfo.pAttachments = attachments.data();
 	frameBufferCreateInfo.width = SwapChainExtent.width;
 	frameBufferCreateInfo.height = SwapChainExtent.height;
 	frameBufferCreateInfo.layers = 1;
@@ -643,35 +639,39 @@ void GraphicsVK::CreateFrameBuffers( void )
 	{
 		attachments[0] = SwapChainImageViews[ii];
 
-		VERIFY( VK_SUCCESS == vkCreateFrameBuffer( LogicalDevice, &frameBufferCreateInfo, NULL, &FrameBuffers[ii] ) );
+		VERIFY( VK_SUCCESS == vkCreateFramebuffer( LogicalDevice, &frameBufferCreateInfo, NULL, &FrameBuffers[ii] ) );
 	}
 }
 
 void GraphicsVK::ReadSettings( void )
 {
-	fullscreen = settings.GetBool( "display/fullscreen" );
-	xResolution = settings.GetInteger( "display/xResolution" );
-	yResolution = settings.GetInteger( "display/yResolution" );
-	aspect = (ASPECT)settings.GetInteger( "display/aspect" );
-	refresh = settings.GetInteger( "display/refresh" );
-	AA = (D3DMULTISAMPLE_TYPE)settings.GetInteger( "display/multisample" );
-	mode = settings.GetInteger( "display/displayMode" );
-	backbufferFormat = (D3DFORMAT)settings.GetInteger( "display/bufferFormat" );
-	depthFormat = (D3DFORMAT)settings.GetInteger( "display/depthFormat" );
-	adapter = settings.GetInteger( "display/adapter" );
+	/*
+	fullscreen = system.GlobalSettings["display"]["fullscreen"];
+	xResolution = system.GlobalSettings["display"]["xResolution"];
+	yResolution = system.GlobalSettings["display"]["yResolution"];
+	aspect = (ASPECT)system.GlobalSettings["display"]["aspect"];
+	refresh = system.GlobalSettings["display"]["refresh"];
+	AA = (D3DMULTISAMPLE_TYPE)system.GlobalSettings["display"]["multisample"];
+	mode = system.GlobalSettings["display"]["displayMode"];
+	backbufferFormat = (D3DFORMAT)system.GlobalSettings["display"]["bufferFormat"];
+	depthFormat = (D3DFORMAT)system.GlobalSettings["display"]["depthFormat"];
+	adapter = system.GlobalSettings["display"]["adapter"];
+	*/
 }
 
 void GraphicsVK::WriteSettings( void )
 {
-	settings.SetBool( "display/fullscreen", fullscreen );
-	settings.SetInteger( "display/xResolution", xResolution );
-	settings.SetInteger( "display/yResolution", yResolution );
-	settings.SetInteger( "display/aspect", aspect );
-	settings.SetInteger( "display/refresh", refresh );
-	settings.SetInteger( "display/multisample", AA );
-	settings.SetInteger( "display/displayMode", mode );
-	settings.SetInteger( "display/bufferFormat", backbufferFormat );
-	settings.SetInteger( "display/depthFormat", depthFormat );
-	settings.SetInteger( "display/bufferCount", bufferCount );
-	settings.SetInteger( "display/adapter", adapter );
+	/*
+	system.GlobalSettings["display"]["fullscreen"] = fullscreen;
+	system.GlobalSettings["display"]["xResolution"] = xResolution;
+	system.GlobalSettings["display"]["yResolution"] = yResolution;
+	system.GlobalSettings["display"]["aspect"] = aspect;
+	system.GlobalSettings["display"]["refresh"] = refresh;
+	system.GlobalSettings["display"]["multisample"] = AA;
+	system.GlobalSettings["display"]["displayMode"] = mode;
+	system.GlobalSettings["display"]["bufferFormat"] = backbufferFormat;
+	system.GlobalSettings["display"]["depthFormat"] = depthFormat;
+	system.GlobalSettings["display"]["bufferCount"] = bufferCount;
+	system.GlobalSettings["display"]["adapter"] = adapter;
+	*/
 }

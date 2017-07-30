@@ -6,6 +6,6 @@
 
 class ScriptProcessor : public iProcess
 {
-}
+};
 
 #endif //_SCRIPTPROCESSOR_H_

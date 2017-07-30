@@ -3,27 +3,40 @@
 
 #define VK_USE_PLATFORM_WIN32_KHR
 
+#include <vector>
+#include <list>
+#include <vulkan/vulkan.hpp>
+
+#pragma comment(lib, "vulkan-1.lib")
+
+#include "Logging/Log.h"
+
 struct GPU
 {
 	VkPhysicalDevice Device;
 	std::vector<VkQueueFamilyProperties> QueueFamilyProperties;
 	std::vector<VkExtensionProperties> ExtensionProperties;
-	VkSurfaceCapabilitiesKHR SurfaceCapabilities = nullptr;
+	VkSurfaceCapabilitiesKHR SurfaceCapabilities;
 	std::vector<VkSurfaceFormatKHR> SurfaceFormats;
 	std::vector<VkPresentModeKHR> PresentModes;
 	VkPhysicalDeviceMemoryProperties MemoryProperties;
 	VkPhysicalDeviceProperties DeviceProperties;
 };
 
+class System;
+class WindowMS;
+
 class GraphicsVK
 {
+private:
+
+	const bool enableDebugLayers = true; //Get from settings file later
 protected:
 
 	Log log;
 
 	System& system;
-	Settings& settings;
-	iWindow& window;
+	WindowMS& window;
 
 	std::vector<const char *> InstanceExtensions;
 	std::vector<const char *> DeviceExtensions;
@@ -37,14 +50,10 @@ protected:
 	int GraphicsFamilyIndex = 0;
 	int PresentFamilyIndex = 0;
 	VkPhysicalDevice PhysicalDevice;
-	GPU* GPUInfo = nullptr;
-
-	VkDevice LogicalDevice;
 
 	VkQueue GraphicsQueue;
 	VkQueue PresentQueue;
 
-	const unsigned int bufferCount = 2;
 	std::vector<VkSemaphore> AcquireSemaphores{ bufferCount };
 	std::vector<VkSemaphore> RenderCompleteSemaphores{ bufferCount };
 
@@ -65,7 +74,7 @@ protected:
 
 	VkRenderPass RenderPass;
 
-	std::vector<VkFramebuffer> FrameBuffers{bufferCount};
+	std::vector<VkFramebuffer> FrameBuffers{ bufferCount };
 
 	void ReadSettings( void );
 	void WriteSettings( void );
@@ -73,7 +82,27 @@ protected:
 	//Vulkan
 	void CreateInstance( void );
 	void CreateSurface( void );
+	void EnumeratePhysicalDevices( void );
+	void SelectPhysicalDevice( void );
+	void CreateLogicalDeviceAndQueues( void );
+	void CreateSemaphores( void );
+	void CreateCommandPool( void );
+	void CreateCommandBuffer( void );
+	void CreateSwapChain( void );
+	void CreateRenderTargets( void );
+	void CreateRenderPass( void );
+	void CreateFrameBuffers( void );
+
+	VkSurfaceFormatKHR ChooseSurfaceFormat( void );
+	VkPresentModeKHR ChoosePresentMode( void );
+	VkExtent2D ChooseSurfaceExtent( void );
+	VkFormat ChooseSupportedFormat( const std::vector<VkFormat>& formats, VkImageTiling tiling, VkFormatFeatureFlags features );
 public:
+
+	const unsigned int bufferCount = 2;
+	GPU* GPUInfo = nullptr;
+
+	VkDevice LogicalDevice;
 
 	GraphicsVK( System& s );
 	~GraphicsVK( void );
