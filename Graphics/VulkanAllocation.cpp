@@ -1,12 +1,13 @@
 #include "Graphics/VulkanAllocation.h"
 #include "System/System.h"
+#include <algorithm>
 
 int VK_FindMemoryTypeIndex( const unsigned int memoryTypeBits, const bool needHostVisible )
 {
 	return -1;
 }
 
-VulkanMemoryPool::VulkanMemoryPool( const GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), ID( ID ), Size( Size ), HostVisible( HostVisible )
+VulkanMemoryPool::VulkanMemoryPool( const GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size ), HostVisible( HostVisible )
 {
 	MemoryTypeIndex = VK_FindMemoryTypeIndex( MemoryTypeBits, HostVisible ); //???
 }
@@ -21,7 +22,7 @@ bool VulkanMemoryPool::Init()
 	VkMemoryAllocateInfo memoryAllocateInfo = {};
 
 	memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	memoryAllocateInfo.allocationSize = Size;
+	memoryAllocateInfo.allocationSize = PoolSize;
 	memoryAllocateInfo.memoryTypeIndex = MemoryTypeIndex;
 
 	//Need access to logical device
@@ -34,19 +35,14 @@ bool VulkanMemoryPool::Init()
 
 	if( HostVisible )
 	{
-		VERIFY( VK_SUCCESS == vkMapMemory( Context.LogicalDevice, DeviceMemory, 0, Size, 0, (void**)&Data ) );
+		VERIFY( VK_SUCCESS == vkMapMemory( Context.LogicalDevice, DeviceMemory, 0, PoolSize, 0, (void**)&Data ) );
 	}
 
-	// vkBlock newBlock{};
-	// newBlock.Size = m_size;
-	// newBlock.Offset = 0;
-	// newBlock.Free = true;
+	//Create a single block that initially contains all the memory represented by this pool
+	vkBlock block = { PoolSize };
 
-	return true;
-}
+	Blocks.push_back( block );
 
-bool VulkanMemoryPool::Allocate( const unsigned int Size, const unsigned int Align, vkAllocation& Allocation )
-{
 	return true;
 }
 
@@ -58,11 +54,73 @@ void VulkanMemoryPool::Shutdown()
 	}
 
 	vkFreeMemory( Context.LogicalDevice, DeviceMemory, NULL );
+}
 
-	for( vkBlock block : Blocks )
+bool VulkanMemoryPool::Allocate( const unsigned int Size, const unsigned int Align, vkAllocation& Allocation )
+{
+	for( auto it = Blocks.begin(); it != Blocks.end(); it++ )
 	{
-		//Delete block somehow?
+		vkBlock& freeBlock = (*it);
+
+		int alignRemainder = ( freeBlock.Offset % Align );
+		int alignDiff = Align - alignRemainder;
+		int adjustedSize = freeBlock.Size;
+		int adjustedOffset = freeBlock.Offset;
+		
+		if( alignDiff != Align )
+		{
+			adjustedSize -= alignDiff;
+			adjustedOffset += alignDiff;
+		}
+
+		if( !( freeBlock.Free ) && ( adjustedSize < Size ) ){ continue; }
+
+		//Move the unallocated block offset onto alignment boundary
+		freeBlock.Size = adjustedSize;
+		freeBlock.Offset = adjustedOffset;
+
+		//Allocate the first Size bytes of the unallocated block to the new block
+		vkBlock allocatedBlock = { Size, freeBlock.Offset, NextBlockID++, false };
+
+		Blocks.insert( it, allocatedBlock );
+
+		//Move the start of the unallocated space to the end of the new block
+		freeBlock.Size -= allocatedBlock.Size;
+		freeBlock.Offset += Size;
+		freeBlock.Free = true;
+
+		//Fill the allocation struct
+		Allocation.Data = Data;
+		Allocation.DeviceMemory = DeviceMemory;
+		Allocation.Offset = allocatedBlock.Offset;
+		Allocation.Size = allocatedBlock.Size;
+		Allocation.BlockID = allocatedBlock.ID;
+		Allocation.PoolID = PoolID;
+
+		return true;
 	}
+
+	return false;
+}
+
+void VulkanMemoryPool::Free( vkAllocation& Allocation )
+{
+	unsigned int BlockID = Allocation.BlockID;
+
+	auto result = std::find_if( Blocks.begin(), Blocks.end(), [BlockID]( vkBlock& block ) -> bool
+	{
+		return block.ID == BlockID;
+	});
+
+	result->ID = 0;
+	result->Free = true; //How/when is this merged with it's free neighbours (if any)?
+
+	Allocation.Data = nullptr;
+	Allocation.DeviceMemory = VK_NULL_HANDLE;
+	Allocation.Offset = 0;
+	Allocation.Size = 0;
+	Allocation.BlockID = 0;
+	Allocation.PoolID = 0;
 }
 
 VulkanAllocator::VulkanAllocator( const GraphicsVK& Context ) : Context( Context ), Garbage{Context.bufferCount}
@@ -88,7 +146,6 @@ vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned 
 	}
 	else
 	{
-		TRACE( "Could not allocate new memory pool." );
 		throw std::runtime_error( "Could not allocate new memory pool." );
 	}
 
@@ -102,7 +159,7 @@ bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned
 {
 	const VkPhysicalDeviceMemoryProperties& physicalMemoryProperties = Context.GPUInfo->MemoryProperties;
 
-	const VkMemoryPropertyFlags required =  HostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT : 0;
+	const VkMemoryPropertyFlags required = HostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT : 0;
 
 	const VkMemoryPropertyFlags preferred = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 

@@ -6,12 +6,16 @@
 
 struct vkAllocation
 {
-	unsigned int Pool = 0;
-	unsigned int Block = 0;
+	//If host visible, map device memory to 'Data' using vkMapMemory
+	byte* Data = nullptr;
+
+	//Vulkan Memory Binding information
 	VkDeviceMemory DeviceMemory = VK_NULL_HANDLE;
 	VkDeviceSize Offset = 0;
 	VkDeviceSize Size = 0;
-	byte* data = nullptr;
+
+	unsigned int PoolID = 0;
+	unsigned int BlockID = 0;
 };
 
 class VulkanMemoryPool
@@ -22,24 +26,29 @@ protected:
 
 	const GraphicsVK& Context;
 
+	VkDeviceMemory DeviceMemory;
+	VkDeviceSize PoolSize = 0;
+	VkDeviceSize Allocated = 0;
+
+	//If host visible, map device memory to 'Data' using vkMapMemory
+	byte* Data = nullptr;
+
+	unsigned int PoolID = 0;
+	unsigned int NextBlockID = 0;
+	unsigned int MemoryTypeIndex = 0;
+
+	bool HostVisible;
+
 	struct vkBlock
 	{
-		unsigned int ID = 0;
-		VkDeviceSize Offset = 0;
 		VkDeviceSize Size = 0;
+		VkDeviceSize Offset = 0; //Offset from the start of allocated memory
+
+		unsigned int ID = 0;
 		bool Free = true;
 	};
 
 	std::list<vkBlock> Blocks;
-
-	unsigned int ID = 0;
-	unsigned int NextBlockID = 0;
-	unsigned int MemoryTypeIndex = 0;
-	bool HostVisible;
-	VkDeviceMemory DeviceMemory;
-	VkDeviceSize Size = 0;
-	VkDeviceSize Allocated = 0;
-	byte* Data = nullptr;
 public:
 
 	VulkanMemoryPool( const GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible );
@@ -48,7 +57,7 @@ public:
 	bool Init();
 	void Shutdown();
 
-	// Return true/false for success.  If true vkAllocation_t reference is filled.
+	// Return true/false for success.  If true Allocation reference is filled.
 	bool Allocate( const unsigned int Size, const unsigned int Align, vkAllocation& Allocation );
 	void Free( vkAllocation & Allocation );
 };
@@ -60,12 +69,12 @@ protected:
 
 	const GraphicsVK& Context;
 
-	int NextPoolID = 0;
-	int GarbageIndex = 0;
+	unsigned int NextPoolID = 0;
+	unsigned int GarbageIndex = 0;
 
-	// How big should each pool be when created?
-	int DeviceLocalMemoryMB = 0;
-	int HostVisibleMemoryMB = 0;
+	//How big should each pool be when created?
+	unsigned int DeviceLocalMemoryMB = 0;
+	unsigned int HostVisibleMemoryMB = 0;
 
 	std::vector<VulkanMemoryPool*> Pools;
 	std::vector<vkAllocation> Garbage;
