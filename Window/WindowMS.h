@@ -19,7 +19,8 @@ public:
 	WindowMS( System &s );
 	~WindowMS( void );
 
-	HWND const getHandle( void ) const;
+	HINSTANCE GetInstance( void ) const;
+	HWND const GetHandle( void ) const;
 
 	int Create( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow );
 	void Destroy( void );

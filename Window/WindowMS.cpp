@@ -19,7 +19,12 @@ WindowMS::~WindowMS( void )
 	Destroy();
 }
 
-HWND const WindowMS::getHandle( void ) const
+HINSTANCE WindowMS::GetInstance( void ) const
+{
+	return hInstance;
+}
+
+HWND const WindowMS::GetHandle( void ) const
 {
 	return hwnd;
 }

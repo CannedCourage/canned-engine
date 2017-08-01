@@ -35,7 +35,6 @@ protected:
 	Log log;
 
 	System& system;
-	iWindow& window;
 
 	LPDIRECT3D9 mInterface;						//interface to DirectX
 	LPDIRECT3DDEVICE9 mDevice;					//the rendering device (graphics card)

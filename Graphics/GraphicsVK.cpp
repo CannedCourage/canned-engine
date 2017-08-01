@@ -5,7 +5,7 @@
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
-GraphicsVK::GraphicsVK( System &s ) : log("GraphicsVK"), system( s ), window( system.window )
+GraphicsVK::GraphicsVK( System &s ) : system( s )
 {
 }
 
@@ -100,8 +100,8 @@ void GraphicsVK::CreateSurface( void )
 	VkWin32SurfaceCreateInfoKHR createInfo = {};
 
 	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	//createInfo.hinstance = window.GetInstance();
-	//createInfo.hwnd = window.GetHandle();
+	createInfo.hinstance = system.window.GetInstance();
+	createInfo.hwnd = system.window.GetHandle();
 
 	VERIFY( VK_SUCCESS == vkCreateWin32SurfaceKHR( Instance, &createInfo, NULL, &Surface) );
 	ASSERT( Surface != nullptr );

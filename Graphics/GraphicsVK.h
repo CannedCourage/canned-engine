@@ -5,8 +5,8 @@
 
 #include <vector>
 #include <list>
-#include <vulkan/vulkan.hpp>
 
+#include <vulkan/vulkan.hpp>
 #pragma comment(lib, "vulkan-1.lib")
 
 #include "Logging/Log.h"
@@ -24,7 +24,6 @@ struct GPU
 };
 
 class System;
-class WindowMS;
 
 class GraphicsVK
 {
@@ -33,10 +32,9 @@ private:
 	const bool enableDebugLayers = true; //Get from settings file later
 protected:
 
-	Log log;
+	Log log{ "GraphicsVK" };
 
 	System& system;
-	WindowMS& window;
 
 	std::vector<const char *> InstanceExtensions;
 	std::vector<const char *> DeviceExtensions;

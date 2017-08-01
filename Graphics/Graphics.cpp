@@ -10,7 +10,7 @@ using std::ostringstream;
 
 //TODO: Replace window references with message system
 
-Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), window( system.window ), mInterface( NULL ), mDevice( NULL ),
+Graphics::Graphics( System &s ) : 	log("Graphics"), system( s ), mInterface( NULL ), mDevice( NULL ),
 									presentParameters( NULL ), adapterCount( 0 ), modeCount( 0 ), adapter( D3DADAPTER_DEFAULT ), mode( 0 ),
 									deviceType( D3DDEVTYPE_HAL ), backbufferFormat( D3DFMT_A8R8G8B8 ), depthFormat( D3DFMT_D16 ),
 									behaviourFlags( D3DCREATE_HARDWARE_VERTEXPROCESSING ), qualityAA( 0 ), bufferCount( 1 ), AA( D3DMULTISAMPLE_NONE ), modes( NULL ),
@@ -196,11 +196,11 @@ void Graphics::SetFullscreen( void )
 
 		if( showCursorFullscreen )
 		{
-			window.CursorVisible( true );
+			system.window.CursorVisible( true );
 		}
 		else
 		{
-			window.CursorVisible( false );
+			system.window.CursorVisible( false );
 		}
 	}
 	else
@@ -219,9 +219,9 @@ void Graphics::SetWindowed( void )
 
 		Refresh();
 
-		window.Update();
+		system.window.Update();
 
-		window.CursorVisible( true );
+		system.window.CursorVisible( true );
 	}
 	else
 	{
@@ -233,8 +233,8 @@ void Graphics::SetClientSize( const int& width, const int& height )
 {
 	if( !fullscreen )
 	{
-		window.SetClientSize( width, height );
-		window.Update();
+		system.window.SetClientSize( width, height );
+		system.window.Update();
 	}
 }
 

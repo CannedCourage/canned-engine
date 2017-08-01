@@ -1,11 +1,9 @@
 #include "Graphics/Graphics.h"
-#include "Window/WindowMS.h"
+#include "System/System.h"
 
 void Graphics::CreateInterface( void )
 {
-	WindowMS& winMS = static_cast<WindowMS&>(window);
-
-	HWND hWnd = winMS.getHandle();
+	HWND hWnd = system.window.GetHandle();
 
     mInterface = Direct3DCreate9( D3D_SDK_VERSION );
 
@@ -168,9 +166,7 @@ void Graphics::CheckDeviceCaps( void )
 
 void Graphics::SetParameters( void )
 {
-	WindowMS& winMS = static_cast<WindowMS&>(window);
-
-	HWND hWnd = winMS.getHandle();
+	HWND hWnd = system.window.GetHandle();
 
 	ZeroMemory( &fullParameters, sizeof( fullParameters ) );
 	fullParameters.AutoDepthStencilFormat = depthFormat;				//16 bit depth buffer, 0 bit stencil buffer
@@ -280,9 +276,7 @@ void Graphics::SetMultisampleOff( void )
 
 void Graphics::CreateDevice( void )
 {
-	WindowMS& winMS = static_cast<WindowMS&>(window);
-
-	HWND hWnd = winMS.getHandle();
+	HWND hWnd = system.window.GetHandle();
 
 	mDevice = NULL;
 

@@ -70,7 +70,7 @@ public:
 
 inline void System::Quit( void )
 {
-	PostMessage( window.getHandle(), WM_CLOSE, 0, 0 );
+	PostMessage( window.GetHandle(), WM_CLOSE, 0, 0 );
 }
 
 LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );

@@ -50,7 +50,7 @@ void Input::Register( PhysicalDevice* physDevice )
 {
 	physicalDevices.push_back( physDevice );
 
-	physDevice->RegisterForRawInput( system.window.getHandle() );
+	physDevice->RegisterForRawInput( system.window.GetHandle() );
 }
 
 void Input::Register( LogicalDevice* intent )
