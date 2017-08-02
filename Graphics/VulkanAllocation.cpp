@@ -1,18 +1,71 @@
 #include "Graphics/VulkanAllocation.h"
 #include "System/System.h"
+#include "Graphics/GraphicsVK.h"
+
 #include <algorithm>
+#include <bitset>
 
-int VK_FindMemoryTypeIndex( const unsigned int memoryTypeBits, const bool needHostVisible )
+///VULKAN MEMORY POOL///
+
+VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size * 1000 ), HostVisible( HostVisible )
 {
-	return -1;
+	VERIFY( VK_SUCCESS == FindMemoryTypeIndex( MemoryTypeBits, HostVisible, MemoryTypeIndex ) );
 }
 
-VulkanMemoryPool::VulkanMemoryPool( const GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size ), HostVisible( HostVisible )
+VkResult VulkanMemoryPool::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const bool NeedHostVisible, unsigned int& SelectedMemoryTypeIndex )
 {
-	MemoryTypeIndex = VK_FindMemoryTypeIndex( MemoryTypeBits, HostVisible ); //???
+	ASSERT( MemoryTypeBits != 0 );
+
+	const VkPhysicalDeviceMemoryProperties& physicalMemoryProperties = Context.GPUInfo->MemoryProperties;
+
+	const VkMemoryPropertyFlags required = NeedHostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT : 0;
+
+	const VkMemoryPropertyFlags preferred = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | required;
+
+	//preferred must be a superset of required.
+    ASSERT( ( required & ~preferred ) == 0 );
+
+    SelectedMemoryTypeIndex = UINT32_MAX;
+    unsigned int minCost = UINT32_MAX;
+
+    //Search for the memory type that satisfies ALL the required flags, and the MOST preferred flags
+    for( unsigned int memTypeIndex = 0, memTypeBit = 1; memTypeIndex < physicalMemoryProperties.memoryTypeCount; memTypeIndex++, memTypeBit <<= 1 )
+    {
+    	if( ( memTypeBit & MemoryTypeBits ) != 0 )
+    	{
+    		const VkMemoryPropertyFlags currentFlags = physicalMemoryProperties.memoryTypes[memTypeIndex].propertyFlags;
+
+    		//If this memory type has all the required flags
+    		if( ( required & ~currentFlags ) == 0 )
+    		{
+    			//Determine how many preferred flags it doesn't have
+    			std::bitset<sizeof(VkMemoryPropertyFlags)> missingFlags(preferred & ~currentFlags);
+    			unsigned int currentCost = missingFlags.count();
+
+    			//Min search for memory type with fewest missing preferred flags
+    			if( currentCost < minCost )
+    			{
+    				SelectedMemoryTypeIndex = memTypeIndex;
+
+    				if( currentCost == 0 )
+    				{
+    					//Can't get better than this
+    					return VK_SUCCESS;
+    				}
+
+    				minCost = currentCost;
+    			}
+    		}
+    	}
+    }
+
+    //Didn't find an exact match, SelectedMemoryTypeIndex is now the closest
+
+    //Check that any match was actually found
+	return ( (SelectedMemoryTypeIndex != UINT32_MAX) ? VK_SUCCESS : VK_ERROR_FEATURE_NOT_PRESENT );
 }
 
-bool VulkanMemoryPool::Init()
+bool VulkanMemoryPool::Init( void )
 {
 	if( MemoryTypeIndex == UINT64_MAX )
 	{
@@ -46,7 +99,7 @@ bool VulkanMemoryPool::Init()
 	return true;
 }
 
-void VulkanMemoryPool::Shutdown()
+void VulkanMemoryPool::CleanUp( void )
 {
 	if( HostVisible )
 	{
@@ -56,37 +109,55 @@ void VulkanMemoryPool::Shutdown()
 	vkFreeMemory( Context.LogicalDevice, DeviceMemory, NULL );
 }
 
-bool VulkanMemoryPool::Allocate( const unsigned int Size, const unsigned int Align, vkAllocation& Allocation )
+//TODO: bufferImageGranularity???
+bool VulkanMemoryPool::Allocate( const unsigned int RequiredSize, const unsigned int Align, vkAllocation& Allocation )
 {
 	for( auto it = Blocks.begin(); it != Blocks.end(); it++ )
 	{
 		vkBlock& freeBlock = (*it);
 
-		int alignRemainder = ( freeBlock.Offset % Align );
-		int alignDiff = Align - alignRemainder;
-		int adjustedSize = freeBlock.Size;
-		int adjustedOffset = freeBlock.Offset;
-		
-		if( alignDiff != Align )
+		if( !( freeBlock.Free ) ){ continue; }
+
+		int alignDiff = Align - ( freeBlock.Offset % Align );
+
+		if( alignDiff == Align )
 		{
-			adjustedSize -= alignDiff;
-			adjustedOffset += alignDiff;
+			alignDiff = 0;
 		}
 
-		if( !( freeBlock.Free ) && ( adjustedSize < Size ) ){ continue; }
+		int adjustedSize = freeBlock.Size - alignDiff;
+		int adjustedOffset = freeBlock.Offset + alignDiff;
 
-		//Move the unallocated block offset onto alignment boundary
-		freeBlock.Size = adjustedSize;
-		freeBlock.Offset = adjustedOffset;
+		if( adjustedSize < RequiredSize ){ continue; }
 
-		//Allocate the first Size bytes of the unallocated block to the new block
-		vkBlock allocatedBlock = { Size, freeBlock.Offset, NextBlockID++, false };
+		if( alignDiff > 0  )
+		{
+			//Add a block representing the unsused space between the last allocation and the new ALIGNED allocation
+			vkBlock padding = {};
+
+			padding.Size = alignDiff;
+			padding.Offset = freeBlock.Offset;
+			padding.ID = -1;
+			padding.Free = true;
+
+			Blocks.insert( it, padding );
+
+			//Move the unallocated block offset onto alignment boundary
+			freeBlock.Size = adjustedSize;
+			freeBlock.Offset = adjustedOffset;
+		}
+
+		//Allocate the first RequiredSize bytes of the unallocated block to the new block
+		vkBlock allocatedBlock = { RequiredSize, freeBlock.Offset, NextBlockID++, false };
 
 		Blocks.insert( it, allocatedBlock );
 
+		//Track allocated space
+		Allocated += allocatedBlock.Size;
+
 		//Move the start of the unallocated space to the end of the new block
 		freeBlock.Size -= allocatedBlock.Size;
-		freeBlock.Offset += Size;
+		freeBlock.Offset += allocatedBlock.Size;
 		freeBlock.Free = true;
 
 		//Fill the allocation struct
@@ -102,9 +173,11 @@ bool VulkanMemoryPool::Allocate( const unsigned int Size, const unsigned int Ali
 
 	return false;
 }
-
+ 
 void VulkanMemoryPool::Free( vkAllocation& Allocation )
 {
+	if( ( Allocation.PoolID != PoolID ) || ( Allocation.BlockID == -1 ) ){ return; }
+
 	unsigned int BlockID = Allocation.BlockID;
 
 	auto result = std::find_if( Blocks.begin(), Blocks.end(), [BlockID]( vkBlock& block ) -> bool
@@ -112,19 +185,34 @@ void VulkanMemoryPool::Free( vkAllocation& Allocation )
 		return block.ID == BlockID;
 	});
 
-	result->ID = 0;
+	result->ID = -1;
 	result->Free = true; //How/when is this merged with it's free neighbours (if any)?
+
+	//Track allocated space
+	Allocated -= result->Size;
 
 	Allocation.Data = nullptr;
 	Allocation.DeviceMemory = VK_NULL_HANDLE;
 	Allocation.Offset = 0;
 	Allocation.Size = 0;
-	Allocation.BlockID = 0;
-	Allocation.PoolID = 0;
+	Allocation.BlockID = -1;
+	Allocation.PoolID = -1;
 }
 
-VulkanAllocator::VulkanAllocator( const GraphicsVK& Context ) : Context( Context ), Garbage{Context.bufferCount}
+///VULKAN ALLOCATOR///
+
+VulkanAllocator::VulkanAllocator( GraphicsVK& Context ) : Context( Context ), Garbage{ Context.bufferCount }
 {
+}
+
+void VulkanAllocator::Init( void )
+{
+	//NOTHING JUST NOW
+}
+
+void VulkanAllocator::CleanUp( void )
+{
+	//NOTHING JUST NOW
 }
 
 vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible )
@@ -202,4 +290,23 @@ bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned
 	}
 
 	return false;
+}
+
+void VulkanAllocator::Free( vkAllocation& Allocation )
+{
+	if( ( Allocation.PoolID == -1 ) ){ return; }
+
+	unsigned int PoolID = Allocation.PoolID;
+
+	auto result = std::find_if( Pools.begin(), Pools.end(), [PoolID]( VulkanMemoryPool* Pool ) -> bool
+	{
+		return Pool->PoolID == PoolID;
+	});
+
+	(*result)->Free( Allocation );
+}
+
+void VulkanAllocator::EmptyGarbage( void )
+{
+	//NOTHING JUST NOW
 }

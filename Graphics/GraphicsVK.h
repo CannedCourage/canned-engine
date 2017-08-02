@@ -11,6 +11,8 @@
 
 #include "Logging/Log.h"
 
+#include "Graphics/VulkanAllocation.h"
+
 struct GPU
 {
 	VkPhysicalDevice Device;
@@ -74,6 +76,8 @@ protected:
 
 	std::vector<VkFramebuffer> FrameBuffers{ bufferCount };
 
+	VulkanAllocator MemoryAllocator{ *this };
+
 	void ReadSettings( void );
 	void WriteSettings( void );
 
@@ -103,7 +107,6 @@ public:
 	VkDevice LogicalDevice;
 
 	GraphicsVK( System& s );
-	~GraphicsVK( void );
 
 	void Init( void );
 	void CleanUp( void );

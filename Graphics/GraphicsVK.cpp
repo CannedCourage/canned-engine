@@ -9,10 +9,6 @@ GraphicsVK::GraphicsVK( System &s ) : system( s )
 {
 }
 
-GraphicsVK::~GraphicsVK( void )
-{
-}
-
 void GraphicsVK::Init( void )
 {
 	TRACE( "GraphicsVK Init" );
@@ -33,7 +29,7 @@ void GraphicsVK::Init( void )
 
 	CreateCommandBuffer();
 
-	//vulkanAllocator.Init();
+	MemoryAllocator.Init();
 
 	//stagingManager.Init();
 
@@ -396,8 +392,8 @@ VkExtent2D GraphicsVK::ChooseSurfaceExtent( void )
 
 	if( GPUInfo->SurfaceCapabilities.currentExtent.width == -1 )
 	{
-		extent.width = 800;
-		extent.height = 600;
+		extent.width = system.GlobalSettings["display"]["xResolution"];
+		extent.height = system.GlobalSettings["display"]["yResolution"];
 	}
 	else
 	{
