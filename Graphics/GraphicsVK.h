@@ -32,6 +32,8 @@ class GraphicsVK
 private:
 
 	const bool enableDebugLayers = true; //Get from settings file later
+
+	std::vector<char> ReadFile( const std::string& Filename );
 protected:
 
 	Log log{ "GraphicsVK" };
@@ -70,6 +72,7 @@ protected:
 
 	VkFormat DepthFormat;
 	VkImage DepthBuffer;
+	vkAllocation DepthBufferMemory;
 	VkImageView DepthBufferView;
 
 	VkRenderPass RenderPass;
@@ -77,6 +80,9 @@ protected:
 	std::vector<VkFramebuffer> FrameBuffers{ bufferCount };
 
 	VulkanAllocator MemoryAllocator{ *this };
+
+	VkShaderModule vertShaderModule;
+	VkShaderModule fragShaderModule;
 
 	void ReadSettings( void );
 	void WriteSettings( void );
@@ -93,6 +99,7 @@ protected:
 	void CreateSwapChain( void );
 	void CreateRenderTargets( void );
 	void CreateRenderPass( void );
+	void CreatePipeline( void );
 	void CreateFrameBuffers( void );
 
 	VkSurfaceFormatKHR ChooseSurfaceFormat( void );

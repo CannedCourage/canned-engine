@@ -2,6 +2,7 @@
 #include "System/System.h"
 
 #include <unordered_set>
+#include <fstream>
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
@@ -39,7 +40,7 @@ void GraphicsVK::Init( void )
 
 	CreateRenderPass();
 
-	//CreatePipeline();
+	CreatePipeline();
 
 	CreateFrameBuffers();
 }
@@ -87,6 +88,7 @@ void GraphicsVK::CreateInstance( void )
 
 	if( enableDebugLayers )
 	{
+		//See this link: https://vulkan-tutorial.com/Drawing_a_triangle/Setup/Validation_layers
 		//CreateDebugReportCallback();???
 	}
 }
@@ -470,7 +472,7 @@ void GraphicsVK::CreateSwapChain( void )
 		imageViewCreateInfo.image = swapChainImages[ii];
 		imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		imageViewCreateInfo.format = SwapChainFormat;
-		imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_R;
+		imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_R; //VK_COMPONENT_SWIZZLE_IDENTITY?
 		imageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_G;
 		imageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_B;
 		imageViewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_A;
@@ -531,14 +533,31 @@ void GraphicsVK::CreateRenderTargets( void )
 	depthImageCreateInfo.arrayLayers = 1;
 	depthImageCreateInfo.format = DepthFormat;
 	depthImageCreateInfo.tiling = tiling;
-	depthImageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+	depthImageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED; //VK_IMAGE_LAYOUT_PREINITIALIZED; ???
 	depthImageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 	
-	//???
+	//Multisample???
 	depthImageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	depthImageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	//Don't know if this is right, but it matches the swap chain setup
+	if( GraphicsFamilyIndex != PresentFamilyIndex )
+	{
+		depthImageCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
+	}
+	else
+	{
+		depthImageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	}
 
 	VERIFY( VK_SUCCESS == vkCreateImage( LogicalDevice, &depthImageCreateInfo, NULL, &DepthBuffer ) );
+
+	//Back the depth image with memory
+	VkMemoryRequirements memoryRequirements;
+	vkGetImageMemoryRequirements( LogicalDevice, DepthBuffer, &memoryRequirements );
+
+	DepthBufferMemory = MemoryAllocator.Allocate( memoryRequirements.size, memoryRequirements.alignment, memoryRequirements.memoryTypeBits, false );
+
+	VERIFY( VK_SUCCESS == vkBindImageMemory( LogicalDevice, DepthBuffer, DepthBufferMemory.DeviceMemory, DepthBufferMemory.Offset ) );
 
 	VkImageViewCreateInfo depthViewCreateInfo = {};
 
@@ -613,6 +632,66 @@ void GraphicsVK::CreateRenderPass( void )
 	renderPassCreateInfo.dependencyCount = 0;
 
 	VERIFY( VK_SUCCESS == vkCreateRenderPass( LogicalDevice, &renderPassCreateInfo, NULL, &RenderPass ) );
+}
+
+std::vector<char> GraphicsVK::ReadFile( const std::string& Filename )
+{
+	std::ifstream file( Filename, std::ios::ate | std::ios::binary );
+
+	if( !file.is_open() )
+	{
+	    throw std::runtime_error("failed to open file!");
+	}
+
+	size_t fileSize = (size_t)file.tellg();
+
+	std::vector<char> buffer( fileSize );
+
+	file.seekg(0);
+
+	file.read( buffer.data(), fileSize );
+
+	file.close();
+
+	return buffer;
+}
+
+void GraphicsVK::CreatePipeline( void )
+{
+	auto vertShader = ReadFile( "shadervert.spv" );
+	auto fragShader = ReadFile( "shaderfrag.spv" );
+
+	TRACE( std::to_string( vertShader.size() ) );
+	TRACE( std::to_string( fragShader.size() ) );
+
+	VkShaderModuleCreateInfo shaderCreateInfo = {};
+	shaderCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+
+	shaderCreateInfo.codeSize = vertShader.size();
+	shaderCreateInfo.pCode = reinterpret_cast<const uint32_t*>(vertShader.data());
+
+	VERIFY( VK_SUCCESS == vkCreateShaderModule( LogicalDevice, &shdaderCreateInfo, nullptr, &vertShaderModule ) );
+
+	shaderCreateInfo.codeSize = fragShader.size();
+	shaderCreateInfo.pCode = reinterpret_cast<const uint32_t*>(fragShader.data());
+
+	VERIFY( VK_SUCCESS == vkCreateShaderModule( LogicalDevice, &shdaderCreateInfo, nullptr, &fragShaderModule ) );
+
+	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
+
+	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo fragShaderStageInfo = {};
+
+	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 }
 
 void GraphicsVK::CreateFrameBuffers( void )

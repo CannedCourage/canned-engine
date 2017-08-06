@@ -77,8 +77,8 @@ protected:
 	unsigned int GarbageIndex = 0;
 
 	//How big should each pool be when created?
-	unsigned int DeviceLocalMemoryMB = 10;
-	unsigned int HostVisibleMemoryMB = 10;
+	unsigned int DeviceLocalMemoryMB = 128;
+	unsigned int HostVisibleMemoryMB = 64;
 
 	std::vector<VulkanMemoryPool*> Pools;
 	std::vector<std::vector<vkAllocation>> Garbage;
