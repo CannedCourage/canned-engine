@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef _VULKANALLOCATION_H_
 #define _VULKANALLOCATION_H_
 
@@ -81,7 +83,7 @@ protected:
 	unsigned int HostVisibleMemoryMB = 64;
 
 	std::vector<VulkanMemoryPool*> Pools;
-	std::vector<std::vector<vkAllocation>> Garbage;
+	//std::vector<std::vector<vkAllocation>> Garbage;
 
 	bool AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible, vkAllocation& Allocation );
 public:

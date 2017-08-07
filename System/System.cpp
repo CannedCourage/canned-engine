@@ -28,6 +28,8 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 	sound.Init();
 	sceneManager.Init();
 
+	newGraphics.Init();
+
 	return result;
 }
 
@@ -89,7 +91,8 @@ int System::GameLoop( void )
 	input.PostUpdate();
 	sound.Update();
 
-	sceneManager.Render();
+	//sceneManager.Render();
+	newGraphics.DrawFrame();
 
 	return 0;
 }
@@ -97,6 +100,7 @@ int System::GameLoop( void )
 //If the System is shutting down, that means end of program, time to do cleanup
 void System::Shutdown( void )
 {
+	newGraphics.CleanUp();
 	sceneManager.Shutdown();
 	assets.CleanUp();
 	sound.CleanUp();

@@ -1,7 +1,7 @@
+#pragma once
+
 #ifndef _GRAPHICSVK_H_
 #define _GRAPHICSVK_H_
-
-#define VK_USE_PLATFORM_WIN32_KHR
 
 #include <vector>
 #include <list>
@@ -56,12 +56,12 @@ protected:
 	VkQueue GraphicsQueue;
 	VkQueue PresentQueue;
 
-	std::vector<VkSemaphore> AcquireSemaphores{ bufferCount };
-	std::vector<VkSemaphore> RenderCompleteSemaphores{ bufferCount };
+	std::vector<VkSemaphore> AcquireSemaphores;
+	std::vector<VkSemaphore> RenderCompleteSemaphores;
 
 	VkCommandPool CommandPool;
-	std::vector<VkCommandBuffer> CommandBuffer{ bufferCount };
-	std::vector<VkFence> CommandBufferFences{ bufferCount };
+	std::vector<VkCommandBuffer> CommandBuffer;
+	std::vector<VkFence> CommandBufferFences;
 
 	VkSwapchainKHR SwapChain;
 	VkFormat SwapChainFormat;
@@ -77,12 +77,14 @@ protected:
 
 	VkRenderPass RenderPass;
 
-	std::vector<VkFramebuffer> FrameBuffers{ bufferCount };
+	std::vector<VkFramebuffer> FrameBuffers;
 
 	VulkanAllocator MemoryAllocator{ *this };
 
 	VkShaderModule vertShaderModule;
 	VkShaderModule fragShaderModule;
+
+	VkPipeline GraphicsPipeline;
 
 	void ReadSettings( void );
 	void WriteSettings( void );
@@ -101,6 +103,7 @@ protected:
 	void CreateRenderPass( void );
 	void CreatePipeline( void );
 	void CreateFrameBuffers( void );
+	void RecordCommands( void );
 
 	VkSurfaceFormatKHR ChooseSurfaceFormat( void );
 	VkPresentModeKHR ChoosePresentMode( void );
@@ -117,6 +120,8 @@ public:
 
 	void Init( void );
 	void CleanUp( void );
+
+	void DrawFrame( void );
 };
 
 #endif //_GRAPHICSVK_H_

@@ -23,8 +23,6 @@
 
 using json = nlohmann::json;
 
-//static_assert(sizeof(float) == 4, "float size check");
-
 #define ASSERT _ASSERTE
  
 #ifdef _DEBUG
@@ -32,6 +30,8 @@ using json = nlohmann::json;
 #else
 #define VERIFY(expression) (expression)
 #endif
+
+#include "Graphics/GraphicsVK.h"
 
 class System
 {
@@ -46,7 +46,6 @@ public:
 
 	//Engine
 	json GlobalSettings;
-	//Settings settings;
 	SceneManager sceneManager{ *this };
 	WindowMS window{ *this };
 	Graphics graphics{ *this };
@@ -55,6 +54,8 @@ public:
 	
 	AssetManager assets{ *this };
 	//EntityManager entityManager;?
+
+	GraphicsVK newGraphics{ *this };
 
 	System( void );
 	~System( void );

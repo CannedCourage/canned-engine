@@ -201,8 +201,13 @@ void VulkanMemoryPool::Free( vkAllocation& Allocation )
 
 ///VULKAN ALLOCATOR///
 
-VulkanAllocator::VulkanAllocator( GraphicsVK& Context ) : Context( Context ), Garbage{ Context.bufferCount }
+VulkanAllocator::VulkanAllocator( GraphicsVK& Context ) : Context( Context )
 {
+	// for( int ii = 0; ii < Context.bufferCount; ii++ )
+	// {
+	// 	std::vector<vkAllocation> temp;
+	// 	Garbage.push_back( temp );
+	// }
 }
 
 void VulkanAllocator::Init( void )
