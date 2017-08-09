@@ -7,7 +7,7 @@
 
 ///VULKAN MEMORY POOL///
 
-VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size * 1000 ), HostVisible( HostVisible )
+VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size * 1000 * 1000 ), HostVisible( HostVisible )
 {
 	VERIFY( VK_SUCCESS == FindMemoryTypeIndex( MemoryTypeBits, HostVisible, MemoryTypeIndex ) );
 }
@@ -81,7 +81,7 @@ bool VulkanMemoryPool::Init( void )
 	//Need access to logical device
 	VERIFY( VK_SUCCESS == vkAllocateMemory( Context.LogicalDevice, &memoryAllocateInfo, NULL, &DeviceMemory ) );
 
-	if( DeviceMemory = VK_NULL_HANDLE )
+	if( DeviceMemory == VK_NULL_HANDLE )
 	{
 		return false;
 	}
@@ -101,6 +101,8 @@ bool VulkanMemoryPool::Init( void )
 
 void VulkanMemoryPool::CleanUp( void )
 {
+	Blocks.clear();
+
 	if( HostVisible )
 	{
 		vkUnmapMemory( Context.LogicalDevice, DeviceMemory );
@@ -186,7 +188,7 @@ void VulkanMemoryPool::Free( vkAllocation& Allocation )
 	});
 
 	result->ID = -1;
-	result->Free = true; //How/when is this merged with it's free neighbours (if any)?
+	result->Free = true; //TODO: How/when is this merged with it's free neighbours (if any)?
 
 	//Track allocated space
 	Allocated -= result->Size;
@@ -217,11 +219,16 @@ void VulkanAllocator::Init( void )
 
 void VulkanAllocator::CleanUp( void )
 {
-	//NOTHING JUST NOW
+	for( VulkanMemoryPool* pool : Pools )
+	{
+		pool->CleanUp();
+	}
 }
 
 vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible )
 {
+	TRACE( "Allocating Memory" );
+
 	vkAllocation allocation;
 
 	if( AllocateFromPools( Size, Align, MemoryTypeBits, HostVisible, allocation ) )
@@ -243,9 +250,14 @@ vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned 
 	}
 
 	//Allocate from new pool
-	pool->Allocate( Size, Align, allocation );
-
-	return allocation;
+	if( pool->Allocate( Size, Align, allocation ) )
+	{
+		return allocation;
+	}
+	else
+	{
+		throw std::runtime_error( "Could not allocate memory." );
+	}
 }
 
 bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible, vkAllocation& Allocation )

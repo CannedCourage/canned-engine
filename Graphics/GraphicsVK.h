@@ -60,7 +60,7 @@ protected:
 	std::vector<VkSemaphore> RenderCompleteSemaphores;
 
 	VkCommandPool CommandPool;
-	std::vector<VkCommandBuffer> CommandBuffer;
+	std::vector<VkCommandBuffer> CommandBuffers;
 	std::vector<VkFence> CommandBufferFences;
 
 	VkSwapchainKHR SwapChain;
@@ -84,6 +84,7 @@ protected:
 	VkShaderModule vertShaderModule;
 	VkShaderModule fragShaderModule;
 
+	VkPipelineLayout PipelineLayout;
 	VkPipeline GraphicsPipeline;
 
 	void ReadSettings( void );
