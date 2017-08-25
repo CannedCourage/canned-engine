@@ -3,66 +3,12 @@
 #include "Graphics/GraphicsVK.h"
 
 #include <algorithm>
-#include <bitset>
 
 ///VULKAN MEMORY POOL///
 
-VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible ) : Context( Context ), PoolID( ID ), PoolSize( Size * 1000 * 1000 ), HostVisible( HostVisible )
+VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties ) : Context( Context ), PoolID( ID ), PoolSize( Size * 1000 * 1000 )
 {
-	VERIFY( VK_SUCCESS == FindMemoryTypeIndex( MemoryTypeBits, HostVisible, MemoryTypeIndex ) );
-}
-
-VkResult VulkanMemoryPool::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const bool NeedHostVisible, unsigned int& SelectedMemoryTypeIndex )
-{
-	ASSERT( MemoryTypeBits != 0 );
-
-	const VkPhysicalDeviceMemoryProperties& physicalMemoryProperties = Context.GPUInfo->MemoryProperties;
-
-	const VkMemoryPropertyFlags required = NeedHostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT : 0;
-
-	const VkMemoryPropertyFlags preferred = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | required;
-
-	//preferred must be a superset of required.
-    ASSERT( ( required & ~preferred ) == 0 );
-
-    SelectedMemoryTypeIndex = UINT32_MAX;
-    unsigned int minCost = UINT32_MAX;
-
-    //Search for the memory type that satisfies ALL the required flags, and the MOST preferred flags
-    for( unsigned int memTypeIndex = 0, memTypeBit = 1; memTypeIndex < physicalMemoryProperties.memoryTypeCount; memTypeIndex++, memTypeBit <<= 1 )
-    {
-    	if( ( memTypeBit & MemoryTypeBits ) != 0 )
-    	{
-    		const VkMemoryPropertyFlags currentFlags = physicalMemoryProperties.memoryTypes[memTypeIndex].propertyFlags;
-
-    		//If this memory type has all the required flags
-    		if( ( required & ~currentFlags ) == 0 )
-    		{
-    			//Determine how many preferred flags it doesn't have
-    			std::bitset<sizeof(VkMemoryPropertyFlags)> missingFlags(preferred & ~currentFlags);
-    			unsigned int currentCost = missingFlags.count();
-
-    			//Min search for memory type with fewest missing preferred flags
-    			if( currentCost < minCost )
-    			{
-    				SelectedMemoryTypeIndex = memTypeIndex;
-
-    				if( currentCost == 0 )
-    				{
-    					//Can't get better than this
-    					return VK_SUCCESS;
-    				}
-
-    				minCost = currentCost;
-    			}
-    		}
-    	}
-    }
-
-    //Didn't find an exact match, SelectedMemoryTypeIndex is now the closest
-
-    //Check that any match was actually found
-	return ( (SelectedMemoryTypeIndex != UINT32_MAX) ? VK_SUCCESS : VK_ERROR_FEATURE_NOT_PRESENT );
+	VERIFY( VK_SUCCESS == Context.FindMemoryTypeIndex( MemoryTypeBits, RequiredProperties, PreferredProperties, MemoryTypeIndex, MemoryProperties ) );
 }
 
 bool VulkanMemoryPool::Init( void )
@@ -86,7 +32,7 @@ bool VulkanMemoryPool::Init( void )
 		return false;
 	}
 
-	if( HostVisible )
+	if( MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT )
 	{
 		VERIFY( VK_SUCCESS == vkMapMemory( Context.LogicalDevice, DeviceMemory, 0, PoolSize, 0, (void**)&Data ) );
 	}
@@ -103,7 +49,7 @@ void VulkanMemoryPool::CleanUp( void )
 {
 	Blocks.clear();
 
-	if( HostVisible )
+	if( MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT )
 	{
 		vkUnmapMemory( Context.LogicalDevice, DeviceMemory );
 	}
@@ -225,20 +171,18 @@ void VulkanAllocator::CleanUp( void )
 	}
 }
 
-vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible )
+vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties )
 {
-	TRACE( "Allocating Memory" );
-
 	vkAllocation allocation;
 
-	if( AllocateFromPools( Size, Align, MemoryTypeBits, HostVisible, allocation ) )
+	if( AllocateFromPools( Size, Align, MemoryTypeBits, RequiredProperties, PreferredProperties, allocation ) )
 	{
 		return allocation;
 	}
 
-	VkDeviceSize poolSize = HostVisible ? HostVisibleMemoryMB : DeviceLocalMemoryMB;
+	VkDeviceSize poolSize = ( RequiredProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) ? HostVisibleMemoryMB : DeviceLocalMemoryMB;
 
-	VulkanMemoryPool* pool = new VulkanMemoryPool( Context, NextPoolID++, MemoryTypeBits, poolSize, HostVisible );
+	VulkanMemoryPool* pool = new VulkanMemoryPool( Context, NextPoolID++, MemoryTypeBits, poolSize, RequiredProperties, PreferredProperties );
 
 	if( pool->Init() )
 	{
@@ -260,27 +204,23 @@ vkAllocation VulkanAllocator::Allocate( const unsigned int Size, const unsigned 
 	}
 }
 
-bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible, vkAllocation& Allocation )
+bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties, vkAllocation& Allocation )
 {
 	const VkPhysicalDeviceMemoryProperties& physicalMemoryProperties = Context.GPUInfo->MemoryProperties;
-
-	const VkMemoryPropertyFlags required = HostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT : 0;
-
-	const VkMemoryPropertyFlags preferred = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
 	for( VulkanMemoryPool* pool : Pools )
 	{
 		const unsigned int memoryTypeIndex = pool->MemoryTypeIndex;
 
-		if( HostVisible && ( pool->HostVisible == false ) ){ continue; }
+		// if( HostVisible && ( pool->HostVisible == false ) ){ continue; }
 
 		if( ( ( MemoryTypeBits >> memoryTypeIndex ) & 1 ) == 0 ){ continue; }
 
-		const VkMemoryPropertyFlags properties = physicalMemoryProperties.memoryTypes[memoryTypeIndex].propertyFlags;
+		//const VkMemoryPropertyFlags properties = physicalMemoryProperties.memoryTypes[memoryTypeIndex].propertyFlags;
 
-		if( ( properties & required ) != required ){ continue; }
+		if( ( pool->MemoryProperties & RequiredProperties ) != RequiredProperties ){ continue; }
 
-		if( ( properties & preferred ) != preferred ){ continue; }
+		if( ( pool->MemoryProperties & PreferredProperties ) != PreferredProperties ){ continue; }
 
 		if( pool->Allocate( Size, Align, Allocation ) )
 		{
@@ -292,13 +232,13 @@ bool VulkanAllocator::AllocateFromPools( const unsigned int Size, const unsigned
 	{
 		const unsigned int memoryTypeIndex = pool->MemoryTypeIndex;
 
-		if( HostVisible && ( pool->HostVisible == false ) ){ continue; }
+		// if( HostVisible && ( pool->HostVisible == false ) ){ continue; }
 
 		if( ( ( MemoryTypeBits >> memoryTypeIndex ) & 1 ) == 0 ){ continue; }
 
-		const VkMemoryPropertyFlags properties = physicalMemoryProperties.memoryTypes[memoryTypeIndex].propertyFlags;
+		// const VkMemoryPropertyFlags properties = physicalMemoryProperties.memoryTypes[memoryTypeIndex].propertyFlags;
 
-		if( ( properties & required ) != required ){ continue; }
+		if( ( pool->MemoryProperties & RequiredProperties ) != RequiredProperties ){ continue; }
 
 		if( pool->Allocate( Size, Align, Allocation ) )
 		{

@@ -41,7 +41,7 @@ protected:
 	int NextBlockID = 0;
 	unsigned int MemoryTypeIndex = UINT32_MAX;
 
-	bool HostVisible = true;
+	VkMemoryPropertyFlags MemoryProperties = 0;
 
 	struct vkBlock
 	{
@@ -53,18 +53,16 @@ protected:
 	};
 
 	std::list<vkBlock> Blocks;
-
-	VkResult VulkanMemoryPool::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const bool NeedHostVisible, unsigned int& SelectedMemoryTypeIndex );
 public:
 
-	VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const bool HostVisible );
+	VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, const unsigned int MemoryTypeBits, const VkDeviceSize Size, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties );
 	~VulkanMemoryPool( void );
 	
 	bool Init( void );
 	void CleanUp( void );
 
 	// Return true/false for success.  If true Allocation reference is filled.
-	bool Allocate( const unsigned int Size, const unsigned int Align, vkAllocation& Allocation );
+	bool Allocate( const unsigned int RequiredSize, const unsigned int Align, vkAllocation& Allocation );
 	void Free( vkAllocation & Allocation );
 };
 
@@ -85,7 +83,7 @@ protected:
 	std::vector<VulkanMemoryPool*> Pools;
 	//std::vector<std::vector<vkAllocation>> Garbage;
 
-	bool AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible, vkAllocation& Allocation );
+	bool AllocateFromPools( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties, vkAllocation& Allocation );
 public:
 
 	VulkanAllocator( GraphicsVK& Context );
@@ -93,7 +91,7 @@ public:
 	void Init( void );
 	void CleanUp( void );
 
-	vkAllocation Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const bool HostVisible );
+	vkAllocation Allocate( const unsigned int Size, const unsigned int Align, const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags RequiredProperties, const VkMemoryPropertyFlags PreferredProperties );
 	void Free( vkAllocation& Allocation );
 
 	void EmptyGarbage( void );
