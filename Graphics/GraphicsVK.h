@@ -10,6 +10,7 @@
 #pragma comment(lib, "vulkan-1.lib")
 
 #include "Logging/Log.h"
+#include "Maths/Vector.h"
 
 #include "Graphics/VulkanAllocation.h"
 
@@ -25,20 +26,57 @@ struct GPU
 	VkPhysicalDeviceProperties DeviceProperties;
 };
 
+struct Vertex
+{
+	//Vector2D Position;
+	//Vector3D Colour;
+
+	float Position[2];
+	float Colour[3];
+
+	static VkVertexInputBindingDescription GetBindingDescription( void )
+	{
+		VkVertexInputBindingDescription bindingDescription = {};
+
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	static std::array<VkVertexInputAttributeDescription, 2> GetAttributeDescriptions( void )
+	{
+		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions = {};
+
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof( Vertex, Position );
+
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof( Vertex, Colour );
+
+		return attributeDescriptions;
+	}
+};
+
+std::vector<char> ReadFile( const std::string& Filename );
+
 class System;
 
 class GraphicsVK
 {
 private:
-
-	const bool enableDebugLayers = true; //Get from settings file later
-
-	std::vector<char> ReadFile( const std::string& Filename );
 protected:
 
 	Log log{ "GraphicsVK" };
 
 	System& system;
+
+	const bool enableDebugLayers = true; //Get from settings file later
 
 	std::vector<const char *> InstanceExtensions;
 	std::vector<const char *> DeviceExtensions;
@@ -69,6 +107,8 @@ protected:
 	VkExtent2D SwapChainExtent;
 
 	std::vector<VkImageView> SwapChainImageViews;
+
+	unsigned int CurrentFrame = 0;
 
 	VkFormat DepthFormat;
 	VkImage DepthBuffer;
@@ -106,13 +146,23 @@ protected:
 	void CreateFrameBuffers( void );
 	void RecordCommands( void );
 
+	void InitSwapChain( void );
+	void CleanUpSwapChain( void );
+	void RecreateSwapChain( void );
+
+	VkBuffer VertexBuffer, IndexBuffer;
+	vkAllocation VertexBufferMemory, IndexBufferMemory;
+
+	void CreateVertexBuffer( void );
+	void CreateIndexBuffer( void );
+
 	VkSurfaceFormatKHR ChooseSurfaceFormat( void );
 	VkPresentModeKHR ChoosePresentMode( void );
 	VkExtent2D ChooseSurfaceExtent( void );
 	VkFormat ChooseSupportedFormat( const std::vector<VkFormat>& formats, VkImageTiling tiling, VkFormatFeatureFlags features );
 public:
 
-	const unsigned int bufferCount = 2;
+	const unsigned int BufferCount = 2;
 	GPU* GPUInfo = nullptr;
 
 	VkDevice LogicalDevice;
@@ -123,6 +173,10 @@ public:
 	void CleanUp( void );
 
 	void DrawFrame( void );
+
+	VkResult FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties );
+	void GraphicsVK::CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkMemoryPropertyFlags Properties, VkBuffer& Buffer, vkAllocation& Allocation );
+	void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
 };
 
 #endif //_GRAPHICSVK_H_

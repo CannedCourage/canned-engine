@@ -10,14 +10,22 @@
 #include <unordered_set>
 #include <fstream>
 #include <limits>
+#include <bitset>
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
+std::vector<Vertex> vertices =
+{
+	{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+};
+
 GraphicsVK::GraphicsVK( System &s ) : system( s )
 {
-	AcquireSemaphores.resize( bufferCount );
-	RenderCompleteSemaphores.resize( bufferCount );
-	FrameBuffers.resize( bufferCount );
+	AcquireSemaphores.resize( BufferCount );
+	RenderCompleteSemaphores.resize( BufferCount );
+	FrameBuffers.resize( BufferCount );
 
 	InstanceExtensions.push_back( VK_KHR_SURFACE_EXTENSION_NAME );
 	InstanceExtensions.push_back( VK_KHR_WIN32_SURFACE_EXTENSION_NAME );
@@ -52,11 +60,20 @@ void GraphicsVK::Init( void )
 
 	CreateCommandPool();
 
-	CreateCommandBuffer();
-
 	MemoryAllocator.Init();
 
 	//stagingManager.Init();
+
+	InitSwapChain();
+
+	CreateVertexBuffer();
+
+	RecordCommands();
+}
+
+void GraphicsVK::InitSwapChain( void )
+{
+	CreateCommandBuffer();
 
 	CreateSwapChain();
 
@@ -67,20 +84,16 @@ void GraphicsVK::Init( void )
 	CreatePipeline();
 
 	CreateFrameBuffers();
-
-	RecordCommands();
 }
 
-void GraphicsVK::CleanUp( void )
+void GraphicsVK::CleanUpSwapChain( void )
 {
-	vkDeviceWaitIdle( LogicalDevice );
-
-	MemoryAllocator.CleanUp();
-
 	for( VkFramebuffer& frame : FrameBuffers )
 	{
 		vkDestroyFramebuffer( LogicalDevice, frame, nullptr );
 	}
+
+	vkFreeCommandBuffers( LogicalDevice, CommandPool, CommandBuffers.size(), CommandBuffers.data() );
 
 	vkDestroyPipeline( LogicalDevice, GraphicsPipeline, nullptr );
 	vkDestroyPipelineLayout( LogicalDevice, PipelineLayout, nullptr );
@@ -91,6 +104,7 @@ void GraphicsVK::CleanUp( void )
 	vkDestroyRenderPass( LogicalDevice, RenderPass, nullptr );
 
 	vkDestroyImageView( LogicalDevice, DepthBufferView, nullptr );
+	MemoryAllocator.Free( DepthBufferMemory );
 	vkDestroyImage( LogicalDevice, DepthBuffer, nullptr );
 
 	for( VkImageView& view : SwapChainImageViews )
@@ -99,6 +113,24 @@ void GraphicsVK::CleanUp( void )
 	}
 
 	vkDestroySwapchainKHR( LogicalDevice, SwapChain, nullptr );
+}
+
+void GraphicsVK::RecreateSwapChain( void )
+{
+	vkDeviceWaitIdle( LogicalDevice );
+
+	CleanUpSwapChain();
+
+	InitSwapChain();
+}
+
+void GraphicsVK::CleanUp( void )
+{
+	vkDeviceWaitIdle( LogicalDevice );
+
+	CleanUpSwapChain();
+
+	MemoryAllocator.CleanUp();
 
 	for( VkFence& fence : CommandBufferFences )
 	{
@@ -381,7 +413,7 @@ void GraphicsVK::CreateSemaphores( void )
 
 	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-	for( int ii = 0; ii < bufferCount; ii++ )
+	for( int ii = 0; ii < BufferCount; ii++ )
 	{
 		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, &semaphoreCreateInfo, NULL, &AcquireSemaphores[ii] ) );
 		VERIFY( VK_SUCCESS == vkCreateSemaphore( LogicalDevice, &semaphoreCreateInfo, NULL, &RenderCompleteSemaphores[ii] ) );
@@ -407,10 +439,10 @@ void GraphicsVK::CreateCommandBuffer( void )
 
 	commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	commandBufferAllocateInfo.commandPool = CommandPool;
-	commandBufferAllocateInfo.commandBufferCount = bufferCount;
+	commandBufferAllocateInfo.commandBufferCount = BufferCount;
 
-	CommandBuffers.resize( bufferCount );
-	CommandBufferFences.resize( bufferCount );
+	CommandBuffers.resize( BufferCount );
+	CommandBufferFences.resize( BufferCount );
 
 	VERIFY( VK_SUCCESS == vkAllocateCommandBuffers( LogicalDevice, &commandBufferAllocateInfo, CommandBuffers.data() ) );
 
@@ -491,7 +523,7 @@ void GraphicsVK::CreateSwapChain( void )
 	swapChainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	swapChainCreateInfo.surface = Surface;
 
-	swapChainCreateInfo.minImageCount = bufferCount;
+	swapChainCreateInfo.minImageCount = BufferCount;
 
 	swapChainCreateInfo.imageFormat = surfaceFormat.format;
 	swapChainCreateInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -630,7 +662,7 @@ void GraphicsVK::CreateRenderTargets( void )
 	VkMemoryRequirements memoryRequirements;
 	vkGetImageMemoryRequirements( LogicalDevice, DepthBuffer, &memoryRequirements );
 
-	DepthBufferMemory = MemoryAllocator.Allocate( memoryRequirements.size, memoryRequirements.alignment, memoryRequirements.memoryTypeBits, false );
+	DepthBufferMemory = MemoryAllocator.Allocate( memoryRequirements.size, memoryRequirements.alignment, memoryRequirements.memoryTypeBits, 0, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT );
 
 	VERIFY( VK_SUCCESS == vkBindImageMemory( LogicalDevice, DepthBuffer, DepthBufferMemory.DeviceMemory, DepthBufferMemory.Offset ) );
 
@@ -720,7 +752,7 @@ void GraphicsVK::CreateRenderPass( void )
 	VERIFY( VK_SUCCESS == vkCreateRenderPass( LogicalDevice, &renderPassCreateInfo, NULL, &RenderPass ) );
 }
 
-std::vector<char> GraphicsVK::ReadFile( const std::string& Filename )
+std::vector<char> ReadFile( const std::string& Filename )
 {
 	std::ifstream file( Filename, std::ios::ate | std::ios::binary );
 
@@ -744,11 +776,8 @@ std::vector<char> GraphicsVK::ReadFile( const std::string& Filename )
 
 void GraphicsVK::CreatePipeline( void )
 {
-	auto vertShader = ReadFile( "shadervert.spv" );
-	auto fragShader = ReadFile( "shaderfrag.spv" );
-
-	TRACE( std::to_string( vertShader.size() ) );
-	TRACE( std::to_string( fragShader.size() ) );
+	auto vertShader = ReadFile( "vert.spv" );
+	auto fragShader = ReadFile( "frag.spv" );
 
 	VkShaderModuleCreateInfo shaderCreateInfo = {};
 	shaderCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -779,13 +808,16 @@ void GraphicsVK::CreatePipeline( void )
 
 	std::vector<VkPipelineShaderStageCreateInfo> shaderStages = { vertShaderStageInfo, fragShaderStageInfo };
 
-	//THIS IS BLANK BECAUSE WE'VE HARDCODED THE VERTEX DATA IN SHADER
+	auto bindingDescription = Vertex::GetBindingDescription();
+	auto attributeDescriptions = Vertex::GetAttributeDescriptions();
+
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
+
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
-	vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>( attributeDescriptions.size() );
+	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -964,7 +996,13 @@ void GraphicsVK::RecordCommands( void )
 
 		vkCmdBindPipeline( CommandBuffers[ii], VK_PIPELINE_BIND_POINT_GRAPHICS, GraphicsPipeline );
 
-		vkCmdDraw( CommandBuffers[ii], 3, 1, 0, 0 );
+		VkBuffer vertexBuffers[] = { VertexBuffer };
+		VkDeviceSize offsets[] = { 0 };
+		vkCmdBindVertexBuffers( CommandBuffers[ii], 0, 1, vertexBuffers, offsets );
+
+		vkCmdDraw( CommandBuffers[ii], static_cast<uint32_t>( vertices.size() ), 1, 0, 0 );
+
+		//vkCmdDraw( CommandBuffers[ii], 3, 1, 0, 0 );
 
 		vkCmdEndRenderPass( CommandBuffers[ii] );
 
@@ -976,14 +1014,32 @@ void GraphicsVK::DrawFrame( void )
 {
 	uint32_t imageIndex;
 
+	/*
+	TODO
+	Some of the functions below return VkResult, need to test the return values
+
+	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+	    recreateSwapChain();
+	    return;
+	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+	    throw std::runtime_error("failed to acquire swap chain image!");
+	}
+
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+	    recreateSwapChain();
+	} else if (result != VK_SUCCESS) {
+	    throw std::runtime_error("failed to present swap chain image!");
+	}
+	*/
+
 	vkQueueWaitIdle( PresentQueue );
 
-	vkAcquireNextImageKHR( LogicalDevice, SwapChain, std::numeric_limits<uint64_t>::max(), AcquireSemaphores[0], VK_NULL_HANDLE, &imageIndex );
+	vkAcquireNextImageKHR( LogicalDevice, SwapChain, std::numeric_limits<uint64_t>::max(), AcquireSemaphores[CurrentFrame], VK_NULL_HANDLE, &imageIndex );
 
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	VkSemaphore waitSemaphores[] = {AcquireSemaphores[0]};
+	VkSemaphore waitSemaphores[] = {AcquireSemaphores[CurrentFrame]};
 	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = waitSemaphores;
@@ -992,7 +1048,7 @@ void GraphicsVK::DrawFrame( void )
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &CommandBuffers[imageIndex];
 
-	VkSemaphore signalSemaphores[] = {RenderCompleteSemaphores[0]};
+	VkSemaphore signalSemaphores[] = {RenderCompleteSemaphores[CurrentFrame]};
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -1012,7 +1068,150 @@ void GraphicsVK::DrawFrame( void )
 
 	vkQueuePresentKHR( PresentQueue, &presentInfo );
 
-	//Use this after the main loop exits: vkDeviceWaitIdle(device); otherwise crash on exit
+	CurrentFrame = ( CurrentFrame + 1 ) % BufferCount;
+}
+
+void GraphicsVK::CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkMemoryPropertyFlags Properties, VkBuffer& Buffer, vkAllocation& Allocation )
+{
+    VkBufferCreateInfo bufferInfo = {};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.size = Size;
+    bufferInfo.usage = Usage;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    VERIFY( VK_SUCCESS == vkCreateBuffer( LogicalDevice, &bufferInfo, nullptr, &Buffer ) );
+
+    VkMemoryRequirements memRequirements;
+    vkGetBufferMemoryRequirements( LogicalDevice, Buffer, &memRequirements );
+
+    Allocation = MemoryAllocator.Allocate( memRequirements.size, memRequirements.alignment, memRequirements.memoryTypeBits, Properties, 0 );
+
+    VERIFY( VK_SUCCESS == vkBindBufferMemory( LogicalDevice, Buffer, Allocation.DeviceMemory, Allocation.Offset ) );
+}
+
+void GraphicsVK::CreateVertexBuffer( void )
+{
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+	VkBuffer stagingBuffer;
+	vkAllocation stagingBufferMemory;
+	
+	CreateBuffer( bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory );
+
+	memcpy( stagingBufferMemory.Data, vertices.data(), (size_t) bufferSize );
+
+	CreateBuffer( bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VertexBuffer, VertexBufferMemory );
+
+	CopyBuffer( stagingBuffer, VertexBuffer, bufferSize );
+
+	MemoryAllocator.Free( stagingBufferMemory );
+
+	vkDestroyBuffer( LogicalDevice, stagingBuffer, nullptr );
+}
+
+void GraphicsVK::CreateIndexBuffer( void )
+{
+}
+
+void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
+{
+	VkCommandBufferAllocateInfo allocInfo = {};
+
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandPool = CommandPool;
+	allocInfo.commandBufferCount = 1;
+
+	VkCommandBuffer CommandBuffer;
+
+	vkAllocateCommandBuffers( LogicalDevice, &allocInfo, &CommandBuffer );
+
+	VkCommandBufferBeginInfo beginInfo = {};
+
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( CommandBuffer, &beginInfo ) );
+
+	VkBufferCopy copyRegion = {};
+
+	copyRegion.srcOffset = 0; // Optional
+	copyRegion.dstOffset = 0; // Optional
+	copyRegion.size = Size;
+	
+	vkCmdCopyBuffer( CommandBuffer, Source, Destination, 1, &copyRegion );
+
+	VERIFY( VK_SUCCESS == vkEndCommandBuffer( CommandBuffer ) );
+
+	VkSubmitInfo submitInfo = {};
+
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &CommandBuffer;
+
+	VERIFY( VK_SUCCESS == vkQueueSubmit( GraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE ) );
+
+	VERIFY( VK_SUCCESS == vkQueueWaitIdle( GraphicsQueue ) );
+
+	vkFreeCommandBuffers( LogicalDevice, CommandPool, 1, &CommandBuffer );
+}
+
+VkResult GraphicsVK::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties )
+{
+	ASSERT( MemoryTypeBits != 0 );
+
+	const VkPhysicalDeviceMemoryProperties& physicalMemoryProperties = GPUInfo->MemoryProperties;
+
+	const VkMemoryPropertyFlags required = Required;
+
+	const VkMemoryPropertyFlags preferred = Preferred | Required;
+
+	//preferred must be a superset of required.
+    ASSERT( ( required & ~preferred ) == 0 );
+
+    SelectedMemoryTypeIndex = UINT32_MAX;
+    unsigned int minCost = UINT32_MAX;
+
+    //Search for the memory type that satisfies ALL the required flags, and the MOST preferred flags
+    for( unsigned int memTypeIndex = 0, memTypeBit = 1; memTypeIndex < physicalMemoryProperties.memoryTypeCount; memTypeIndex++, memTypeBit <<= 1 )
+    {
+    	if( ( memTypeBit & MemoryTypeBits ) != 0 )
+    	{
+    		const VkMemoryPropertyFlags currentFlags = physicalMemoryProperties.memoryTypes[memTypeIndex].propertyFlags;
+
+    		//If this memory type has all the required flags
+    		if( ( required & ~currentFlags ) == 0 )
+    		{
+    			//Determine how many preferred flags it doesn't have
+    			std::bitset<sizeof(VkMemoryPropertyFlags)> missingFlags(preferred & ~currentFlags);
+    			unsigned int currentCost = missingFlags.count();
+    			
+    			//Store the properties of the current memory type
+    			VkMemoryPropertyFlags availFlags = currentFlags; //preferred & currentFlags;
+
+    			//Min search for memory type with fewest missing preferred flags
+    			if( currentCost < minCost )
+    			{
+    				//Set the index AND record the supported properties
+    				SelectedMemoryTypeIndex = memTypeIndex;
+    				SupportedProperties = availFlags;
+
+    				if( currentCost == 0 )
+    				{
+    					//Can't get better than this
+    					return VK_SUCCESS;
+    				}
+
+    				minCost = currentCost;
+    			}
+    		}
+    	}
+    }
+
+    //Didn't find an exact match, SelectedMemoryTypeIndex is now the closest
+
+    //Check that any match was actually found
+	return ( (SelectedMemoryTypeIndex != UINT32_MAX) ? VK_SUCCESS : VK_ERROR_FEATURE_NOT_PRESENT );
 }
 
 void GraphicsVK::ReadSettings( void )
@@ -1043,7 +1242,7 @@ void GraphicsVK::WriteSettings( void )
 	system.GlobalSettings["display"]["displayMode"] = mode;
 	system.GlobalSettings["display"]["bufferFormat"] = backbufferFormat;
 	system.GlobalSettings["display"]["depthFormat"] = depthFormat;
-	system.GlobalSettings["display"]["bufferCount"] = bufferCount;
+	system.GlobalSettings["display"]["BufferCount"] = BufferCount;
 	system.GlobalSettings["display"]["adapter"] = adapter;
 	*/
 }
