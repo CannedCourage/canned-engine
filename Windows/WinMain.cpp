@@ -12,106 +12,43 @@ System* sys = NULL;
 //lpCmdLine( command line arguments, not including program name ), nCmdShow( specifies initial window state, i.e. minimised, maximised, this is set in shortcut properties )
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	sys = new System();
-	sys->Initialise( hInstance, lpCmdLine, nCmdShow );
-	int result = result = sys->Run();
-	sys->Shutdown();
-	sys->Quit();
-	// try
-	// {
-	// 	sys = new System();
+	int result = 0;
 
-	// 	if( !sys )
-	// 	{
-	// 		MessageBox( NULL, TEXT( "Error during construction" ), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
-	// 		return 0;
-	// 	}
-	// }
-	// catch( std::exception error )
-	// {
-	// 	MessageBox( NULL, error.what(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
-	// catch( std::string error )
-	// {
-	// 	MessageBox( NULL, error.c_str(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
+	try
+	{
+		sys = new System();
+		
+		if( !sys )
+		{
+			throw std::runtime_error( "Error during construction" );
+		}
 
-	// try
-	// {
-	// 	if( !sys->Initialise( hInstance, lpCmdLine, nCmdShow ) )
-	// 	{
-	// 		MessageBox( NULL, TEXT( "Error during initialisation" ), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
-	// 		return 0;
-	// 	}
-	// }
-	// catch( std::exception error )
-	// {
-	// 	MessageBox( NULL, error.what(), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
-	// catch( std::string error )
-	// {
-	// 	MessageBox( NULL, error.c_str(), TEXT( "Error during initialisation" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
+		if( !sys->Initialise( hInstance, lpCmdLine, nCmdShow ) )
+		{
+			throw std::runtime_error( "Error during initialisation" );
+		}
 
-	// int result = 0;
-	// try
-	// {
-	// 	//Run() implements the message loop, which is the main loop
-	// 	result = sys->Run();
-	// }
-	// catch( std::exception error )
-	// {
-	// 	MessageBox( NULL, error.what(), TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
-	// catch( std::string error )
-	// {
-	// 	MessageBox( NULL, error.c_str(), TEXT( "Error during main loop" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
+		//Run() implements the message loop, which is the main loop
+		result = sys->Run();
 
-	// try
-	// {
-	// 	sys->Shutdown();
-	// }
-	// catch( std::exception error )
-	// {
-	// 	MessageBox( NULL, error.what(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
-	// catch( std::string error )
-	// {
-	// 	MessageBox( NULL, error.c_str(), TEXT( "Error during shutdown" ), MB_ICONEXCLAMATION | MB_OK );
-	// 	if( sys != NULL )
-	// 	{
-	// 		sys->Quit();
-	// 	}
-	// }
+		sys->Shutdown();
+	}
+	catch( std::exception error )
+	{
+		MessageBox( NULL, error.what(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
+	catch( std::string error )
+	{
+		MessageBox( NULL, error.c_str(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+		if( sys != NULL )
+		{
+			sys->Quit();
+		}
+	}
 
 	if( sys != NULL )
 	{
