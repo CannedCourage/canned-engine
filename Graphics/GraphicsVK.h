@@ -13,6 +13,14 @@
 #include "Maths/Vector.h"
 
 #include "Graphics/VulkanAllocation.h"
+#include "Graphics/VulkanStaging.h"
+
+#include "System/Debug.h"
+
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
+#include <Windows.h>
 
 struct GPU
 {
@@ -65,16 +73,15 @@ struct Vertex
 
 std::vector<char> ReadFile( const std::string& Filename );
 
-class System;
-
 class GraphicsVK
 {
+	friend class VulkanStagingManager;
 private:
 protected:
 
 	Log log{ "GraphicsVK" };
 
-	System& system;
+	json Settings;
 
 	const bool enableDebugLayers = true; //Get from settings file later
 
@@ -89,10 +96,12 @@ protected:
 
 	int GraphicsFamilyIndex = 0;
 	int PresentFamilyIndex = 0;
+	int TransferFamilyIndex = 0;
 	VkPhysicalDevice PhysicalDevice;
 
 	VkQueue GraphicsQueue;
 	VkQueue PresentQueue;
+	VkQueue TransferQueue;
 
 	std::vector<VkSemaphore> AcquireSemaphores;
 	std::vector<VkSemaphore> RenderCompleteSemaphores;
@@ -118,8 +127,6 @@ protected:
 	VkRenderPass RenderPass;
 
 	std::vector<VkFramebuffer> FrameBuffers;
-
-	VulkanAllocator MemoryAllocator{ *this };
 
 	VkShaderModule vertShaderModule;
 	VkShaderModule fragShaderModule;
@@ -162,12 +169,15 @@ protected:
 	VkFormat ChooseSupportedFormat( const std::vector<VkFormat>& formats, VkImageTiling tiling, VkFormatFeatureFlags features );
 public:
 
+	HWND WindowHandle;
+	HINSTANCE WindowInstance;
+
 	const unsigned int BufferCount = 2;
 	GPU* GPUInfo = nullptr;
 
 	VkDevice LogicalDevice;
 
-	GraphicsVK( System& s );
+	GraphicsVK( void );
 
 	void Init( void );
 	void CleanUp( void );
@@ -175,8 +185,11 @@ public:
 	void DrawFrame( void );
 
 	VkResult FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties );
-	void GraphicsVK::CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkMemoryPropertyFlags Properties, VkBuffer& Buffer, vkAllocation& Allocation );
-	void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
+	VkBuffer CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkSharingMode SharingMode, VkMemoryPropertyFlags Properties, vkAllocation& Allocation );
+	void CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
+
+	VulkanAllocator MemoryAllocator{ *this };
+	VulkanStagingManager StagingManager{ *this };
 };
 
 #endif //_GRAPHICSVK_H_

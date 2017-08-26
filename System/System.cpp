@@ -19,6 +19,8 @@ System::~System( void )
 
 int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
 {
+	TRACE( "System Init" );
+	
 	Console.CreateConsole( true, false );
 
 	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
@@ -28,6 +30,8 @@ int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const 
 	sound.Init();
 	sceneManager.Init();
 
+	newGraphics.WindowInstance = window.GetInstance();
+	newGraphics.WindowHandle = window.GetHandle();
 	newGraphics.Init();
 
 	return result;

@@ -1,9 +1,13 @@
+#pragma once
+
 #ifndef _VULKANSTAGING_H_
 #define _VULKANSTAGING_H_
 
 #include <vulkan/vulkan.hpp>
 
 #include <vector>
+
+#include "Graphics/VulkanAllocation.h"
 
 struct StagingBuffer
 {
@@ -26,29 +30,43 @@ protected:
 
 	GraphicsVK& Context;
 
-	unsigned char* MappedData = nullptr;
+	//VulkanMemoryPool MemoryPool{ Context, 0,  };
 
-	VkDeviceMemory Memory = VK_NULL_HANDLE;
+	//unsigned char* MappedData = nullptr;
+
+	//VkDeviceMemory Memory = VK_NULL_HANDLE;
+
 	VkCommandPool CommandPool = VK_NULL_HANDLE;
+	VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
 
-	int MaxBufferSize = 0;
-	int CurrentBuffer = 0;
+	//int MaxBufferSize = 0;
+	//int CurrentBuffer = 0;
 
-	std::vector<StagingBuffer> Buffers;
+	//std::vector<StagingBuffer> Buffers;
 
 	// This waits until the command buffer carrying the copy commands is done.
-	void Wait( StagingBuffer & stage );
+	//void Wait( StagingBuffer & stage );
+
+	void CreateCommandPool( void );
+	void CreateCommandBuffer( void );
+
+	void BeginRecording( void );
+	void EndRecording( void );
 public:
 
 	VulkanStagingManager( GraphicsVK& Context );
 
-	void Init();
-	void Shutdown();
+	void Init( void );
+	void CleanUp( void );
 
-	unsigned char* Stage( const int size, const int alignment, VkCommandBuffer & commandBuffer, VkBuffer & buffer, int & bufferOffset );
+	VkBuffer Stage( const int Size, vkAllocation& Allocation );
+
+	void CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
 
 	// Flush will drain all data for the current staging buffer.
-	void Flush();
+	//void Flush();
+
+	void SubmitQueue( void );
 };
 
 #endif //_VULKANSTAGING_H_

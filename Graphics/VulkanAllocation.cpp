@@ -1,5 +1,4 @@
 #include "Graphics/VulkanAllocation.h"
-#include "System/System.h"
 #include "Graphics/GraphicsVK.h"
 
 #include <algorithm>
@@ -109,7 +108,7 @@ bool VulkanMemoryPool::Allocate( const unsigned int RequiredSize, const unsigned
 		freeBlock.Free = true;
 
 		//Fill the allocation struct
-		Allocation.Data = Data;
+		Allocation.Data = Data + allocatedBlock.Offset;
 		Allocation.DeviceMemory = DeviceMemory;
 		Allocation.Offset = allocatedBlock.Offset;
 		Allocation.Size = allocatedBlock.Size;

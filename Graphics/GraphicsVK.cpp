@@ -2,10 +2,11 @@
 #define NOMINMAX
 #endif
 
+#define settingsFile "w:/engine/data/settings/MainSettings.json"
+
 #define VK_USE_PLATFORM_WIN32_KHR
 
 #include "Graphics/GraphicsVK.h"
-#include "System/System.h"
 
 #include <unordered_set>
 #include <fstream>
@@ -16,12 +17,15 @@ static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data 
 
 std::vector<Vertex> vertices =
 {
-	{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 };
 
-GraphicsVK::GraphicsVK( System &s ) : system( s )
+std::vector<uint16_t> drawIndices = { 0, 1, 2, 2, 3, 0 };
+
+GraphicsVK::GraphicsVK( void )
 {
 	AcquireSemaphores.resize( BufferCount );
 	RenderCompleteSemaphores.resize( BufferCount );
@@ -46,6 +50,8 @@ void GraphicsVK::Init( void )
 {
 	TRACE( "GraphicsVK Init" );
 
+	ReadSettings();
+
 	CreateInstance();
 
 	CreateSurface();
@@ -62,11 +68,13 @@ void GraphicsVK::Init( void )
 
 	MemoryAllocator.Init();
 
-	//stagingManager.Init();
+	StagingManager.Init();
 
 	InitSwapChain();
 
 	CreateVertexBuffer();
+
+	CreateIndexBuffer();
 
 	RecordCommands();
 }
@@ -130,6 +138,10 @@ void GraphicsVK::CleanUp( void )
 
 	CleanUpSwapChain();
 
+	vkDestroyBuffer( LogicalDevice, VertexBuffer, nullptr );
+
+    vkDestroyBuffer( LogicalDevice, IndexBuffer, nullptr );
+
 	MemoryAllocator.CleanUp();
 
 	for( VkFence& fence : CommandBufferFences )
@@ -152,6 +164,8 @@ void GraphicsVK::CleanUp( void )
 	vkDestroyDevice( LogicalDevice, nullptr );
 	vkDestroySurfaceKHR( Instance, Surface, nullptr );
 	vkDestroyInstance( Instance, nullptr );
+
+	WriteSettings();
 }
 
 void GraphicsVK::CreateInstance( void )
@@ -188,8 +202,8 @@ void GraphicsVK::CreateSurface( void )
 	VkWin32SurfaceCreateInfoKHR createInfo = {};
 
 	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	createInfo.hinstance = system.window.GetInstance();
-	createInfo.hwnd = system.window.GetHandle();
+	createInfo.hinstance = WindowInstance;
+	createInfo.hwnd = WindowHandle;
 
 	VERIFY( VK_SUCCESS == vkCreateWin32SurfaceKHR( Instance, &createInfo, NULL, &Surface) );
 	ASSERT( Surface != nullptr );
@@ -277,6 +291,7 @@ void GraphicsVK::SelectPhysicalDevice( void )
 	{
 		int graphicsIdx = -1;
 		int presentIdx = -1;
+		int transferIdx = -1;
 
 		//???
 		/*
@@ -321,10 +336,25 @@ void GraphicsVK::SelectPhysicalDevice( void )
 			}
 		}
 
-		if( graphicsIdx >= 0 && presentIdx >= 0 )
+		for( int ii = 0; ii < gpu.QueueFamilyProperties.size(); ii++ )
+		{
+			const VkQueueFamilyProperties& props = gpu.QueueFamilyProperties[ii];
+
+			if( props.queueCount == 0 ){ continue; }
+
+			if( !( props.queueFlags & VK_QUEUE_GRAPHICS_BIT ) && ( props.queueFlags & VK_QUEUE_TRANSFER_BIT ) )
+			{
+				transferIdx = ii;
+
+				break;
+			}
+		}
+
+		if( graphicsIdx >= 0 && presentIdx >= 0 && transferIdx >= 0 )
 		{
 			GraphicsFamilyIndex = graphicsIdx;
 			PresentFamilyIndex = presentIdx;
+			TransferFamilyIndex = transferIdx;
 			PhysicalDevice = gpu.Device;
 			GPUInfo = &gpu;
 
@@ -341,6 +371,7 @@ void GraphicsVK::CreateLogicalDeviceAndQueues( void )
 
 	uniqueIndex.insert( GraphicsFamilyIndex );
 	uniqueIndex.insert( PresentFamilyIndex );
+	uniqueIndex.insert( TransferFamilyIndex );
 
 	std::vector<VkDeviceQueueCreateInfo> deviceQueueInfo;
 
@@ -405,6 +436,7 @@ void GraphicsVK::CreateLogicalDeviceAndQueues( void )
 
 	vkGetDeviceQueue( LogicalDevice, GraphicsFamilyIndex, 0, &GraphicsQueue );
 	vkGetDeviceQueue( LogicalDevice, PresentFamilyIndex, 0, &PresentQueue );
+	vkGetDeviceQueue( LogicalDevice, TransferFamilyIndex, 0, &TransferQueue );
 }
 
 void GraphicsVK::CreateSemaphores( void )
@@ -501,8 +533,8 @@ VkExtent2D GraphicsVK::ChooseSurfaceExtent( void )
 
 	if( GPUInfo->SurfaceCapabilities.currentExtent.width == -1 )
 	{
-		extent.width = system.GlobalSettings["display"]["xResolution"];
-		extent.height = system.GlobalSettings["display"]["yResolution"];
+		extent.width = Settings["display"]["xResolution"];
+		extent.height = Settings["display"]["yResolution"];
 	}
 	else
 	{
@@ -1000,7 +1032,11 @@ void GraphicsVK::RecordCommands( void )
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers( CommandBuffers[ii], 0, 1, vertexBuffers, offsets );
 
-		vkCmdDraw( CommandBuffers[ii], static_cast<uint32_t>( vertices.size() ), 1, 0, 0 );
+		vkCmdBindIndexBuffer( CommandBuffers[ii], IndexBuffer, 0, VK_INDEX_TYPE_UINT16 );
+
+		vkCmdDrawIndexed( CommandBuffers[ii], static_cast<uint16_t>(drawIndices.size()), 1, 0, 0, 0 );
+
+		//vkCmdDraw( CommandBuffers[ii], static_cast<uint32_t>( vertices.size() ), 1, 0, 0 );
 
 		//vkCmdDraw( CommandBuffers[ii], 3, 1, 0, 0 );
 
@@ -1014,6 +1050,7 @@ void GraphicsVK::DrawFrame( void )
 {
 	uint32_t imageIndex;
 
+	StagingManager.SubmitQueue();
 	/*
 	TODO
 	Some of the functions below return VkResult, need to test the return values
@@ -1032,7 +1069,8 @@ void GraphicsVK::DrawFrame( void )
 	}
 	*/
 
-	vkQueueWaitIdle( PresentQueue );
+	//vkQueueWaitIdle( PresentQueue );
+	VERIFY( VK_SUCCESS == vkQueueWaitIdle( PresentQueue ) );
 
 	vkAcquireNextImageKHR( LogicalDevice, SwapChain, std::numeric_limits<uint64_t>::max(), AcquireSemaphores[CurrentFrame], VK_NULL_HANDLE, &imageIndex );
 
@@ -1071,48 +1109,74 @@ void GraphicsVK::DrawFrame( void )
 	CurrentFrame = ( CurrentFrame + 1 ) % BufferCount;
 }
 
-void GraphicsVK::CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkMemoryPropertyFlags Properties, VkBuffer& Buffer, vkAllocation& Allocation )
+VkBuffer GraphicsVK::CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkSharingMode SharingMode, VkMemoryPropertyFlags Properties, vkAllocation& Allocation )
 {
+	VkBuffer buffer;
+
     VkBufferCreateInfo bufferInfo = {};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = Size;
     bufferInfo.usage = Usage;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.sharingMode = SharingMode; //VK_SHARING_MODE_EXCLUSIVE;
 
-    VERIFY( VK_SUCCESS == vkCreateBuffer( LogicalDevice, &bufferInfo, nullptr, &Buffer ) );
+    VERIFY( VK_SUCCESS == vkCreateBuffer( LogicalDevice, &bufferInfo, nullptr, &buffer ) );
 
     VkMemoryRequirements memRequirements;
-    vkGetBufferMemoryRequirements( LogicalDevice, Buffer, &memRequirements );
+    vkGetBufferMemoryRequirements( LogicalDevice, buffer, &memRequirements );
 
     Allocation = MemoryAllocator.Allocate( memRequirements.size, memRequirements.alignment, memRequirements.memoryTypeBits, Properties, 0 );
 
-    VERIFY( VK_SUCCESS == vkBindBufferMemory( LogicalDevice, Buffer, Allocation.DeviceMemory, Allocation.Offset ) );
+    VERIFY( VK_SUCCESS == vkBindBufferMemory( LogicalDevice, buffer, Allocation.DeviceMemory, Allocation.Offset ) );
+
+    return buffer;
 }
 
 void GraphicsVK::CreateVertexBuffer( void )
 {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-	VkBuffer stagingBuffer;
 	vkAllocation stagingBufferMemory;
 	
-	CreateBuffer( bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory );
+	VkBuffer stagingBuffer = StagingManager.Stage( bufferSize, stagingBufferMemory );
 
 	memcpy( stagingBufferMemory.Data, vertices.data(), (size_t) bufferSize );
 
-	CreateBuffer( bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VertexBuffer, VertexBufferMemory );
+	VertexBuffer = CreateBuffer(
+		bufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		VK_SHARING_MODE_EXCLUSIVE,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		VertexBufferMemory
+		);
 
-	CopyBuffer( stagingBuffer, VertexBuffer, bufferSize );
+	StagingManager.CopyBuffer( stagingBuffer, VertexBuffer, bufferSize );
 
-	MemoryAllocator.Free( stagingBufferMemory );
+	//MemoryAllocator.Free( stagingBufferMemory );
 
-	vkDestroyBuffer( LogicalDevice, stagingBuffer, nullptr );
+	//vkDestroyBuffer( LogicalDevice, stagingBuffer, nullptr );
 }
 
 void GraphicsVK::CreateIndexBuffer( void )
 {
-}
+	VkDeviceSize bufferSize = sizeof(drawIndices[0]) * drawIndices.size();
 
+    vkAllocation stagingBufferMemory;
+	
+	VkBuffer stagingBuffer = StagingManager.Stage( bufferSize, stagingBufferMemory );
+
+    memcpy( stagingBufferMemory.Data, drawIndices.data(), (size_t) bufferSize );
+
+    IndexBuffer = CreateBuffer(
+		bufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+		VK_SHARING_MODE_EXCLUSIVE,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		IndexBufferMemory
+		);
+
+    StagingManager.CopyBuffer( stagingBuffer, IndexBuffer, bufferSize );
+}
+/*
 void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
 {
 	VkCommandBufferAllocateInfo allocInfo = {};
@@ -1155,7 +1219,7 @@ void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize
 
 	vkFreeCommandBuffers( LogicalDevice, CommandPool, 1, &CommandBuffer );
 }
-
+//*/
 VkResult GraphicsVK::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties )
 {
 	ASSERT( MemoryTypeBits != 0 );
@@ -1216,33 +1280,14 @@ VkResult GraphicsVK::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, con
 
 void GraphicsVK::ReadSettings( void )
 {
-	/*
-	fullscreen = system.GlobalSettings["display"]["fullscreen"];
-	xResolution = system.GlobalSettings["display"]["xResolution"];
-	yResolution = system.GlobalSettings["display"]["yResolution"];
-	aspect = (ASPECT)system.GlobalSettings["display"]["aspect"];
-	refresh = system.GlobalSettings["display"]["refresh"];
-	AA = (D3DMULTISAMPLE_TYPE)system.GlobalSettings["display"]["multisample"];
-	mode = system.GlobalSettings["display"]["displayMode"];
-	backbufferFormat = (D3DFORMAT)system.GlobalSettings["display"]["bufferFormat"];
-	depthFormat = (D3DFORMAT)system.GlobalSettings["display"]["depthFormat"];
-	adapter = system.GlobalSettings["display"]["adapter"];
-	*/
+	std::ifstream mainSettingsFile{ settingsFile };
+	
+	mainSettingsFile >> Settings;
 }
 
 void GraphicsVK::WriteSettings( void )
 {
-	/*
-	system.GlobalSettings["display"]["fullscreen"] = fullscreen;
-	system.GlobalSettings["display"]["xResolution"] = xResolution;
-	system.GlobalSettings["display"]["yResolution"] = yResolution;
-	system.GlobalSettings["display"]["aspect"] = aspect;
-	system.GlobalSettings["display"]["refresh"] = refresh;
-	system.GlobalSettings["display"]["multisample"] = AA;
-	system.GlobalSettings["display"]["displayMode"] = mode;
-	system.GlobalSettings["display"]["bufferFormat"] = backbufferFormat;
-	system.GlobalSettings["display"]["depthFormat"] = depthFormat;
-	system.GlobalSettings["display"]["BufferCount"] = BufferCount;
-	system.GlobalSettings["display"]["adapter"] = adapter;
-	*/
+	std::ofstream mainSettingsFile{ settingsFile };
+
+	mainSettingsFile << std::setw(4) << Settings << std::endl;
 }

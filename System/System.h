@@ -23,13 +23,7 @@
 
 using json = nlohmann::json;
 
-#define ASSERT _ASSERTE
- 
-#ifdef _DEBUG
-#define VERIFY ASSERT
-#else
-#define VERIFY(expression) (expression)
-#endif
+#include "System/Debug.h"
 
 #include "Graphics/GraphicsVK.h"
 
@@ -55,7 +49,7 @@ public:
 	AssetManager assets{ *this };
 	//EntityManager entityManager;?
 
-	GraphicsVK newGraphics{ *this };
+	GraphicsVK newGraphics;
 
 	System( void );
 	~System( void );
