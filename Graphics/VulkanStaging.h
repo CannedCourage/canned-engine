@@ -9,15 +9,28 @@
 
 #include "Graphics/VulkanAllocation.h"
 
+const int DefaultBufferSizeMB = 64;
+const int DefaultBufferSize = DefaultBufferSizeMB * 1000000;
+
 struct StagingBuffer
 {
+	friend class VulkanStagingManager;
+
+public:
 	unsigned char* Data = nullptr;
 
 	VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
 	VkBuffer Buffer = VK_NULL_HANDLE;
+	vkAllocation Allocation;
+
+	unsigned int BufferIndex;
+
+	StagingBuffer( unsigned int Index ) : BufferIndex( Index )
+	{
+	}
+private:
+
 	VkFence Fence = VK_NULL_HANDLE;
-	VkDeviceSize Offset = 0;
-	
 	bool submitted = false;
 };
 
@@ -30,25 +43,19 @@ protected:
 
 	GraphicsVK& Context;
 
-	//VulkanMemoryPool MemoryPool{ Context, 0,  };
-
-	//unsigned char* MappedData = nullptr;
-
-	//VkDeviceMemory Memory = VK_NULL_HANDLE;
-
 	VkCommandPool CommandPool = VK_NULL_HANDLE;
-	VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
 
 	//int MaxBufferSize = 0;
-	//int CurrentBuffer = 0;
+	int CurrentBufferIndex = 0;
 
-	//std::vector<StagingBuffer> Buffers;
+	std::vector<StagingBuffer> Buffers;
 
 	// This waits until the command buffer carrying the copy commands is done.
 	//void Wait( StagingBuffer & stage );
 
 	void CreateCommandPool( void );
-	void CreateCommandBuffer( void );
+	void CreateCommandBuffer( StagingBuffer& CurrentBuffer );
+	void CreateBuffer( StagingBuffer& CurrentBuffer );
 
 	void BeginRecording( void );
 	void EndRecording( void );

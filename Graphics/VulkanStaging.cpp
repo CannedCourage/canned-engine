@@ -1,6 +1,8 @@
 #include "Graphics/VulkanStaging.h"
 #include "Graphics/GraphicsVK.h"
 
+#include <algorithm>
+
 VulkanStagingManager::VulkanStagingManager( GraphicsVK& Context ) : Context( Context ) //Buffers{ Context.BufferCount }
 {
 }
@@ -9,10 +11,16 @@ void VulkanStagingManager::Init( void )
 {
 	CreateCommandPool();
 
-	CreateCommandBuffer();
+	for( int ii = 0; ii < Context.BufferCount; ii++ )
+	{
+		StagingBuffer buffer(ii);
 
-	//Instantiate Buffer
-	//Use Buffer mem requirements to instantiate VulkanMemoryPool?
+		CreateCommandBuffer( buffer );
+
+		CreateBuffer( buffer );
+
+		Buffers.push_back( buffer );
+	}
 
 	BeginRecording();
 }
@@ -28,7 +36,7 @@ void VulkanStagingManager::CreateCommandPool( void )
 	VERIFY( VK_SUCCESS == vkCreateCommandPool( Context.LogicalDevice, &commandPoolCreateInfo, NULL, &CommandPool ) );
 }
 
-void VulkanStagingManager::CreateCommandBuffer( void )
+void VulkanStagingManager::CreateCommandBuffer( StagingBuffer& CurrentBuffer )
 {
 	VkCommandBufferAllocateInfo allocInfo = {};
 
@@ -37,7 +45,41 @@ void VulkanStagingManager::CreateCommandBuffer( void )
 	allocInfo.commandPool = CommandPool;
 	allocInfo.commandBufferCount = 1;
 
-	vkAllocateCommandBuffers( Context.LogicalDevice, &allocInfo, &CommandBuffer );
+	vkAllocateCommandBuffers( Context.LogicalDevice, &allocInfo, &CurrentBuffer.CommandBuffer );
+}
+
+void VulkanStagingManager::CreateBuffer( StagingBuffer& CurrentBuffer )
+{
+	VkBufferCreateInfo bufferInfo = {};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = DefaultBufferSize;
+	bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	VERIFY( VK_SUCCESS == vkCreateBuffer( Context.LogicalDevice, &bufferInfo, nullptr, &( CurrentBuffer.Buffer ) ) );
+
+	VkMemoryRequirements memRequirements;
+	vkGetBufferMemoryRequirements( Context.LogicalDevice, CurrentBuffer.Buffer, &memRequirements );
+
+	CurrentBuffer.Allocation = Context.MemoryAllocator.Allocate(
+		memRequirements.size,
+		memRequirements.alignment,
+		memRequirements.memoryTypeBits,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		0
+	);
+
+	VERIFY( VK_SUCCESS == vkBindBufferMemory( Context.LogicalDevice, CurrentBuffer.Buffer, CurrentBuffer.Allocation.DeviceMemory, CurrentBuffer.Allocation.Offset ) );
+}
+
+void VulkanStagingManager::CleanUp( void )
+{
+	for( StagingBuffer& buffer : Buffers )
+	{
+		vkFreeCommandBuffers( Context.LogicalDevice, CommandPool, 1, &( buffer.CommandBuffer ) );
+	}
+
+	vkDestroyCommandPool( Context.LogicalDevice, CommandPool, nullptr );
 }
 
 void VulkanStagingManager::BeginRecording( void )
@@ -47,19 +89,40 @@ void VulkanStagingManager::BeginRecording( void )
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( CommandBuffer, &beginInfo ) );
+	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( Buffers[CurrentBufferIndex].CommandBuffer, &beginInfo ) );
 }
 
 void VulkanStagingManager::EndRecording( void )
 {
-	VERIFY( VK_SUCCESS == vkEndCommandBuffer( CommandBuffer ) );
+	VERIFY( VK_SUCCESS == vkEndCommandBuffer( Buffers[CurrentBufferIndex].CommandBuffer ) );
 }
 
-void VulkanStagingManager::CleanUp( void )
+void VulkanStagingManager::SubmitQueue( void )
 {
-	vkFreeCommandBuffers( Context.LogicalDevice, CommandPool, 1, &CommandBuffer );
+	EndRecording();
 
-	vkDestroyCommandPool( Context.LogicalDevice, CommandPool, nullptr );
+	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
+
+	VkSubmitInfo submitInfo = {};
+
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &( Buffers[CurrentBufferIndex].CommandBuffer );
+
+	VERIFY( VK_SUCCESS == vkQueueSubmit( Context.TransferQueue, 1, &submitInfo, VK_NULL_HANDLE ) );
+
+	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
+
+	//Clean up temp "staging" buffer
+
+	//OR
+
+	//Do separate check for VkEvent?
+
+	CurrentBufferIndex = ( CurrentBufferIndex + 1 ) % 2;
+
+	//Reset command buffer?
+	BeginRecording();
 }
 
 VkBuffer VulkanStagingManager::Stage( const int Size, vkAllocation& Allocation )
@@ -86,31 +149,5 @@ void VulkanStagingManager::CopyBuffer( VkBuffer Source, VkBuffer Destination, Vk
 	copyRegion.dstOffset = 0; // Optional
 	copyRegion.size = Size;
 	
-	vkCmdCopyBuffer( CommandBuffer, Source, Destination, 1, &copyRegion );
-}
-
-void VulkanStagingManager::SubmitQueue( void )
-{
-	EndRecording();
-
-	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
-
-	VkSubmitInfo submitInfo = {};
-
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &CommandBuffer;
-
-	VERIFY( VK_SUCCESS == vkQueueSubmit( Context.TransferQueue, 1, &submitInfo, VK_NULL_HANDLE ) );
-
-	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
-
-	//Clean up temp "staging" buffer
-
-	//OR
-
-	//Do separate check for VkEvent?
-
-	//Reset command buffer?
-	BeginRecording();
+	vkCmdCopyBuffer( Buffers[CurrentBufferIndex].CommandBuffer, Source, Destination, 1, &copyRegion );
 }
