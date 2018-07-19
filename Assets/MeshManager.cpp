@@ -50,7 +50,7 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 
 	if( mesh->HasPositions() )
 	{
-		D3DVERTEXELEMENT9 decl = { 0, offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
+		D3DVERTEXELEMENT9 decl = { 0, (WORD)offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
 		data->vertexElements.push_back( decl );
 		offset += ( 3 * sizeof(float) );
 
@@ -62,18 +62,18 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 	//Compress Normals, Tangents and Bitangents?
 	if( mesh->HasNormals() )
 	{
-		D3DVERTEXELEMENT9 decl = { 0, offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 };
+		D3DVERTEXELEMENT9 decl = { 0, (WORD)offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 };
 		data->vertexElements.push_back( decl );
 		offset += ( 3 * sizeof(float) );
 	}
 
 	if( mesh->HasTangentsAndBitangents() )
 	{
-		D3DVERTEXELEMENT9 decl = { 0, offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 };
+		D3DVERTEXELEMENT9 decl = { 0, (WORD)offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 };
 		data->vertexElements.push_back( decl );
 		offset += ( 3 * sizeof(float) );
 
-		D3DVERTEXELEMENT9 decl1 = { 0, offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 };
+		D3DVERTEXELEMENT9 decl1 = { 0, (WORD)offset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BINORMAL, 0 };
 		data->vertexElements.push_back( decl1 );
 		offset += ( 3 * sizeof(float) );
 	}
