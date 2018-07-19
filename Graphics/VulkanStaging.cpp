@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-VulkanStagingManager::VulkanStagingManager( GraphicsVK& Context ) : Context( Context ) //Buffers{ Context.BufferCount }
+VulkanStagingManager::VulkanStagingManager( GraphicsVK& Context ) : Context( Context )
 {
 }
 
