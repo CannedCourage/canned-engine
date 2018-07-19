@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef _GRAPHICSVK_H_
 #define _GRAPHICSVK_H_
 

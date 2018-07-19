@@ -1,8 +1,6 @@
 //Input Class
 //Handle keyboard, mouse and gamepad input (maybe more)
 
-#pragma once
-
 #ifndef _INPUT_H_
 #define _INPUT_H_
 

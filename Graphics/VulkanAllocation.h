@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef _VULKANALLOCATION_H_
 #define _VULKANALLOCATION_H_
 

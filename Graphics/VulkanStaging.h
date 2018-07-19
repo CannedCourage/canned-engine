@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef _VULKANSTAGING_H_
 #define _VULKANSTAGING_H_
 
