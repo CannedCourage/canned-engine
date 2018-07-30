@@ -7,8 +7,6 @@
 #include "Logging/Log.h"
 #include "Window/ConsoleAdapter.h"
 #include "Scene/SceneManager.h"
-#include "Window/WindowMS.h"
-#include "Graphics/Graphics.h"
 #include "Engine/Time.h"
 #include "Input/Input.h"
 #include "Assets/AssetManager.h"
@@ -25,6 +23,8 @@ using json = nlohmann::json;
 
 #include "Graphics/GraphicsVK.h"
 
+class GLFWwindow;
+
 class System
 {
 private:
@@ -38,34 +38,32 @@ public:
 
 	//Engine
 	json GlobalSettings;
-	SceneManager sceneManager{ *this };
-	WindowMS window{ *this };
-	Graphics graphics{ *this };
-	Input input{ *this };
+	GLFWwindow* window{};
+	GraphicsVK newGraphics{};
 	Sound sound{};
+	Input input{};
 	
 	AssetManager assets{ *this };
-	//EntityManager entityManager;?
 
-	GraphicsVK newGraphics;
+	SceneManager sceneManager{ *this };
 
 	System( void );
 	~System( void );
 
-	int Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow );
+	int Initialise( void );
 	int Run( void );
 	int GameLoop( void );
 	void Shutdown( void );
 	void Quit( void );
 
-	LRESULT CALLBACK MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+	//LRESULT CALLBACK MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 };
 
 inline void System::Quit( void )
 {
-	PostMessage( window.GetHandle(), WM_CLOSE, 0, 0 );
+	//PostMessage( window.GetHandle(), WM_CLOSE, 0, 0 );
 }
 
-LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+//LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
 #endif //_SYSTEM_H_

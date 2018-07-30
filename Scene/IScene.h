@@ -35,7 +35,6 @@ protected:
 	SceneManager& manager;
 
 	//Services //Eventually remove these, move to standard set of classes for rendering (i.e. models and such)
-	Graphics& graphics;
 	Input& input;
 	Sound& sound;
 	//Physics& physics;

@@ -1,3 +1,4 @@
+/*
 #include "Sprite/AnimatedSpriteProcessor.h"
 #include "Entity/Entity.h"
 
@@ -25,3 +26,4 @@ const AnimatedSpriteComponent& AnimatedSpriteGetter::operator()( const Entity& e
 {
 	return sprites.GetAnimatedSpriteComponent( entity.ID );
 }
+*/

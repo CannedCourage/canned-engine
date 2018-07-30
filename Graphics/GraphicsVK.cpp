@@ -4,14 +4,20 @@
 
 #define settingsFile "w:/engine/data/settings/MainSettings.json"
 
+//TODO: Add a switch for the WIN32 definition
 #define VK_USE_PLATFORM_WIN32_KHR
 
 #include "Graphics/GraphicsVK.h"
+
+#include "GLFW/glfw3.h"
 
 #include <unordered_set>
 #include <fstream>
 #include <limits>
 #include <bitset>
+#include <iterator>
+#include <algorithm>
+#include <set>
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
@@ -32,18 +38,119 @@ GraphicsVK::GraphicsVK( void )
 	FrameBuffers.resize( BufferCount );
 
 	InstanceExtensions.push_back( VK_KHR_SURFACE_EXTENSION_NAME );
-	InstanceExtensions.push_back( VK_KHR_WIN32_SURFACE_EXTENSION_NAME );
 	
-	DeviceExtensions.push_back( "VK_KHR_swapchain" );
+	DeviceExtensions.push_back( VK_KHR_SWAPCHAIN_EXTENSION_NAME );
 
 	if( enableDebugLayers )
 	{
 		InstanceExtensions.push_back( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
 
 		ValidationLayers.push_back( "VK_LAYER_LUNARG_standard_validation" );
+
+		if( !CheckValidationLayerSupport() )
+		{
+			throw std::runtime_error( "Validation layers requested, but not available!" );
+		}
 	}
 
-	//ValidateValidationLayers();???
+#ifdef WIN32
+	// Steam's overlay is incompatible with LunarG's
+	SetEnvironmentVariable("DISABLE_VK_LAYER_VALVE_steam_overlay_1", "1");
+#endif
+}
+
+bool GraphicsVK::CheckValidationLayerSupport( void )
+{
+	uint32_t layerCount;
+	vkEnumerateInstanceLayerProperties( &layerCount, nullptr );
+
+	std::vector<VkLayerProperties> availableLayers( layerCount );
+	vkEnumerateInstanceLayerProperties( &layerCount, availableLayers.data() );
+
+	//std::sort( ValidationLayers.begin(), ValidationLayers.end() );
+	//std::sort( availableLayers.begin(), availableLayers.end() );
+
+	//bool includes = std::includes( availableLayers.begin(), availableLayers.end(), ValidationLayers.begin(), ValidationLayers.end() );
+
+	//TODO: Review this
+	for( const char* layer : ValidationLayers )
+	{
+		bool layerFound = false;
+
+		for( const auto& layerProperties : availableLayers )
+		{
+			if( strcmp( layer, layerProperties.layerName ) == 0)
+			{
+				layerFound = true;
+				break;
+			}
+		}
+
+		if( !layerFound )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+VKAPI_ATTR VkBool32 VKAPI_CALL GraphicsVK::DebugCallback( VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj, size_t location, int32_t code, const char* layerPrefix, const char* msg, void* userData )
+{
+    //std::cerr << "Validation layer: " << msg << std::endl;
+    TRACE( msg );
+
+    return VK_FALSE;
+}
+
+void GraphicsVK::CreateDebugReportCallback( void )
+{
+	VkDebugReportCallbackCreateInfoEXT createInfo = {};
+
+	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+	createInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT;
+	createInfo.pfnCallback = DebugCallback;
+
+	if( CreateDebugReportCallbackEXT( Instance, &createInfo, nullptr, &Callback ) != VK_SUCCESS )
+	{
+		throw std::runtime_error( "failed to set up debug callback!" );
+	}
+}
+
+VkResult CreateDebugReportCallbackEXT( VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback )
+{
+	auto func = (PFN_vkCreateDebugReportCallbackEXT) vkGetInstanceProcAddr( instance, "vkCreateDebugReportCallbackEXT" );
+
+	if( func != nullptr )
+	{
+		return func( instance, pCreateInfo, pAllocator, pCallback );
+	}
+	else
+	{
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void DestroyDebugReportCallbackEXT( VkInstance instance, VkDebugReportCallbackEXT callback, const VkAllocationCallbacks* pAllocator )
+{
+	auto func = (PFN_vkDestroyDebugReportCallbackEXT) vkGetInstanceProcAddr( instance, "vkDestroyDebugReportCallbackEXT" );
+
+	if( func != nullptr )
+	{
+		func( instance, callback, pAllocator );
+	}
+}
+
+void GraphicsVK::GetInstanceExtensions( void )
+{
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions;
+
+	glfwExtensions = glfwGetRequiredInstanceExtensions( &glfwExtensionCount );
+	ASSERT( glfwExtensionCount > 0 );
+	ASSERT( glfwExtensions != NULL );
+
+	InstanceExtensions.insert( InstanceExtensions.end(), glfwExtensions, glfwExtensions + glfwExtensionCount );
 }
 
 void GraphicsVK::Init( void )
@@ -51,6 +158,8 @@ void GraphicsVK::Init( void )
 	TRACE( "GraphicsVK Init" );
 
 	ReadSettings();
+
+	GetInstanceExtensions();
 
 	CreateInstance();
 
@@ -163,6 +272,12 @@ void GraphicsVK::CleanUp( void )
 
 	vkDestroyDevice( LogicalDevice, nullptr );
 	vkDestroySurfaceKHR( Instance, Surface, nullptr );
+
+	if( enableDebugLayers )
+	{
+		DestroyDebugReportCallbackEXT( Instance, Callback, nullptr );
+	}
+
 	vkDestroyInstance( Instance, nullptr );
 
 	WriteSettings();
@@ -192,20 +307,13 @@ void GraphicsVK::CreateInstance( void )
 
 	if( enableDebugLayers )
 	{
-		//See this link: https://vulkan-tutorial.com/Drawing_a_triangle/Setup/Validation_layers
-		//CreateDebugReportCallback();???
+		CreateDebugReportCallback();
 	}
 }
 
 void GraphicsVK::CreateSurface( void )
 {
-	VkWin32SurfaceCreateInfoKHR createInfo = {};
-
-	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	createInfo.hinstance = WindowInstance;
-	createInfo.hwnd = WindowHandle;
-
-	VERIFY( VK_SUCCESS == vkCreateWin32SurfaceKHR( Instance, &createInfo, NULL, &Surface) );
+	VERIFY( VK_SUCCESS == glfwCreateWindowSurface( Instance, Window, nullptr, &Surface ) );
 	ASSERT( Surface != nullptr );
 }
 
@@ -285,6 +393,19 @@ void GraphicsVK::EnumeratePhysicalDevices( void )
 	}
 }
 
+bool GraphicsVK::CheckPhysicalDeviceExtensionSupport( GPU Device )
+{
+	//TODO: Review this
+	std::set<std::string> requiredExtensions( DeviceExtensions.begin(), DeviceExtensions.end() );
+
+	for( const auto& extension : Device.ExtensionProperties )
+	{
+		requiredExtensions.erase( extension.extensionName );
+	}
+
+	return requiredExtensions.empty();
+}
+
 void GraphicsVK::SelectPhysicalDevice( void )
 {
 	for( GPU& gpu : GPUs )
@@ -293,12 +414,10 @@ void GraphicsVK::SelectPhysicalDevice( void )
 		int presentIdx = -1;
 		int transferIdx = -1;
 
-		//???
-		/*
-		if ( !CheckPhysicalDeviceExtensionSupport( gpu, DeviceExtensions ) ) {
+		if( !CheckPhysicalDeviceExtensionSupport( gpu ) )
+		{
 			continue;
 		}
-		*/
 
 		if( gpu.SurfaceFormats.size() == 0 ){ continue; }
 

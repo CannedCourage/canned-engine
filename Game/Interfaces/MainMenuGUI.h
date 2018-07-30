@@ -9,7 +9,7 @@ private:
 protected:
 public:
  
-    MainMenu( System& sys, const char* _name, GUI* _parent = NULL );
+    MainMenu( const char* _name, GUI* _parent = NULL );
     ~MainMenu( void );
 
     void Init( void );

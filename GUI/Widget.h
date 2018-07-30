@@ -1,8 +1,6 @@
 #ifndef _WIDGET_H_
 #define _WIDGET_H_
 
-class System;
-class Graphics;
 class GUI;
  
 class Widget
@@ -16,11 +14,9 @@ protected:
     bool active, focused;
 
     GUI& parent;
-
-    Graphics& graphics;
 public:
 
-    Widget( System& sys, const char* _name, GUI& _parent );
+    Widget( const char* _name, GUI& _parent );
     virtual ~Widget( void );
 
     virtual bool hasFocus( void );

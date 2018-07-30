@@ -22,6 +22,7 @@ SplashScreen::~SplashScreen( void )
 
 void SplashScreen::Load( void )
 {
+	/*
 	if( !loaded )
 	{
 		Vertex2dTx vertices[] =
@@ -47,6 +48,7 @@ void SplashScreen::Load( void )
 	//Always set state and report
 	loaded = true;
 	//system.sceneManager.ReportFinishedLoading( this );
+	*/
 }
 
 void SplashScreen::Unload( void )
@@ -89,6 +91,7 @@ void SplashScreen::OnLost( void )
 
 void SplashScreen::OnRecover( void )
 {
+	/*
 	if( lost )
 	{
 		graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 4*sizeof(Vertex2dTx), 0, Vertex2dTx::format, D3DPOOL_MANAGED, &vertexBuffer, NULL ), "SplashScreen: Vertex Buffer creation FAILED" );
@@ -111,6 +114,7 @@ void SplashScreen::OnRecover( void )
 		graphics.ErrorCheck( vertexBuffer->Unlock(), "SplashScreen: Error unlocking vertex buffer again" );
 	}
 	lost = false;
+	//*/
 }
 
 void SplashScreen::MainLoop( void )
@@ -127,6 +131,7 @@ void SplashScreen::MainLoop( void )
 
 void SplashScreen::RenderMain( void )
 {
+	/*
 	// clear the window to a deep blue
 	graphics.Device()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
 
@@ -151,6 +156,7 @@ void SplashScreen::RenderMain( void )
 	graphics.Device()->EndScene();    // ends the 3D scene
 
     graphics.Device()->Present( NULL, NULL, NULL, NULL );   // displays the created frame on the screen
+    */
 }
 
 void SplashScreen::Start( void )

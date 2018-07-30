@@ -23,7 +23,7 @@ void SceneManager::Init( void )
 	//With new SceneList implementation, this can be read from a settings file as a string
 	ChangeScene( "TestScene" );
 
-	PushGUI( new MainMenu( system, "Main Menu" ) );
+	PushGUI( new MainMenu( "Main Menu" ) );
 }
 
 void SceneManager::Prepare( void )
@@ -97,9 +97,10 @@ bool SceneManager::FixedUpdate( void )
 
 void SceneManager::Render()
 {
+	/*
 	if( !render ){ return; }
 
-	if( system.graphics.IsDeviceLost() )	//Device is lost
+	if( system.graphics.IsDeviceLost() ) //Device is lost
 	{
 		TRACE( "Device Lost" );
 
@@ -131,6 +132,7 @@ void SceneManager::Render()
 			}
 		}
 	}
+	//*/
 }
 
 void SceneManager::OnLost( void )

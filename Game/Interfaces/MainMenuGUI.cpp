@@ -1,13 +1,14 @@
 #include "Game/Interfaces/MainMenuGUI.h"
-#include "Game/Interfaces/MenuOption.h"
+//#include "Game/Interfaces/MenuOption.h"
+#include "GUI/Widget.h"
 
-MainMenu::MainMenu( System& sys, const char* _name, GUI* _parent ) : GUI( sys, _name, _parent )
+MainMenu::MainMenu( const char* _name, GUI* _parent ) : GUI( _name, _parent )
 {
-    MenuOption* one = new MenuOption( sys, "Option 1", *this );
-    one->SetDisplayText( "This is Option 1" );
-    one->SetPosition( 100, 100 );
+    //MenuOption* one = new MenuOption( sys, "Option 1", *this );
+    //one->SetDisplayText( "This is Option 1" );
+    //one->SetPosition( 100, 100 );
 
-	controls.push_back( one );
+	//controls.push_back( one );
 }
 
 MainMenu::~MainMenu( void )

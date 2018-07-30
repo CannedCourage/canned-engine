@@ -3,7 +3,6 @@
 
 IScene::IScene( System& Sys, const std::string& N ) : 	system( Sys ),
 														manager( Sys.sceneManager ),
-														graphics( Sys.graphics ),
 														input( Sys.input ),
 														sound( Sys.sound ),
 														assets( Sys.assets ),

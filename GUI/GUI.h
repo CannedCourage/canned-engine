@@ -3,7 +3,6 @@
 
 #include <vector>
 
-class System;
 class Widget;
 
 class GUI
@@ -18,7 +17,7 @@ protected:
     GUI* parent;
 public:
 
-    GUI( System& sys, const char* _name, GUI* _parent = NULL );
+    GUI( const char* _name, GUI* _parent = NULL );
     virtual ~GUI( void );
 
     virtual void Init( void ) = 0;

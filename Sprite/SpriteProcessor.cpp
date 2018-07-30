@@ -1,5 +1,5 @@
+/*
 #include "Sprite/SpriteProcessor.h"
-#include "Graphics/Graphics.h"
 #include "Transform/TransformProcessor.h"
 #include <assert.h>
 #include <string>
@@ -229,3 +229,4 @@ void SpriteProcessor::Update( const EngineDuration& deltaT )
 void SpriteProcessor::End( void )
 {
 }
+//*/

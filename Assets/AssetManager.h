@@ -17,14 +17,11 @@
 #include "Mesh/Mesh.h"
 
 class System;
-class Graphics;
 
 class AssetManager
 {
 private:
 protected:
-
-	Graphics& graphics;
 
 	Log log;
 

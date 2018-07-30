@@ -1,11 +1,10 @@
 #include "Input/Input.h"
-#include "System/System.h"
 #include "Input/PhysicalDevice.h"
 #include "Input/LogicalDevice.h"
 
 #include <algorithm>
 
-Input::Input( System& s ) : log( "Input" ), system( s )
+Input::Input( void ) : log( "Input" )
 {
 }
 
@@ -50,7 +49,7 @@ void Input::Register( PhysicalDevice* physDevice )
 {
 	physicalDevices.push_back( physDevice );
 
-	physDevice->RegisterForRawInput( system.window.GetHandle() );
+	//physDevice->RegisterForRawInput( system.window.GetHandle() );
 }
 
 void Input::Register( LogicalDevice* intent )

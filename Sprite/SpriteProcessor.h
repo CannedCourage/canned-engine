@@ -1,3 +1,4 @@
+/*
 #ifndef _SPRITEPROCESSOR_H_
 #define _SPRITEPROCESSOR_H_
 
@@ -100,3 +101,4 @@ public:
 };
 
 #endif //_SPRITEPROCESSOR_H_
+//*/

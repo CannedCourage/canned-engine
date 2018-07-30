@@ -3,11 +3,16 @@
 #include "System/System.h"
 #include "StandardResources/resource.h"
 
+#include "GLFW/glfw3.h"
+#pragma comment(lib, "glfw3dll.lib")
+
 System::System( void )
 {
 	std::ifstream mainSettingsFile{ settingsFile };
 	
 	mainSettingsFile >> GlobalSettings;
+
+	//Console.CreateConsole( true, false );
 }
 
 System::~System( void )
@@ -17,41 +22,49 @@ System::~System( void )
 	mainSettingsFile << std::setw(4) << GlobalSettings << std::endl;
 }
 
-int System::Initialise( const HINSTANCE hInstance, const LPSTR lpCmdLine, const int nCmdShow )
+int System::Initialise( void )
 {
 	TRACE( "System Init" );
-	
-	Console.CreateConsole( true, false );
 
-	int result = window.Create( hInstance, lpCmdLine, nCmdShow );
+	glfwInit();
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); //No OpenGL
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); //Prevent resizing
+
+    window = glfwCreateWindow(800, 600, "GLFW window", nullptr, nullptr);
+
+    if( !window )
+    {
+        glfwTerminate();
+        return 0;
+    }
+
+    glfwMakeContextCurrent(window);
 	
-	input.Init();
-	graphics.Init();
+	newGraphics.Window = window;
+	newGraphics.Init();
 	sound.Init();
+	input.Init();
+	//assets?
 	sceneManager.Init();
 
-	newGraphics.WindowInstance = window.GetInstance();
-	newGraphics.WindowHandle = window.GetHandle();
-	newGraphics.Init();
-
-	return result;
+	return 1;
 }
 
 int System::Run( void )
 {
+	//Main loop
 	//The Message Loop
-	MSG msg; //A system message
-
-	while( TRUE )
+	//MSG msg; //A system message
+	
+	while( !glfwWindowShouldClose(window) )
     {
     	time.FrameBegin();
 
-        while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	//Get message from queue
-        {
-            TranslateMessage( &msg ); //Additional Processing
-            DispatchMessage( &msg ); //Send the Message
-        }
+    	/* Poll for and process events */
+        glfwPollEvents();
 
+    	/*
 		if( ::GetAsyncKeyState( VK_ESCAPE ) )
 		{
 			Quit();
@@ -65,13 +78,16 @@ int System::Run( void )
 			time.FrameEnd();
 			break;
 		}
+		//*/
 
 		GameLoop();
 
 		time.FrameEnd();
     }
+    //*/
 
-	return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
+    return 0;
+	//return msg.wParam;	//If message is quit, this will be 0. If there was an error, this will be -1
 	//~The Message Loop
 }
 
@@ -104,14 +120,18 @@ int System::GameLoop( void )
 //If the System is shutting down, that means end of program, time to do cleanup
 void System::Shutdown( void )
 {
-	newGraphics.CleanUp();
 	sceneManager.Shutdown();
 	assets.CleanUp();
 	sound.CleanUp();
-	graphics.CleanUp();
-	window.Destroy();
+	newGraphics.CleanUp();
+
+	//Clean Up
+    glfwDestroyWindow(window);
+
+    glfwTerminate();
 }
 
+/*
 LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch( msg )
@@ -134,15 +154,10 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 		case WM_COMMAND:	//Sent by command items, e.g. menu options
 			switch( LOWORD( wParam ) )
 			{
-				/*
-				case ID_FILE_EXIT:
-					Quit();
-					break;
-				//*/
-					default:
-					{
-						return DefWindowProc( hWnd, msg, wParam, lParam );
-					}
+				default:
+				{
+					return DefWindowProc( hWnd, msg, wParam, lParam );
+				}
 			}
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 			break;
@@ -172,3 +187,4 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 	}
 	return 0;
 }
+//*/

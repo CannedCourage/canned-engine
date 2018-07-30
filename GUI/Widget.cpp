@@ -2,7 +2,7 @@
 
 #include "System/System.h"
 
-Widget::Widget( System& sys, const char* _name, GUI& _parent ) : graphics( sys.graphics ), name( _name ), parent( _parent )
+Widget::Widget( const char* _name, GUI& _parent ) : name( _name ), parent( _parent )
 {
 }
 

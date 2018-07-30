@@ -1,3 +1,4 @@
+/*
 #include "Sprite/AnimatedSpriteProcessor.h"
 #include "Graphics/Graphics.h"
 #include "Transform/TransformProcessor.h"
@@ -238,3 +239,4 @@ void AnimatedSpriteProcessor::Update( const EngineDuration& deltaT )
 void AnimatedSpriteProcessor::End( void )
 {
 }
+//*/

@@ -10,8 +10,6 @@
 #include <vector>
 #include <windows.h>
 
-class System;
-class Settings;
 class PhysicalDevice;
 class LogicalDevice;
 
@@ -22,8 +20,6 @@ protected:
 
 	Log log;
 
-	System& system;
-
 	std::vector<PhysicalDevice*> physicalDevices;
 	std::vector<LogicalDevice*> logicalDevices;
 
@@ -32,7 +28,7 @@ protected:
 	// Event<void ( void )> EvaluateLogicalDevices;
 public:
 
-	Input( System& s );
+	Input( void );
 	~Input( void );
 
 	void Init( void );

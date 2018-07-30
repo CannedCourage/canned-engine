@@ -1,5 +1,4 @@
 #include "Mesh/MeshProcessor.h"
-#include "Graphics/Graphics.h"
 
 MeshProcessor::MeshProcessor( Graphics& g ) : log( "MeshProcessor" ), graphics( g )
 {
@@ -29,6 +28,7 @@ void MeshProcessor::End( void )
 
 void MeshProcessor::Update( const EngineDuration& deltaT )
 {
+	/*
 	graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE);
 	graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE);
@@ -49,7 +49,8 @@ void MeshProcessor::Update( const EngineDuration& deltaT )
 
 		if( mesh.effect != NULL )
 		{
-			/*/ set dynamic shader parameters
+			/*
+			// set dynamic shader parameters
 			{
 				Math::Matrix viewProjection = graphics.GetViewMatrix() * graphics.GetProjectionMatrix();
 				graphics.ErrorCheck( mesh.effect->SetMatrix( mesh.EffectParameters.viewProjection, &viewProjection.data ) );
@@ -62,7 +63,7 @@ void MeshProcessor::Update( const EngineDuration& deltaT )
 				graphics.ErrorCheck( mesh.effect->SetTechnique( mesh.EffectParameters.mTechniques[mCurrentAnimationMethod] ) );
 			}
 			//*/
-
+			/*
 			// set geometry data
 			{
 				graphics.ErrorCheck( graphics.Device()->SetVertexDeclaration( mesh.vertexDeclaration ), "Setting vertex declaration" );
@@ -88,4 +89,5 @@ void MeshProcessor::Update( const EngineDuration& deltaT )
 	graphics.Device()->SetRenderState( D3DRS_SRGBWRITEENABLE, FALSE );
 	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, NULL, 0, 0 ), "Clearing stream source" );
 	graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
+	//*/
 }

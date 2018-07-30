@@ -1,6 +1,5 @@
 #include "Assets/AssetManager.h"
 #include <assert.h>
-#include "Graphics/Graphics.h"
 
 bool AssetManager::LoadMesh( const char* file )
 {
@@ -45,7 +44,7 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 	*/
 	
 	//Add a vertex element for each type of information in the mesh, i.e. positons, normals, texture coordinates
-	
+	/*
 	int offset = 0;
 
 	if( mesh->HasPositions() )
@@ -104,7 +103,7 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 	/*if( mesh->HasBones() )
 	{
 	}*/
-
+	/*
 	//End vertex declaration
 	D3DVERTEXELEMENT9 endElement = D3DDECL_END();
 
@@ -113,6 +112,7 @@ void AssetManager::GetVertexInformation( const aiMesh* mesh, MeshData* data )
 	data->vertexSize = offset;
 	data->vertexCount = mesh->mNumVertices;
 	data->triangleCount = mesh->mNumFaces;
+	//*/
 }
 
 void AssetManager::BuildMesh( const aiScene* sc, const char* name )
@@ -237,6 +237,7 @@ void AssetManager::BuildMesh( const aiScene* sc, const char* name )
 
 void AssetManager::AccquireMeshResources( Mesh& mesh )
 {
+	/*
 	TRACE( "Accquiring Resources" );
 
 	graphics.Device()->CreateVertexDeclaration( &mesh.data.vertexElements[0], &mesh.vertexDeclaration );
@@ -278,7 +279,8 @@ void AssetManager::AccquireMeshResources( Mesh& mesh )
 		}
 		else 
 		{
-			/*// set static shader parameters
+			/*
+			// set static shader parameters
 			D3DXHANDLE hDiffuseMap = mesh.effect->GetParameterBySemantic( NULL, "DIFFUSE_MAP" );
 			graphics.ErrorCheck( mesh.effect->SetTexture( hDiffuseMap, mesh.diffuseMap ) );
 
@@ -297,9 +299,10 @@ void AssetManager::AccquireMeshResources( Mesh& mesh )
 			for( int t=0; t<SAM_COUNT; ++t )
 			{
 				mesh.EffectParameters.mTechniques[t] = mesh.effect->GetTechniqueByName( mSkeletons[t]->GetShaderTechnique() );
-			}*/
-		}
-	}
+			}
+			*/
+		//}
+	//}
 	//*/
 }
 

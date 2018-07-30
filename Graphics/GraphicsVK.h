@@ -20,6 +20,8 @@ using json = nlohmann::json;
 
 #include <Windows.h>
 
+class GLFWwindow;
+
 struct GPU
 {
 	VkPhysicalDevice Device;
@@ -70,11 +72,15 @@ struct Vertex
 };
 
 std::vector<char> ReadFile( const std::string& Filename );
+VkResult CreateDebugReportCallbackEXT( VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback );
+void DestroyDebugReportCallbackEXT( VkInstance instance, VkDebugReportCallbackEXT callback, const VkAllocationCallbacks* pAllocator );
 
 class GraphicsVK
 {
 	friend class VulkanStagingManager;
 private:
+
+	VkDebugReportCallbackEXT Callback;
 protected:
 
 	Log log{ "GraphicsVK" };
@@ -135,7 +141,13 @@ protected:
 	void ReadSettings( void );
 	void WriteSettings( void );
 
+	//GLFW
+	void GetInstanceExtensions( void );
+
 	//Vulkan
+	bool CheckValidationLayerSupport( void );
+	bool CheckPhysicalDeviceExtensionSupport( GPU Device );
+	void CreateDebugReportCallback( void );
 	void CreateInstance( void );
 	void CreateSurface( void );
 	void EnumeratePhysicalDevices( void );
@@ -167,8 +179,7 @@ protected:
 	VkFormat ChooseSupportedFormat( const std::vector<VkFormat>& formats, VkImageTiling tiling, VkFormatFeatureFlags features );
 public:
 
-	HWND WindowHandle;
-	HINSTANCE WindowInstance;
+	GLFWwindow* Window;
 
 	const unsigned int BufferCount = 2;
 	GPU* GPUInfo = nullptr;
@@ -188,6 +199,8 @@ public:
 
 	VulkanAllocator MemoryAllocator{ *this };
 	VulkanStagingManager StagingManager{ *this };
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback( VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj, size_t location, int32_t code, const char* layerPrefix, const char* msg, void* userData );
 };
 
 #endif //_GRAPHICSVK_H_

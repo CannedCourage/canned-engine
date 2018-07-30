@@ -31,17 +31,17 @@ protected:
 
 	//Processors
 	TransformProcessor transforms;
-	MeshProcessor meshes;
-	SpriteProcessor sprites;
-	AnimatedSpriteProcessor animatedSprites;
+	//MeshProcessor meshes;
+	//SpriteProcessor sprites;
+	//AnimatedSpriteProcessor animatedSprites;
 
 	//Helpers
 	TransformAdder 			AddTransform;
 	TransformGetter 		GetTransform;
-	SpriteAdder 			AddSprite;
-	SpriteGetter			GetSprite;
-	AnimatedSpriteAdder 	AddAnimatedSprite;
-	AnimatedSpriteGetter 	GetAnimatedSprite;
+	//SpriteAdder 			AddSprite;
+	//SpriteGetter			GetSprite;
+	//AnimatedSpriteAdder 	AddAnimatedSprite;
+	//AnimatedSpriteGetter 	GetAnimatedSprite;
 
 	void Update( void ); //Remove
 

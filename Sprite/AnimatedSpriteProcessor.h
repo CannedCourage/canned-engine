@@ -1,3 +1,4 @@
+/*
 #ifndef _ANIMATEDSPRITEPROCESSOR_H_
 #define _ANIMATEDSPRITEPROCESSOR_H_
 
@@ -98,3 +99,4 @@ public:
 };
 
 #endif //_ANIMATEDSPRITEPROCESSOR_H_
+//*/
