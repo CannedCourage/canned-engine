@@ -3,7 +3,7 @@
 #include "System/System.h"
 #include "StandardResources/resource.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #pragma comment(lib, "glfw3dll.lib")
 
 System::System( void )
@@ -28,10 +28,11 @@ int System::Initialise( void )
 
 	glfwInit();
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); //No OpenGL
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); //Prevent resizing
+    glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API ); //No OpenGL
+    glfwWindowHint( GLFW_RESIZABLE, GLFW_FALSE ); //Prevent resizing
 
-    window = glfwCreateWindow(800, 600, "GLFW window", nullptr, nullptr);
+    window = glfwCreateWindow( 800, 600, "GLFW window", nullptr, nullptr );
+    glfwSetWindowUserPointer( window, this ); //Make System available to GLFW
 
     if( !window )
     {
@@ -43,8 +44,13 @@ int System::Initialise( void )
 	
 	newGraphics.Window = window;
 	newGraphics.Init();
+
 	sound.Init();
+
+	glfwSetKeyCallback( window, key_callback );
+
 	input.Init();
+
 	//assets?
 	sceneManager.Init();
 
@@ -64,21 +70,12 @@ int System::Run( void )
     	/* Poll for and process events */
         glfwPollEvents();
 
-    	/*
-		if( ::GetAsyncKeyState( VK_ESCAPE ) )
+    	if( glfwGetKey( window, GLFW_KEY_ESCAPE ) == GLFW_PRESS )
 		{
+			time.FrameEnd();
 			Quit();
-			time.FrameEnd();
 			break;
 		}
-
-		if( msg.message == WM_QUIT )
-		{
-			TRACE( "QUITTING" );
-			time.FrameEnd();
-			break;
-		}
-		//*/
 
 		GameLoop();
 
@@ -131,14 +128,20 @@ void System::Shutdown( void )
     glfwTerminate();
 }
 
-/*
-LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
+void System::Quit( void )
 {
-	switch( msg )
-	{
-		case WM_CREATE:
-			break;
-		case WM_MOVE:	//Remember new position //CLIENT AREA
+	glfwSetWindowShouldClose( window, GL_TRUE );
+}
+
+void System::key_callback( GLFWwindow* window, int key, int scancode, int action, int mods )
+{
+	System* sys = static_cast<System*>( glfwGetWindowUserPointer( window ) );
+
+	sys->input.ReceiveKeyboardInput( key, scancode, action, mods );
+}
+
+/*
+		case WM_MOVE: //Remember new position //CLIENT AREA
 			{
 				int xPos = ( int )LOWORD( lParam );
 				int yPos = ( int )HIWORD( lParam );
@@ -151,40 +154,4 @@ LRESULT CALLBACK System::MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPA
 				window.SetWindowPosition( ( temp->left ), ( temp->top ) );
 				return true;
 			}
-		case WM_COMMAND:	//Sent by command items, e.g. menu options
-			switch( LOWORD( wParam ) )
-			{
-				default:
-				{
-					return DefWindowProc( hWnd, msg, wParam, lParam );
-				}
-			}
-			return DefWindowProc( hWnd, msg, wParam, lParam );
-			break;
-		case WM_KEYDOWN:
-			{
-				switch( wParam )
-				{
-					case VK_UP:
-						TRACE( "Up received" );
-						graphics.ToggleFullscreen();
-						break;
-				}
-				break;
-			}
-		case WM_INPUT:
-		{
-			RAWINPUT raw;
-			UINT dwSize = sizeof( raw );
-
-			GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, &raw, &dwSize, sizeof( RAWINPUTHEADER ) );
-
-			input.ReceiveRawInput( &raw );
-			break;
-		}
-		default:
-			return DefWindowProc( hWnd, msg, wParam, lParam );
-	}
-	return 0;
-}
 //*/

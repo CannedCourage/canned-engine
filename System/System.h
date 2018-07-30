@@ -38,10 +38,10 @@ public:
 
 	//Engine
 	json GlobalSettings;
-	GLFWwindow* window{};
-	GraphicsVK newGraphics{};
-	Sound sound{};
-	Input input{};
+	GLFWwindow* window;
+	GraphicsVK newGraphics;
+	Sound sound;
+	Input input;
 	
 	AssetManager assets{ *this };
 
@@ -56,14 +56,7 @@ public:
 	void Shutdown( void );
 	void Quit( void );
 
-	//LRESULT CALLBACK MessageHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
-
-inline void System::Quit( void )
-{
-	//PostMessage( window.GetHandle(), WM_CLOSE, 0, 0 );
-}
-
-//LRESULT CALLBACK WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
 #endif //_SYSTEM_H_

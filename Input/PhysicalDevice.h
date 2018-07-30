@@ -15,6 +15,7 @@ public:
 
 	virtual void RegisterForRawInput( HWND hWnd ){}
 	virtual void ReceiveRawInput( const RAWINPUT& input ){}
+	virtual void ReceiveKeyboardInput( int key, int scancode, int action, int mods ){}
 };
 
 #endif //_PHYSICALDEVICE_H_

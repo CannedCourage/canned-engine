@@ -64,3 +64,11 @@ void Input::ReceiveRawInput( RAWINPUT* in )
 		device->ReceiveRawInput( *in );
 	});
 }
+
+void Input::ReceiveKeyboardInput( int key, int scancode, int action, int mods )
+{
+	for( PhysicalDevice* device : physicalDevices )
+	{
+		device->ReceiveKeyboardInput( key, scancode, action, mods );
+	}
+}

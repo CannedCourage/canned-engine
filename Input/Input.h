@@ -41,6 +41,8 @@ public:
 	void Register( LogicalDevice* logiDevice );
 
 	void ReceiveRawInput( RAWINPUT* in );
+	void ReceiveKeyboardInput( int key, int scancode, int action, int mods );
+	//void ReceiveMouseInput();
 };
 
 #endif //_INPUT_H_
