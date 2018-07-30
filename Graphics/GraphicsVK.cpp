@@ -4,9 +4,6 @@
 
 #define settingsFile "w:/engine/data/settings/MainSettings.json"
 
-//TODO: Add a switch for the WIN32 definition
-#define VK_USE_PLATFORM_WIN32_KHR
-
 #include "Graphics/GraphicsVK.h"
 
 #include "GLFW/glfw3.h"
