@@ -1,4 +1,5 @@
 #include "System/System.h"
+
 #include <stdexcept> 
 
 System* sys = NULL;
@@ -21,14 +22,14 @@ int main()
             throw std::runtime_error( "Error during initialisation" );
         }
 
-        //Run() implements the message loop, which is the main loop
+        //Run() is the main loop
         result = sys->Run();
 
         sys->Shutdown();
     }
     catch( std::exception error )
     {
-        //MessageBox( NULL, error.what(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+        //TODO: Alert the user
         if( sys != NULL )
         {
             sys->Quit();
@@ -36,7 +37,7 @@ int main()
     }
     catch( std::string error )
     {
-        //MessageBox( NULL, error.c_str(), TEXT( "Error during construction" ), MB_ICONEXCLAMATION | MB_OK );
+        //TODO: Alert the user
         if( sys != NULL )
         {
             sys->Quit();
