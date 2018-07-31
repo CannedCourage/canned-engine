@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include <codecvt>
+#include <memory>
 
 #include "Logging/Log.h"
 #include "Window/ConsoleAdapter.h"
@@ -21,9 +22,8 @@ using json = nlohmann::json;
 
 #include "System/Debug.h"
 
-#include "Graphics/GraphicsVK.h"
-
-class GLFWwindow;
+class WindowGLFW;
+class GraphicsVK;
 
 class System
 {
@@ -32,14 +32,15 @@ protected:
 
 	Log log{ "System" };
 	ConsoleAdapter Console;
+
+	std::unique_ptr<WindowGLFW> Window;
+	std::unique_ptr<GraphicsVK> Graphics;
 public:
 
 	Time time;
 
 	//Engine
 	json GlobalSettings;
-	GLFWwindow* window;
-	GraphicsVK newGraphics;
 	Sound sound;
 	Input input;
 	
@@ -56,7 +57,8 @@ public:
 	void Shutdown( void );
 	void Quit( void );
 
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	WindowGLFW* GetWindow( void ){ return Window.get(); }
+	GraphicsVK* GetGraphics( void ){ return Graphics.get(); }
 };
 
 #endif //_SYSTEM_H_
