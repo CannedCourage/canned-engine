@@ -2,12 +2,6 @@
 #define NOMINMAX
 #endif
 
-#define settingsFile "w:/engine/data/settings/MainSettings.json"
-
-#include "Graphics/GraphicsVK.h"
-
-#include "GLFW/glfw3.h"
-
 #include <unordered_set>
 #include <fstream>
 #include <limits>
@@ -15,6 +9,12 @@
 #include <iterator>
 #include <algorithm>
 #include <set>
+
+#include "Graphics/GraphicsVK.h"
+
+#include <GLFW/glfw3.h>
+
+#define settingsFile "w:/engine/data/settings/MainSettings.json"
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 

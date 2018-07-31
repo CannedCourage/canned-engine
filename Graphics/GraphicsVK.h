@@ -18,8 +18,6 @@
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;
 
-#include <Windows.h>
-
 class GLFWwindow;
 
 struct GPU
