@@ -5,27 +5,19 @@
 #include <fstream>
 #include <string>
 
-#ifdef _DEBUG
-#define TRACE(expression) Trace(__FILE__,__LINE__,expression)
-#else
-#define TRACE __noop
-#endif
-
-void Trace( const std::string& File, unsigned int Line, const std::string& Msg );
+#include "Logging/Trace.h"
 
 class Log
 {
 private:
 protected:
 
-	const std::string Scope; 	//Where the message comes from
-	std::ofstream LocalFile; 	//Log file stream
+	const std::string Scope; //Where the message comes from
+	std::ofstream LocalFile; //Log file stream
 
 	static std::string GetTimestamp( void );
 public:
 
-	bool WriteToStdOutput = true;
-	bool WriteToLogFile = true;
 	bool WriteToDebugOutput = true;
 
 	Log( void );

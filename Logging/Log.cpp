@@ -1,4 +1,3 @@
-//#define _CRT_SECURE_NO_WARNINGS 1
 #include "Logging/Log.h"
 
 #include <iostream>
@@ -6,27 +5,6 @@
 #include <chrono>
 #include <ctime>
 #include <exception>
-
-#include <windows.h>
-
-/*
-If a method/function expects a const reference to string, it will also accept a string literal, e.g.
- 
-void Method( const std::string& str );
-a.Method( “literal” );
-
-See: http://stackoverflow.com/questions/4044255/passing-a-string-literal-to-a-function-that-takes-a-stdstring
-//*/
-
-//TODO: Add support for format strings
-void Trace( const std::string& File, unsigned int Line, const std::string& Msg )
-{
-	std::string msg = File + "(" + std::to_string(Line) + "): " + Msg + "\n";
-
-	std::cout << msg;
-
-	OutputDebugString( msg.c_str() );
-}
 
 Log::Log( void ) : Scope( "" ), LocalFile{}
 {
@@ -68,24 +46,16 @@ void Log::Open( const std::string& LogFilename )
 
 void Log::Message( const std::string& Msg )
 {
-	std::string msg = Msg + "\t" + GetTimestamp() + "\n";
+	const std::string msg = Msg + "\t" + GetTimestamp() + "\n";
 
-	if( WriteToStdOutput )
+	if( LocalFile )
 	{
-		std::cout << msg;
-	}
-
-	if( WriteToLogFile )
-	{
-		if( LocalFile )
-		{
-			LocalFile << msg;
-		}
+		LocalFile << msg;
 	}
 
 	if( WriteToDebugOutput )
 	{
-		OutputDebugStringA( msg.c_str() );
+		TRACE( msg );
 	}
 }
 
