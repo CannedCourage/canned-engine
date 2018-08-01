@@ -1,59 +1,64 @@
 #ifndef _MOUSE_H_
 #define _MOUSE_H_
 
-#ifndef HID_USAGE_PAGE_GENERIC
-#define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
-#endif
-#ifndef HID_USAGE_GENERIC_MOUSE
-#define HID_USAGE_GENERIC_MOUSE        ((USHORT) 0x02)
-#endif
+#include "Input/PhysicalDevice.h"
 
-#include "Logging\Log.h"
-#include "Input\PhysicalDevice.h"
-
-#include <windows.h>
 #include <map>
 
 class Input;
+
+struct CursorPosition
+{
+	double X{0}, Y{0};
+};
+
+struct ScrollPosition
+{
+	double X{0}, Y{0};
+};
 
 class Mouse : public PhysicalDevice
 {
 private:
 protected:
 
-	std::map<int, bool> buttonStates;
+	enum ButtonState{ DOWN = 1, UP = 2 };
 
-	static Log log;
+	std::map<int, ButtonState> CurrentPresses, PreviousPresses;
 
-	RAWMOUSE currentMouse;
+	CursorPosition CurrentPos, PreviousPos;
+
+	ScrollPosition CurrentScroll;
 public:
 
+	/*
 	enum Button{ 	
-					LEFT = RI_MOUSE_BUTTON_1_DOWN,
-					RIGHT = RI_MOUSE_BUTTON_2_DOWN,
-					MIDDLE = RI_MOUSE_BUTTON_3_DOWN,
-					MOUSE4 = RI_MOUSE_BUTTON_4_DOWN,
-					MOUSE5 = RI_MOUSE_BUTTON_5_DOWN
+					LEFT = GLFW_MOUSE_BUTTON_LEFT,
+					RIGHT = GLFW_MOUSE_BUTTON_RIGHT,
+					MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE,
+					MOUSE4 = GLFW_MOUSE_BUTTON_4,
+					MOUSE5 = GLFW_MOUSE_BUTTON_5
 				};
+	//*/
 
 	Mouse( void );
 	Mouse( Input& input );
 
-	void RegisterForRawInput( HWND hWnd );
-	void ReceiveRawInput( const RAWINPUT& input );
+	void ReceiveMousePosition( double X, double Y );
+	void ReceiveMouseInput( int Button, int Action, int Mods );
+	void ReceiveScrollInput( double X, double Y );
 
-	long GetMouseXRelative( void );
-	long GetMouseYRelative( void );
-
-	short GetWheelDelta( void );
+	double GetMouseXRelative( void );
+	double GetMouseYRelative( void );
+	double GetWheelDelta( void );
 
 	void PreUpdate( void );
 	void Update( void );
 	void PostUpdate( void );
 
-	bool IsPressed( int button );
-	bool WentDown( int button );
-	bool WentUp( int button );
+	bool IsPressed( int Button );
+	bool WentDown( int Button );
+	bool WentUp( int Button );
 };
 
 #endif //_MOUSE_H_

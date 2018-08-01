@@ -1,8 +1,6 @@
 #include "Input/Mouse.h"
 #include "input/Input.h"
 
-Log Mouse::log( "Mouse" );
-
 Mouse::Mouse( void )
 {
 }
@@ -12,41 +10,34 @@ Mouse::Mouse( Input& input )
 	input.Register( this );
 }
 
-void Mouse::RegisterForRawInput( HWND hWnd )
+void Mouse::ReceiveMousePosition( double X, double Y )
 {
-	RAWINPUTDEVICE Rid[1];
-
-	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
-    Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
-    Rid[0].dwFlags = NULL; //RIDEV_NOLEGACY - Prevent other input messages being sent?
-    Rid[0].hwndTarget = hWnd;
-
-    RegisterRawInputDevices( Rid, 1, sizeof( Rid[0] ) );
+	CurrentPos.X = X;
+	CurrentPos.Y = Y;
 }
 
-void Mouse::ReceiveRawInput( const RAWINPUT& input )
+void Mouse::ReceiveMouseInput( int Button, int Action, int Mods )
 {
-	if( input.header.dwType != RIM_TYPEMOUSE )
+	if( Action == 2 )
 	{
 		return;
 	}
 
-	currentMouse = input.data.mouse;
+	if( Action == 1 )
+	{
+		CurrentPresses[Button] = DOWN;
+	}
+	
+	if( Action == 0 )
+	{
+		CurrentPresses[Button] = UP;
+	}
+}
 
-	if( ( currentMouse.usButtonFlags & Button::LEFT ) == Button::LEFT ){ buttonStates[ Button::LEFT ] = true; }
-	if( ( currentMouse.usButtonFlags & ( Button::LEFT * 2 ) ) == ( Button::LEFT * 2 ) ){ buttonStates[ Button::LEFT ] = false; }
-
-	if( ( currentMouse.usButtonFlags & Button::RIGHT ) == Button::RIGHT ){ buttonStates[ Button::RIGHT ] = true; }
-	if( ( currentMouse.usButtonFlags & ( Button::RIGHT * 2 ) ) == ( Button::RIGHT * 2 ) ){ buttonStates[ Button::RIGHT ] = false; }
-
-	if( ( currentMouse.usButtonFlags & Button::MIDDLE ) == Button::MIDDLE ){ buttonStates[ Button::MIDDLE ] = true; }
-	if( ( currentMouse.usButtonFlags & ( Button::MIDDLE * 2 ) ) == ( Button::MIDDLE * 2 ) ){ buttonStates[ Button::MIDDLE ] = false; }
-
-	if( ( currentMouse.usButtonFlags & Button::MOUSE4 ) == Button::MOUSE4 ){ buttonStates[ Button::MOUSE4 ] = true; }
-	if( ( currentMouse.usButtonFlags & ( Button::MOUSE4 * 2 ) ) == ( Button::MOUSE4 * 2 ) ){ buttonStates[ Button::MOUSE4 ] = false; }
-
-	if( ( currentMouse.usButtonFlags & Button::MOUSE5 ) == Button::MOUSE5 ){ buttonStates[ Button::MOUSE5 ] = true; }
-	if( ( currentMouse.usButtonFlags & ( Button::MOUSE5 * 2 ) ) == ( Button::MOUSE5 * 2 ) ){ buttonStates[ Button::MOUSE5 ] = false; }
+void Mouse::ReceiveScrollInput( double X, double Y )
+{
+	CurrentScroll.X = X;
+	CurrentScroll.Y = Y;
 }
 
 void Mouse::PreUpdate( void )
@@ -59,44 +50,38 @@ void Mouse::Update( void )
 
 void Mouse::PostUpdate( void )
 {
-	ZeroMemory( &currentMouse, sizeof( RAWMOUSE ) );
+	PreviousPos = CurrentPos;
+	PreviousPresses = CurrentPresses;
+	CurrentScroll.X = 0;
+	CurrentScroll.Y = 0;
 }
 
-long Mouse::GetMouseXRelative( void )
+double Mouse::GetMouseXRelative( void )
 {
-	return currentMouse.lLastX;
+	return ( CurrentPos.X - PreviousPos.X );
 }
 
-long Mouse::GetMouseYRelative( void )
+double Mouse::GetMouseYRelative( void )
 {
-	return currentMouse.lLastY;
+	return ( CurrentPos.Y - PreviousPos.Y );
 }
 
-short Mouse::GetWheelDelta( void )
+double Mouse::GetWheelDelta( void )
 {
-	if( ( currentMouse.usButtonFlags & RI_MOUSE_WHEEL ) == RI_MOUSE_WHEEL )
-	{
-		return (short)currentMouse.usButtonData;
-	}
-	else
-	{
-		return 0;
-	}
+	return CurrentScroll.Y;
 }
 
-bool Mouse::IsPressed( int button )
+bool Mouse::IsPressed( int Button )
 {
-	return ( buttonStates[ button ] );
+	return ( CurrentPresses[Button] == DOWN );
 }
 
-bool Mouse::WentDown( int button )
+bool Mouse::WentDown( int Button )
 {
-	return ( ( currentMouse.usButtonFlags & button ) == button );
+	return ( IsPressed( Button ) && ( ( PreviousPresses[Button] == 0 ) || ( PreviousPresses[Button] == UP ) ) );
 }
 
-bool Mouse::WentUp( int button )
+bool Mouse::WentUp( int Button )
 {
-	button *= 2; //Up constant is 2x Down constant
-
-	return ( ( currentMouse.usButtonFlags & button ) == button );
+	return ( !IsPressed( Button ) && ( PreviousPresses[Button] == DOWN ) );
 }

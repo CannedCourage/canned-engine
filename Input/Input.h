@@ -4,11 +4,9 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-#include "Logging/Log.h"
-#include "Engine/Event.h"
+//#include "Engine/Event.h"
 
 #include <vector>
-#include <windows.h>
 
 class PhysicalDevice;
 class LogicalDevice;
@@ -17,8 +15,6 @@ class Input
 {
 private:
 protected:
-
-	Log log;
 
 	std::vector<PhysicalDevice*> physicalDevices;
 	std::vector<LogicalDevice*> logicalDevices;
@@ -39,10 +35,11 @@ public:
 
 	void Register( PhysicalDevice* physDevice );
 	void Register( LogicalDevice* logiDevice );
-
-	void ReceiveRawInput( RAWINPUT* in );
-	void ReceiveKeyboardInput( int key, int scancode, int action, int mods );
-	//void ReceiveMouseInput();
+	
+	void ReceiveKeyboardInput( int Key, int Scancode, int Action, int Mods );
+	void ReceiveMousePosition( double X, double Y );
+	void ReceiveMouseInput( int Button, int Action, int Mods );
+	void ReceiveScrollInput( double X, double Y );
 };
 
 #endif //_INPUT_H_

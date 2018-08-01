@@ -1,8 +1,6 @@
 #ifndef _PHYSICALDEVICE_H_
 #define _PHYSICALDEVICE_H_
 
-#include <windows.h>
-
 class PhysicalDevice
 {
 private:
@@ -13,9 +11,10 @@ public:
 	virtual void Update( void ) = 0;
 	virtual void PostUpdate( void ) = 0;
 
-	virtual void RegisterForRawInput( HWND hWnd ){}
-	virtual void ReceiveRawInput( const RAWINPUT& input ){}
-	virtual void ReceiveKeyboardInput( int key, int scancode, int action, int mods ){}
+	virtual void ReceiveKeyboardInput( int Key, int Scancode, int Action, int Mods ){}
+	virtual void ReceiveMousePosition( double X, double Y ){}
+	virtual void ReceiveMouseInput( int Button, int Action, int Mods ){}
+	virtual void ReceiveScrollInput( double X, double Y ){}
 };
 
 #endif //_PHYSICALDEVICE_H_

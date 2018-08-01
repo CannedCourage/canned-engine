@@ -2,9 +2,7 @@
 #include "Input/PhysicalDevice.h"
 #include "Input/LogicalDevice.h"
 
-#include <algorithm>
-
-Input::Input( void ) : log( "Input" )
+Input::Input( void )
 {
 }
 
@@ -18,38 +16,36 @@ void Input::Init( void )
 
 void Input::PreUpdate( void )
 {
-	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
+	for( PhysicalDevice* device : physicalDevices )
 	{
 		device->PreUpdate();
-	});
+	}
 }
 
 void Input::Update( void )
 {
-	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
+	for( PhysicalDevice* device : physicalDevices )
 	{
 		device->Update();
-	});
+	}
 	
-	std::for_each( logicalDevices.begin(), logicalDevices.end(), []( LogicalDevice* device )
+	for( LogicalDevice* device : logicalDevices )
 	{
 		device->EvaluateInputs();
-	});
+	}
 }
 
 void Input::PostUpdate( void )
 {
-	std::for_each( physicalDevices.begin(), physicalDevices.end(), []( PhysicalDevice* device )
+	for( PhysicalDevice* device : physicalDevices )
 	{
 		device->PostUpdate();
-	});
+	}
 }
 
 void Input::Register( PhysicalDevice* physDevice )
 {
 	physicalDevices.push_back( physDevice );
-
-	//physDevice->RegisterForRawInput( system.window.GetHandle() );
 }
 
 void Input::Register( LogicalDevice* intent )
@@ -57,18 +53,34 @@ void Input::Register( LogicalDevice* intent )
 	logicalDevices.push_back( intent );
 }
 
-void Input::ReceiveRawInput( RAWINPUT* in )
-{
-	std::for_each( physicalDevices.begin(), physicalDevices.end(), [in]( PhysicalDevice* device )
-	{
-		device->ReceiveRawInput( *in );
-	});
-}
-
-void Input::ReceiveKeyboardInput( int key, int scancode, int action, int mods )
+void Input::ReceiveKeyboardInput( int Key, int Scancode, int Action, int Mods )
 {
 	for( PhysicalDevice* device : physicalDevices )
 	{
-		device->ReceiveKeyboardInput( key, scancode, action, mods );
+		device->ReceiveKeyboardInput( Key, Scancode, Action, Mods );
+	}
+}
+
+void Input::ReceiveMousePosition( double X, double Y )
+{
+	for( PhysicalDevice* device : physicalDevices )
+	{
+		device->ReceiveMousePosition( X, Y );
+	}
+}
+
+void Input::ReceiveMouseInput( int Button, int Action, int Mods )
+{
+	for( PhysicalDevice* device : physicalDevices )
+	{
+		device->ReceiveMouseInput( Button, Action, Mods );
+	}
+}
+
+void Input::ReceiveScrollInput( double X, double Y )
+{
+	for( PhysicalDevice* device : physicalDevices )
+	{
+		device->ReceiveScrollInput( X, Y );
 	}
 }

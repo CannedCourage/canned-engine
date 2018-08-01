@@ -3,10 +3,9 @@
 #include "Maths/Clamp.h"
 #include <cmath>
 #include "Input/Input.h"
+#include "Logging/Trace.h"
 
 using std::ostringstream;
-
-Log XboxController::log( "XboxController" );
 
 XboxController::XboxController( int playerID, float _deadLX, float _deadLY, float _deadRX, float _deadRY ) : PID( playerID ), deadLX( _deadLX ), deadLY( _deadLY ), deadRX( _deadRX ), deadRY( _deadRY )
 {
@@ -50,8 +49,6 @@ void XboxController::PreUpdate( void )
 
 void XboxController::Update( void )
 {
-	previousState = currentState;
-
 	GetPadState();
 
 	trigL = NormaliseTrigger( currentState.Gamepad.bLeftTrigger );
@@ -72,6 +69,7 @@ void XboxController::Update( void )
 
 void XboxController::PostUpdate( void )
 {
+	previousState = currentState;
 }
 
 void XboxController::Vibrate( int left, int right )

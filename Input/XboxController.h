@@ -3,7 +3,6 @@
 
 #pragma comment(lib, "Xinput.lib")
 
-#include "Logging\Log.h"
 #include "Input\PhysicalDevice.h"
 
 #include <windows.h>
@@ -15,8 +14,6 @@ class XboxController : PhysicalDevice
 {
 private:
 protected:
-
-	static Log log;
 
 	int PID;
 	bool padConnected;
@@ -30,20 +27,23 @@ protected:
 	float NormaliseTrigger( int trigOutput );
 public:
 
-	enum Button{ 	A = XINPUT_GAMEPAD_A,
-					B = XINPUT_GAMEPAD_B,
-					X = XINPUT_GAMEPAD_X,
-					Y = XINPUT_GAMEPAD_Y,
-					LBUMPER = XINPUT_GAMEPAD_LEFT_SHOULDER,
-					RBUMPER = XINPUT_GAMEPAD_RIGHT_SHOULDER,
-					LTHUMB = XINPUT_GAMEPAD_LEFT_THUMB,
-					RTHUMB = XINPUT_GAMEPAD_RIGHT_THUMB,
-					START = XINPUT_GAMEPAD_START,
-					BACK = XINPUT_GAMEPAD_BACK,
-					DPADUP = XINPUT_GAMEPAD_DPAD_UP,
-					DPADDOWN = XINPUT_GAMEPAD_DPAD_DOWN,
-					DPADLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
-					DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT };
+	enum Button
+	{
+		A = XINPUT_GAMEPAD_A,
+		B = XINPUT_GAMEPAD_B,
+		X = XINPUT_GAMEPAD_X,
+		Y = XINPUT_GAMEPAD_Y,
+		LBUMPER = XINPUT_GAMEPAD_LEFT_SHOULDER,
+		RBUMPER = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+		LTHUMB = XINPUT_GAMEPAD_LEFT_THUMB,
+		RTHUMB = XINPUT_GAMEPAD_RIGHT_THUMB,
+		START = XINPUT_GAMEPAD_START,
+		BACK = XINPUT_GAMEPAD_BACK,
+		DPADUP = XINPUT_GAMEPAD_DPAD_UP,
+		DPADDOWN = XINPUT_GAMEPAD_DPAD_DOWN,
+		DPADLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+		DPADRIGHT = XINPUT_GAMEPAD_DPAD_RIGHT
+	};
 
 	XboxController( int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );
 	XboxController( Input& input, int playerID = 0, float _deadLX = 0.0f, float _deadLY = 0.0f, float _deadRX = 0.0f, float _deadRY = 0.0f );

@@ -22,9 +22,11 @@ TestScene::TestScene( System &s ) : IScene( s, "TestScene" ),
 									//AddAnimatedSprite( animatedSprites ),
 									//GetAnimatedSprite( animatedSprites )
 {
-	test1.AddInput( std::bind( &Keyboard::IsPressed, &keys, Keyboard::Keys::LEFT_CONTROL ) );
+	test1.AddInput( std::bind( &Keyboard::IsPressed, &keys, 341 ) );
 
-	test1.AddInput( std::bind( &Keyboard::WentUp, &keys, Keyboard::Keys::LEFT_ALT ) );
+	test1.AddInput( std::bind( &Keyboard::WentUp, &keys, 342 ) );
+
+	//test1.AddInput( std::bind( &XboxController::WentDown, &player1, XboxController::Button::A ) );
 
 	engine.AddProcess( &transforms, Priority::UPDATE );
 	//engine.AddProcess( &meshes, Priority::RENDER );

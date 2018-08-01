@@ -1,6 +1,7 @@
 #include "Window/WindowGLFW.h"
 #include "System/System.h"
 #include "Graphics/GraphicsVK.h"
+#include "Input/Input.h"
 
 #include <stdexcept>
 
@@ -18,7 +19,21 @@ void cursor_position_callback( GLFWwindow* Window, double X, double Y )
 {
 	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
 
-	//sys->input.
+	sys->input.ReceiveMousePosition( X, Y );
+}
+
+void mouse_button_callback( GLFWwindow* Window, int Button, int Action, int Mods )
+{
+	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
+
+	sys->input.ReceiveMouseInput( Button, Action, Mods );
+}
+
+void scroll_callback( GLFWwindow* Window, double XOffset, double YOffset )
+{
+	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
+
+	sys->input.ReceiveScrollInput( XOffset, YOffset );
 }
 
 void window_size_callback( GLFWwindow* Window, int Width, int Height )
@@ -61,7 +76,10 @@ void WindowGLFW::Init( System* Sys )
     Sys->GetGraphics()->Window = Window;
 
     glfwSetKeyCallback( Window, key_callback );
-    //Cursor Position callback
+    glfwSetCursorPosCallback( Window, cursor_position_callback );
+    glfwSetMouseButtonCallback( Window, mouse_button_callback );
+    glfwSetScrollCallback( Window, scroll_callback );
+    
     //glfwSetWindowSizeCallback(Window, window_size_callback);
     //glfwSetFramebufferSizeCallback(Window, framebuffer_size_callback);
 }
