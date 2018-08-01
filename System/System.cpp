@@ -11,8 +11,6 @@ System::System( void )
 	
 	mainSettingsFile >> GlobalSettings;
 
-	//Console.CreateConsole( true, false );
-
 	//Instantiate services
 	Window = std::make_unique<WindowGLFW>();
 	Graphics = std::make_unique<GraphicsVK>();
@@ -38,6 +36,7 @@ int System::Initialise( void )
 	input.Init();
 
 	//assets?
+	
 	sceneManager.Init();
 
 	return 1;

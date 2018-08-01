@@ -1,12 +1,9 @@
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
 
-#include <Windows.h>
-#include <codecvt>
 #include <memory>
 
 #include "Logging/Log.h"
-#include "Window/ConsoleAdapter.h"
 #include "Scene/SceneManager.h"
 #include "Engine/Time.h"
 #include "Input/Input.h"
@@ -31,7 +28,6 @@ private:
 protected:
 
 	Log log{ "System" };
-	ConsoleAdapter Console;
 
 	std::unique_ptr<WindowGLFW> Window;
 	std::unique_ptr<GraphicsVK> Graphics;
