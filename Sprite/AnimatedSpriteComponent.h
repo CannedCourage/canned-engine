@@ -56,7 +56,7 @@ public:
 	Frame& GetCurrentFrame( void );
 	const Frame& GetCurrentFrame( void ) const;
 
-	const EngineDuration& Length( void ) const;
+	EngineDuration Length( void ) const;
 };
  
 class AnimatedSpriteComponent

@@ -142,10 +142,7 @@ const Frame& Animation2D::GetCurrentFrame( void ) const
 	return Frames.at( CurrentFrame );
 }
 
-//Interesting note: This method returns a reference to a temporary object
-//The result of this method can only be stored in a const reference, it will fail at compilation if non-const
-//The liftime of the temporary becomes the lifetime of the const reference it's stored in
-const EngineDuration& Animation2D::Length( void ) const
+EngineDuration Animation2D::Length( void ) const
 {
 	return std::accumulate( Frames.begin(), Frames.end(), EngineDuration::zero(),
 							[]( const EngineDuration& a, const Frame& b )
