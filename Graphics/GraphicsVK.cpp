@@ -2,6 +2,8 @@
 #define NOMINMAX
 #endif
 
+#include "Graphics\DisableSteamOverlay.h"
+
 #include <unordered_set>
 #include <fstream>
 #include <limits>
@@ -49,11 +51,6 @@ GraphicsVK::GraphicsVK( void )
 			throw std::runtime_error( "Validation layers requested, but not available!" );
 		}
 	}
-
-#ifdef WIN32
-	// Steam's overlay is incompatible with LunarG's
-	SetEnvironmentVariable("DISABLE_VK_LAYER_VALVE_steam_overlay_1", "1");
-#endif
 }
 
 bool GraphicsVK::CheckValidationLayerSupport( void )
