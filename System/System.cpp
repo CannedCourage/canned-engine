@@ -1,5 +1,7 @@
 #define settingsFile "w:/engine/data/settings/MainSettings.json"
 
+#include "Graphics/DisableSteamOverlay.h"
+
 #include "StandardResources/resource.h"
 #include "System/System.h"
 #include "Window/WindowGLFW.h"
@@ -10,6 +12,8 @@ System::System( void )
 	std::ifstream mainSettingsFile{ settingsFile };
 	
 	mainSettingsFile >> GlobalSettings;
+
+	HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
 
 	//Instantiate services
 	Window = std::make_unique<WindowGLFW>();

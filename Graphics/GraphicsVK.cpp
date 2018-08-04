@@ -2,8 +2,6 @@
 #define NOMINMAX
 #endif
 
-#include "Graphics\DisableSteamOverlay.h"
-
 #include <unordered_set>
 #include <fstream>
 #include <limits>
@@ -1211,7 +1209,7 @@ void GraphicsVK::DrawFrame( void )
 	presentInfo.waitSemaphoreCount = 1;
 	presentInfo.pWaitSemaphores = signalSemaphores;
 
-	VkSwapchainKHR swapChains[] = {SwapChain};
+	VkSwapchainKHR swapChains[] = { SwapChain };
 	presentInfo.swapchainCount = 1;
 	presentInfo.pSwapchains = swapChains;
 	presentInfo.pImageIndices = &imageIndex;
