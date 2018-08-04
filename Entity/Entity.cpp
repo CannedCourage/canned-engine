@@ -10,6 +10,16 @@ Entity::Entity( const std::string& Name ) : ID( EntityCounter ), Name( Name )
 	EntityCounter++;
 }
 
+Entity::operator int() const
+{
+	return (int)ID;
+}
+
+Entity::operator unsigned int() const
+{
+	return ID;
+}
+
 bool Entity::Has( const unsigned int ComponentTypeID ) const
 {
 	return ComponentFlags.test( ComponentTypeID );

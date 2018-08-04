@@ -32,6 +32,9 @@ public:
 
 	Entity& operator=( const Entity& rhs ) = default;
 
+	operator int() const;
+	operator unsigned int() const;
+
 	bool Has( const unsigned int ComponentTypeID ) const;
 
 	void AddScript( Script* ScriptInstance );
