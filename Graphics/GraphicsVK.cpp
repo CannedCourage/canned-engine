@@ -173,6 +173,7 @@ void GraphicsVK::Init( void )
 
 	InitSwapChain();
 
+	//Move these to SpriteManager?
 	CreateVertexBuffer();
 
 	CreateIndexBuffer();
@@ -188,6 +189,7 @@ void GraphicsVK::InitSwapChain( void )
 
 	CreateRenderTargets();
 
+	//Move this to SpriteManager?
 	CreateRenderPass();
 
 	CreatePipeline();
@@ -919,6 +921,7 @@ std::vector<char> ReadFile( const std::string& Filename )
 
 void GraphicsVK::CreatePipeline( void )
 {
+	//TODO: Create a LoadShaderModule method
 	auto vertShader = ReadFile( "vert.spv" );
 	auto fragShader = ReadFile( "frag.spv" );
 
@@ -1181,6 +1184,7 @@ void GraphicsVK::DrawFrame( void )
 	*/
 
 	//vkQueueWaitIdle( PresentQueue );
+	//Switch to using fences for sync
 	VERIFY( VK_SUCCESS == vkQueueWaitIdle( PresentQueue ) );
 
 	vkAcquireNextImageKHR( LogicalDevice, SwapChain, std::numeric_limits<uint64_t>::max(), AcquireSemaphores[CurrentFrame], VK_NULL_HANDLE, &imageIndex );
@@ -1246,12 +1250,6 @@ void GraphicsVK::CreateVertexBuffer( void )
 {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-	vkAllocation stagingBufferMemory;
-	
-	VkBuffer stagingBuffer = StagingManager.Stage( bufferSize, stagingBufferMemory );
-
-	memcpy( stagingBufferMemory.Data, vertices.data(), (size_t) bufferSize );
-
 	VertexBuffer = CreateBuffer(
 		bufferSize,
 		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -1259,23 +1257,13 @@ void GraphicsVK::CreateVertexBuffer( void )
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VertexBufferMemory
 		);
-
-	StagingManager.CopyBuffer( stagingBuffer, VertexBuffer, bufferSize );
-
-	//MemoryAllocator.Free( stagingBufferMemory );
-
-	//vkDestroyBuffer( LogicalDevice, stagingBuffer, nullptr );
+	
+	StagingManager.StageData( vertices.data(), bufferSize, VertexBuffer );
 }
 
 void GraphicsVK::CreateIndexBuffer( void )
 {
 	VkDeviceSize bufferSize = sizeof(drawIndices[0]) * drawIndices.size();
-
-    vkAllocation stagingBufferMemory;
-	
-	VkBuffer stagingBuffer = StagingManager.Stage( bufferSize, stagingBufferMemory );
-
-    memcpy( stagingBufferMemory.Data, drawIndices.data(), (size_t) bufferSize );
 
     IndexBuffer = CreateBuffer(
 		bufferSize,
@@ -1285,52 +1273,9 @@ void GraphicsVK::CreateIndexBuffer( void )
 		IndexBufferMemory
 		);
 
-    StagingManager.CopyBuffer( stagingBuffer, IndexBuffer, bufferSize );
+    StagingManager.StageData( drawIndices.data(), bufferSize, IndexBuffer );
 }
-/*
-void GraphicsVK::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
-{
-	VkCommandBufferAllocateInfo allocInfo = {};
 
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandPool = CommandPool;
-	allocInfo.commandBufferCount = 1;
-
-	VkCommandBuffer CommandBuffer;
-
-	vkAllocateCommandBuffers( LogicalDevice, &allocInfo, &CommandBuffer );
-
-	VkCommandBufferBeginInfo beginInfo = {};
-
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( CommandBuffer, &beginInfo ) );
-
-	VkBufferCopy copyRegion = {};
-
-	copyRegion.srcOffset = 0; // Optional
-	copyRegion.dstOffset = 0; // Optional
-	copyRegion.size = Size;
-	
-	vkCmdCopyBuffer( CommandBuffer, Source, Destination, 1, &copyRegion );
-
-	VERIFY( VK_SUCCESS == vkEndCommandBuffer( CommandBuffer ) );
-
-	VkSubmitInfo submitInfo = {};
-
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &CommandBuffer;
-
-	VERIFY( VK_SUCCESS == vkQueueSubmit( GraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE ) );
-
-	VERIFY( VK_SUCCESS == vkQueueWaitIdle( GraphicsQueue ) );
-
-	vkFreeCommandBuffers( LogicalDevice, CommandPool, 1, &CommandBuffer );
-}
-//*/
 VkResult GraphicsVK::FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties )
 {
 	ASSERT( MemoryTypeBits != 0 );

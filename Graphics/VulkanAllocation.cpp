@@ -10,6 +10,11 @@ VulkanMemoryPool::VulkanMemoryPool( GraphicsVK& Context, const unsigned int ID, 
 	VERIFY( VK_SUCCESS == Context.FindMemoryTypeIndex( MemoryTypeBits, RequiredProperties, PreferredProperties, MemoryTypeIndex, MemoryProperties ) );
 }
 
+VulkanMemoryPool::~VulkanMemoryPool( void )
+{
+	//Move cleanup call here
+}
+
 bool VulkanMemoryPool::Init( void )
 {
 	if( MemoryTypeIndex == UINT64_MAX )

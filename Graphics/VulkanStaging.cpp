@@ -1,7 +1,9 @@
 #include "Graphics/VulkanStaging.h"
 #include "Graphics/GraphicsVK.h"
+#include "Logging/Trace.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 VulkanStagingManager::VulkanStagingManager( GraphicsVK& Context ) : Context( Context )
 {
@@ -9,20 +11,60 @@ VulkanStagingManager::VulkanStagingManager( GraphicsVK& Context ) : Context( Con
 
 void VulkanStagingManager::Init( void )
 {
+	CreateBuffersAndMemory();
+
 	CreateCommandPool();
 
-	for( int ii = 0; ii < Context.BufferCount; ii++ )
-	{
-		StagingBuffer buffer(ii);
-
-		CreateCommandBuffer( buffer );
-
-		CreateBuffer( buffer );
-
-		Buffers.push_back( buffer );
-	}
+	CreateCommandBuffers();
 
 	BeginRecording();
+}
+
+void VulkanStagingManager::CreateBuffersAndMemory( void )
+{
+	StagingBuffers.resize( 2 );
+
+	VkBufferCreateInfo bufferInfo = {};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = DefaultBufferSize;
+	bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	VkFenceCreateInfo fenceCreateInfo = {};
+	fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	//fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	VkMemoryRequirements memRequirements;
+
+	for( auto& buffer : StagingBuffers )
+	{
+		VERIFY( VK_SUCCESS == vkCreateBuffer( Context.LogicalDevice, &bufferInfo, nullptr, &( buffer.Buffer ) ) );
+
+		VERIFY( VK_SUCCESS == vkCreateFence( Context.LogicalDevice, &fenceCreateInfo, nullptr, &( buffer.Fence ) ) );
+	}
+
+	vkGetBufferMemoryRequirements( Context.LogicalDevice, StagingBuffers[0].Buffer, &memRequirements );
+
+	vkGetBufferMemoryRequirements( Context.LogicalDevice, StagingBuffers[1].Buffer, &memRequirements );
+
+	MemoryPool = std::make_unique<VulkanMemoryPool>( Context, 0, memRequirements.memoryTypeBits, DefaultBufferSizeMB * 2, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 0 );
+
+	if( !( MemoryPool->Init() ) )
+	{
+		TRACE( "Could not allocate new memory pool" );
+		throw std::runtime_error( "Could not allocate new memory pool." );
+	}
+
+	for( auto& buffer : StagingBuffers )
+	{
+		if( !( MemoryPool->Allocate( memRequirements.size, memRequirements.alignment, buffer.Allocation ) ) )
+		{
+			TRACE( "Could not allocate memory." );
+			throw std::runtime_error( "Could not allocate memory." );
+		}
+
+		VERIFY( VK_SUCCESS == vkBindBufferMemory( Context.LogicalDevice, buffer.Buffer, buffer.Allocation.DeviceMemory, buffer.Allocation.Offset ) );
+	}
 }
 
 void VulkanStagingManager::CreateCommandPool( void )
@@ -30,13 +72,13 @@ void VulkanStagingManager::CreateCommandPool( void )
 	VkCommandPoolCreateInfo commandPoolCreateInfo = {};
 	commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 
-	commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+	commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	commandPoolCreateInfo.queueFamilyIndex = Context.TransferFamilyIndex;
 
 	VERIFY( VK_SUCCESS == vkCreateCommandPool( Context.LogicalDevice, &commandPoolCreateInfo, NULL, &CommandPool ) );
 }
 
-void VulkanStagingManager::CreateCommandBuffer( StagingBuffer& CurrentBuffer )
+void VulkanStagingManager::CreateCommandBuffers( void )
 {
 	VkCommandBufferAllocateInfo allocInfo = {};
 
@@ -45,41 +87,22 @@ void VulkanStagingManager::CreateCommandBuffer( StagingBuffer& CurrentBuffer )
 	allocInfo.commandPool = CommandPool;
 	allocInfo.commandBufferCount = 1;
 
-	vkAllocateCommandBuffers( Context.LogicalDevice, &allocInfo, &CurrentBuffer.CommandBuffer );
-}
-
-void VulkanStagingManager::CreateBuffer( StagingBuffer& CurrentBuffer )
-{
-	VkBufferCreateInfo bufferInfo = {};
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferInfo.size = DefaultBufferSize;
-	bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	VERIFY( VK_SUCCESS == vkCreateBuffer( Context.LogicalDevice, &bufferInfo, nullptr, &( CurrentBuffer.Buffer ) ) );
-
-	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements( Context.LogicalDevice, CurrentBuffer.Buffer, &memRequirements );
-
-	CurrentBuffer.Allocation = Context.MemoryAllocator.Allocate(
-		memRequirements.size,
-		memRequirements.alignment,
-		memRequirements.memoryTypeBits,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		0
-	);
-
-	VERIFY( VK_SUCCESS == vkBindBufferMemory( Context.LogicalDevice, CurrentBuffer.Buffer, CurrentBuffer.Allocation.DeviceMemory, CurrentBuffer.Allocation.Offset ) );
+	for( auto& buffer : StagingBuffers )
+	{
+		vkAllocateCommandBuffers( Context.LogicalDevice, &allocInfo, &( buffer.CommandBuffer ) );
+	}
 }
 
 void VulkanStagingManager::CleanUp( void )
 {
-	for( StagingBuffer& buffer : Buffers )
+	for( auto& buffer : StagingBuffers )
 	{
-		vkFreeCommandBuffers( Context.LogicalDevice, CommandPool, 1, &( buffer.CommandBuffer ) );
+		vkDestroyBuffer( Context.LogicalDevice, buffer.Buffer, nullptr );
 	}
 
 	vkDestroyCommandPool( Context.LogicalDevice, CommandPool, nullptr );
+
+	MemoryPool->CleanUp();
 }
 
 void VulkanStagingManager::BeginRecording( void )
@@ -89,31 +112,40 @@ void VulkanStagingManager::BeginRecording( void )
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( Buffers[CurrentBufferIndex].CommandBuffer, &beginInfo ) );
+	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( StagingBuffers[CurrentBufferIndex].CommandBuffer, &beginInfo ) );
 }
 
 void VulkanStagingManager::EndRecording( void )
 {
-	VERIFY( VK_SUCCESS == vkEndCommandBuffer( Buffers[CurrentBufferIndex].CommandBuffer ) );
+	VERIFY( VK_SUCCESS == vkEndCommandBuffer( StagingBuffers[CurrentBufferIndex].CommandBuffer ) );
 }
 
+//This needs to happen prior to rendering
 void VulkanStagingManager::SubmitQueue( void )
 {
 	EndRecording();
 
-	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
+	//VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
 
 	VkSubmitInfo submitInfo = {};
 
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &( Buffers[CurrentBufferIndex].CommandBuffer );
+	submitInfo.pCommandBuffers = &( StagingBuffers[CurrentBufferIndex].CommandBuffer );
 
-	VERIFY( VK_SUCCESS == vkQueueSubmit( Context.TransferQueue, 1, &submitInfo, VK_NULL_HANDLE ) );
+	if( StagingBuffers[CurrentBufferIndex].Submitted )
+	{
+		Wait( StagingBuffers[CurrentBufferIndex] );
 
+		StagingBuffers[CurrentBufferIndex].Submitted = false;
+	}
+
+	VERIFY( VK_SUCCESS == vkQueueSubmit( Context.TransferQueue, 1, &submitInfo, StagingBuffers[CurrentBufferIndex].Fence ) );
+
+	StagingBuffers[CurrentBufferIndex].Submitted = true;
+
+	//Need to replace this
 	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
-
-	//Clean up temp "staging" buffer
 
 	//OR
 
@@ -141,7 +173,29 @@ VkBuffer VulkanStagingManager::Stage( const int Size, vkAllocation& Allocation )
 	return stagingBuffer;
 }
 
-void VulkanStagingManager::CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
+void VulkanStagingManager::StageData( const void* SourceData, VkDeviceSize Size, VkBuffer Destination )
+{
+	if( ( StagingBuffers[CurrentBufferIndex].Offset + Size ) > MaxBufferSize )
+	{
+		//Force Submit now?
+	}
+
+	auto& buffer = StagingBuffers[CurrentBufferIndex];
+
+	memcpy( buffer.Allocation.Data + buffer.Offset, SourceData, (size_t)Size );
+
+	VkBufferCopy copyRegion = {};
+
+	copyRegion.srcOffset = buffer.Offset;
+	copyRegion.dstOffset = 0;
+	copyRegion.size = Size;
+	
+	vkCmdCopyBuffer( buffer.CommandBuffer, buffer.Buffer, Destination, 1, &copyRegion );
+	
+	buffer.Offset += Size;
+}
+
+void VulkanStagingManager::RecordCopyBufferCommand( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
 {
 	VkBufferCopy copyRegion = {};
 
@@ -149,5 +203,22 @@ void VulkanStagingManager::CopyBuffer( VkBuffer Source, VkBuffer Destination, Vk
 	copyRegion.dstOffset = 0; // Optional
 	copyRegion.size = Size;
 	
-	vkCmdCopyBuffer( Buffers[CurrentBufferIndex].CommandBuffer, Source, Destination, 1, &copyRegion );
+	vkCmdCopyBuffer( StagingBuffers[CurrentBufferIndex].CommandBuffer, Source, Destination, 1, &copyRegion );
+}
+
+void VulkanStagingManager::Wait( StagingBuffer& Stage )
+{
+	int timeout = 100;
+
+	auto result = vkWaitForFences( Context.LogicalDevice, 1, &(Stage.Fence), VK_TRUE, timeout );
+
+	if( result == VK_SUCCESS )
+	{
+		VERIFY( VK_SUCCESS == vkResetFences( Context.LogicalDevice, 1, &(Stage.Fence) ) );
+	}
+}
+
+void VulkanStagingManager::Flush( void )
+{
+
 }

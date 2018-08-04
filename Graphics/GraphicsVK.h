@@ -193,7 +193,6 @@ public:
 
 	VkResult FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties );
 	VkBuffer CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkSharingMode SharingMode, VkMemoryPropertyFlags Properties, vkAllocation& Allocation );
-	void CopyBuffer( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
 
 	VulkanAllocator MemoryAllocator{ *this };
 	VulkanStagingManager StagingManager{ *this };
