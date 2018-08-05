@@ -64,13 +64,10 @@ public:
 	void Init( void );
 	void CleanUp( void );
 
-	VkBuffer Stage( const int Size, vkAllocation& Allocation );
 	void StageData( const void* SourceData, VkDeviceSize Size, VkBuffer DestinationBuffer );
 
-	void RecordCopyBufferCommand( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size );
-
 	// Flush will drain all data for the current staging buffer.
-	void Flush();
+	//void Flush();
 
 	void SubmitQueue( void );
 };

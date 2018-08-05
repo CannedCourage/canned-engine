@@ -112,6 +112,7 @@ void VulkanStagingManager::BeginRecording( void )
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
+	//This also resets the command buffer
 	VERIFY( VK_SUCCESS == vkBeginCommandBuffer( StagingBuffers[CurrentBufferIndex].CommandBuffer, &beginInfo ) );
 }
 
@@ -125,8 +126,6 @@ void VulkanStagingManager::SubmitQueue( void )
 {
 	EndRecording();
 
-	//VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
-
 	VkSubmitInfo submitInfo = {};
 
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -136,41 +135,25 @@ void VulkanStagingManager::SubmitQueue( void )
 	if( StagingBuffers[CurrentBufferIndex].Submitted )
 	{
 		Wait( StagingBuffers[CurrentBufferIndex] );
-
-		StagingBuffers[CurrentBufferIndex].Submitted = false;
 	}
 
 	VERIFY( VK_SUCCESS == vkQueueSubmit( Context.TransferQueue, 1, &submitInfo, StagingBuffers[CurrentBufferIndex].Fence ) );
 
 	StagingBuffers[CurrentBufferIndex].Submitted = true;
 
-	//Need to replace this
-	VERIFY( VK_SUCCESS == vkQueueWaitIdle( Context.TransferQueue ) );
-
-	//OR
-
-	//Do separate check for VkEvent?
-
 	CurrentBufferIndex = ( CurrentBufferIndex + 1 ) % 2;
 
-	//Reset command buffer?
+	if( StagingBuffers[CurrentBufferIndex].Submitted )
+	{
+		Wait( StagingBuffers[CurrentBufferIndex] );
+
+		StagingBuffers[CurrentBufferIndex].Submitted = false;
+
+		//TODO: Reset the staging buffer
+		//StagingBuffers[CurrentBufferIndex].Offset = 0;
+	}
+
 	BeginRecording();
-}
-
-VkBuffer VulkanStagingManager::Stage( const int Size, vkAllocation& Allocation )
-{
-	//TODO: StagingManager needs to own the buffer and memory
-	VkBuffer stagingBuffer;
-
-	stagingBuffer = Context.CreateBuffer(
-		Size,
-		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		VK_SHARING_MODE_EXCLUSIVE,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		Allocation
-		);
-
-	return stagingBuffer;
 }
 
 void VulkanStagingManager::StageData( const void* SourceData, VkDeviceSize Size, VkBuffer Destination )
@@ -178,6 +161,8 @@ void VulkanStagingManager::StageData( const void* SourceData, VkDeviceSize Size,
 	if( ( StagingBuffers[CurrentBufferIndex].Offset + Size ) > MaxBufferSize )
 	{
 		//Force Submit now?
+		TRACE( "Not enough space in current staging buffer. Forcing submit to queue!" );
+		SubmitQueue();
 	}
 
 	auto& buffer = StagingBuffers[CurrentBufferIndex];
@@ -195,17 +180,6 @@ void VulkanStagingManager::StageData( const void* SourceData, VkDeviceSize Size,
 	buffer.Offset += Size;
 }
 
-void VulkanStagingManager::RecordCopyBufferCommand( VkBuffer Source, VkBuffer Destination, VkDeviceSize Size )
-{
-	VkBufferCopy copyRegion = {};
-
-	copyRegion.srcOffset = 0; // Optional
-	copyRegion.dstOffset = 0; // Optional
-	copyRegion.size = Size;
-	
-	vkCmdCopyBuffer( StagingBuffers[CurrentBufferIndex].CommandBuffer, Source, Destination, 1, &copyRegion );
-}
-
 void VulkanStagingManager::Wait( StagingBuffer& Stage )
 {
 	int timeout = 100;
@@ -218,7 +192,7 @@ void VulkanStagingManager::Wait( StagingBuffer& Stage )
 	}
 }
 
-void VulkanStagingManager::Flush( void )
-{
+// void VulkanStagingManager::Flush( void )
+// {
 
-}
+// }
