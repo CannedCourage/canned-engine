@@ -5,7 +5,6 @@
 #include <list>
 
 #include <vulkan/vulkan.hpp>
-#pragma comment(lib, "vulkan-1.lib")
 
 #include "Logging/Log.h"
 #include "Maths/Vector.h"
@@ -15,7 +14,11 @@
 
 #include "System/Debug.h"
 
+#pragma warning( push )
+#pragma warning( disable : 4003 ) //v2.1.1 has 100s of warnings relating to min/max macros. Fixed in v3.
 #include "nlohmann/json.hpp"
+#pragma warning( pop )
+
 using json = nlohmann::json;
 
 class GLFWwindow;
@@ -99,6 +102,7 @@ protected:
 	int GraphicsFamilyIndex = 0;
 	int PresentFamilyIndex = 0;
 	int TransferFamilyIndex = 0;
+
 	VkPhysicalDevice PhysicalDevice;
 
 	VkQueue GraphicsQueue;
@@ -130,12 +134,6 @@ protected:
 
 	std::vector<VkFramebuffer> FrameBuffers;
 
-	VkShaderModule vertShaderModule;
-	VkShaderModule fragShaderModule;
-
-	VkPipelineLayout PipelineLayout;
-	VkPipeline GraphicsPipeline;
-
 	void ReadSettings( void );
 	void WriteSettings( void );
 
@@ -157,19 +155,12 @@ protected:
 	void CreateSwapChain( void );
 	void CreateRenderTargets( void );
 	void CreateRenderPass( void );
-	void CreatePipeline( void );
 	void CreateFrameBuffers( void );
 	void RecordCommands( void );
 
 	void InitSwapChain( void );
 	void CleanUpSwapChain( void );
 	void RecreateSwapChain( void );
-
-	VkBuffer VertexBuffer, IndexBuffer;
-	vkAllocation VertexBufferMemory, IndexBufferMemory;
-
-	void CreateVertexBuffer( void );
-	void CreateIndexBuffer( void );
 
 	VkSurfaceFormatKHR ChooseSurfaceFormat( void );
 	VkPresentModeKHR ChoosePresentMode( void );
@@ -189,10 +180,19 @@ public:
 	void Init( void );
 	void CleanUp( void );
 
+	void Begin( void ); //Begin()?
+	void End( void ); //End()?
+	void Submit( void ); //Submit()?
+
 	void DrawFrame( void );
 
 	VkResult FindMemoryTypeIndex( const unsigned int MemoryTypeBits, const VkMemoryPropertyFlags Required, const VkMemoryPropertyFlags Preferred, unsigned int& SelectedMemoryTypeIndex, VkMemoryPropertyFlags& SupportedProperties );
 	VkBuffer CreateBuffer( VkDeviceSize Size, VkBufferUsageFlags Usage, VkSharingMode SharingMode, VkMemoryPropertyFlags Properties, vkAllocation& Allocation );
+	VkShaderModule LoadShaderModule( const std::string& Filename );
+
+	VkCommandBuffer GetCurrentCommandBuffer( void );
+	VkRenderPass GetRenderPass( void );
+	VkExtent2D GetFrameBufferExtent( void );
 
 	VulkanAllocator MemoryAllocator{ *this };
 	VulkanStagingManager StagingManager{ *this };

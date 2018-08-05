@@ -79,10 +79,15 @@ int System::GameLoop( void )
 	}
 
 	input.PostUpdate();
-	sound.Update();
+	sound.Update(); //Why is this here?
+
+	Graphics->Begin();
 
 	//sceneManager.Render();
-	Graphics->DrawFrame();
+
+	Graphics->End();
+
+	Graphics->Submit();
 
 	return 0;
 }

@@ -1,10 +1,6 @@
 #ifndef _SPRITECOMPONENT_H_
 #define _SPRITECOMPONENT_H_
 
-#include <d3dx9.h>
-
-class IDirect3DTexture9;
-
 class RectangleFloat
 {
 private:
@@ -24,7 +20,7 @@ public:
 	RectangleFloat TextureDimensions; //Scale and Translate
 	float TextureRotation = 0.0f; //Rotation about Z-axis
 	
-	IDirect3DTexture9* Texture = NULL; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
+	//IDirect3DTexture9* Texture = NULL; //TODO: Replace with Material component reference, Material = { texture(s), attributes, shader }?
 
 	SpriteComponent( void );
 };

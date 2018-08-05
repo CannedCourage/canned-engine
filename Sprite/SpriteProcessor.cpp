@@ -1,129 +1,101 @@
-/*
 #include "Sprite/SpriteProcessor.h"
 #include "Transform/TransformProcessor.h"
-#include <assert.h>
+
 #include <string>
 
-SpriteProcessor::SpriteProcessor( Graphics& g, TransformProcessor& t ) : graphics( g ), transforms( t ), log( "SpriteProcessor" )
+const std::vector<Vertex> vertices =
 {
-	D3DVERTEXELEMENT9 pos = { 0, (WORD)posOffset, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 };
-	D3DVERTEXELEMENT9 tex = { 0, (WORD)texOffset, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 };
-	D3DVERTEXELEMENT9 endElement = D3DDECL_END();
+	{ { -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
+    { { 0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f } },
+    { { 0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } },
+    { { -0.5f, 0.5f }, { 1.0f, 1.0f, 1.0f } }
+};
+
+const std::vector<uint16_t> drawIndices = { 0, 1, 2, 2, 3, 0 };
+
+/*
+Vertex vertices[] =
+{
+	{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f },
+	{ 0.5f, 0.5f, 0.0f, 1.0f, 0.0f },
+	{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
+	{ 0.5f, -0.5f, 0.0f, 1.0f, 1.0f }
+};
+//*/
+
+SpriteProcessor::SpriteProcessor( GraphicsVK* g, TransformProcessor& t ) : Graphics( g ), transforms( t )
+{
+	//Create vertex buffer
+	VkDeviceSize vertBufferSize = sizeof(vertices[0]) * vertices.size();
+
+	VertexBuffer = Graphics->CreateBuffer(
+		vertBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		VK_SHARING_MODE_EXCLUSIVE,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		VertexBufferMemory
+		);
+
+	Graphics->StagingManager.StageData( vertices.data(), vertBufferSize, VertexBuffer );
+
+	//Create Index Buffer
+	VkDeviceSize indexBufferSize = sizeof(drawIndices[0]) * drawIndices.size();
+
+    IndexBuffer = Graphics->CreateBuffer(
+		indexBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+		VK_SHARING_MODE_EXCLUSIVE,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		IndexBufferMemory
+		);
+
+    Graphics->StagingManager.StageData( drawIndices.data(), indexBufferSize, IndexBuffer );
+
+	//Load shaders
+	VertShaderModule = Graphics->LoadShaderModule( "vert.spv" );
+	FragShaderModule = Graphics->LoadShaderModule( "frag.spv" );
 	
-	vElements.push_back( pos );
-	vElements.push_back( tex );
-	vElements.push_back( endElement );
-	
-	graphics.Device()->CreateVertexDeclaration( &vElements[0], &vDecl );
-	
-	VFormat vertices[] =
-	{
-		{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f },
-		{ 0.5f, 0.5f, 0.0f, 1.0f, 0.0f },
-		{ -0.5f, -0.5f, 0.0f, 0.0f, 1.0f },
-		{ 0.5f, -0.5f, 0.0f, 1.0f, 1.0f }
-	};
+	//Set world, view, projection, and translation matrices
 
-	verts.push_back( vertices[0] );
-	verts.push_back( vertices[1] );
-	verts.push_back( vertices[2] );
-	verts.push_back( vertices[3] );
+	//Set texture in shader
 
-	//Create non-FVF vertex buffer
-	graphics.ErrorCheck( graphics.Device()->CreateVertexBuffer( 20*sizeof(float), D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &vBuffer, NULL ), "Error creating sprite buffer" );
-	
-	BYTE* vertexData;
-	graphics.ErrorCheck( vBuffer->Lock( 0, 0, reinterpret_cast<void**>( &vertexData ), 0 ), "Error locking vertex buffer" );
-	memcpy( vertexData, vertices, 20*sizeof(float) );
-	graphics.ErrorCheck( vBuffer->Unlock(), "Error unlocking vertex buffer" );
-	
-	indicies.push_back( 0 );
-	indicies.push_back( 1 );
-	indicies.push_back( 2 );
-	indicies.push_back( 2 );
-	indicies.push_back( 1 );
-	indicies.push_back( 3 );
+	//Set technique
 
-	// build index buffer
-	graphics.ErrorCheck( graphics.Device()->CreateIndexBuffer( indicies.size(), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &iBuffer, NULL ), "Error creating sprite index buffer" );
+	//Calculate matrices
 
-	BYTE* indexData;
-	graphics.ErrorCheck( iBuffer->Lock( 0, 0, reinterpret_cast<void**>( &indexData ), 0 ), "Error locking index buffer" );
-	memcpy( indexData, &indicies[0], indicies.size() );
-	graphics.ErrorCheck( iBuffer->Unlock(), "Error unlocking index buffer" );
-
-	graphics.ErrorCheck(
-	D3DXCreateEffectFromFile( 
-    graphics.Device(), 
-    effectFile, 
-    NULL, // CONST D3DXMACRO* pDefines,
-    NULL, // LPD3DXINCLUDE pInclude,
-    shaderFlags, 
-	NULL, // LPD3DXEFFECTPOOL pPool,
-    &effect, 
-    NULL ),
-	"Error creating Sprite shader" );
-	
-	worldHandle = effect->GetParameterBySemantic( NULL, "WORLD" );
-	viewHandle = effect->GetParameterBySemantic( NULL, "VIEW" );
-	projHandle = effect->GetParameterBySemantic( NULL, "PROJECTION" );
-	texTransHandle = effect->GetParameterBySemantic( NULL, "TEXTRANSFROM" );
-	textureHandle = effect->GetParameterByName( NULL, "g_MeshTexture" );
-
-	//TODO: Switch back to SpriteShader.fx	
-	RenderWithTexture = effect->GetTechniqueByName( "RenderSpriteWithTexture" );
-
-	D3DXMatrixIdentity( &viewMat );
-	D3DXMatrixIdentity( &projMat );
-
-	D3DXMatrixLookAtLH( &viewMat, &(D3DXVECTOR3( 0.0f, 0.0f, -1.0f )), &(D3DXVECTOR3( 0.0f, 0.0f, 0.0f )), &(D3DXVECTOR3( 0.0f, 1.0f, 0.0f )) );
-	
-	//TODO: Get screen info from Graphics class(?) - This is a good reason to abstract this code away into the graphics class
-	D3DXMatrixOrthoLH( &projMat, 1280, 720, 0.0f, 10.0f );
-
-	//Set View Matrix
-	effect->SetMatrix( viewHandle, &viewMat );
-	effect->SetMatrix( projHandle, &projMat );
+	//Set matrices
 }
 
 SpriteProcessor::~SpriteProcessor( void )
 {
-	if( vDecl != NULL )
-	{
-		vDecl->Release();
-		vDecl = NULL;
-	}
+	//Release vertex and index buffer
+	vkDestroyBuffer( Graphics->LogicalDevice, VertexBuffer, nullptr );
+    vkDestroyBuffer( Graphics->LogicalDevice, IndexBuffer, nullptr );
 	
-	if( vBuffer != NULL )
-	{
-		vBuffer->Release();
-		vBuffer = NULL;
-	}
-	
-	if( iBuffer != NULL )
-	{
-		iBuffer->Release();
-		iBuffer = NULL;
-	}
-	
-	if( effect != NULL )
-	{
-		effect->Release();
-		effect = NULL;
-	}
+	//Release shader
+	vkDestroyShaderModule( Graphics->LogicalDevice, FragShaderModule, nullptr );
+	vkDestroyShaderModule( Graphics->LogicalDevice, VertShaderModule, nullptr );
+
+	//Release pipeline
+	vkDestroyPipeline( Graphics->LogicalDevice, SpritePipeline, nullptr );
+	vkDestroyPipelineLayout( Graphics->LogicalDevice, PipelineLayout, nullptr );
 }
 
+//TODO: Removed TextureAssetName parameter
 void SpriteProcessor::AddSpriteComponent( const unsigned int entityID, const std::string& TextureAssetName )
 {
+	//TODO: Check if component already exists
+
 	SpriteComponent s;
 
-	s.Texture = graphics.GetTexture( TextureAssetName );
+	//s.Texture = graphics.GetTexture( TextureAssetName );
 
 	spriteComponents[entityID] = s;
 }
 
 SpriteComponent& SpriteProcessor::GetSpriteComponent( const unsigned int entityID )
 {
+	//TODO: Check if component exists
 	return spriteComponents[entityID];
 }
 
@@ -133,35 +105,20 @@ void SpriteProcessor::Start( void )
 
 void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteComponent& sprite )
 {
-	D3DXMATRIX world, textureTransformation; //Passed to shader
-	D3DXMATRIX translation, localRotationX, localRotationY, localRotationZ, scaling; //Geometry
-	D3DXMATRIX textureScaling, textureRotation, textureTranslation; //Texture Coordinates
+	VkCommandBuffer buffer = Graphics->GetCurrentCommandBuffer();
+	//Declare matrices
 
-	D3DXMatrixIdentity( &world ); D3DXMatrixIdentity( &textureTransformation );
-	D3DXMatrixIdentity( &translation );
-	D3DXMatrixIdentity( &localRotationX ); D3DXMatrixIdentity( &localRotationY ); D3DXMatrixIdentity( &localRotationZ );
-	D3DXMatrixIdentity( &scaling );
-	D3DXMatrixIdentity( &textureScaling ); D3DXMatrixIdentity( &textureRotation ); D3DXMatrixIdentity( &textureTranslation );
-
+	//Grab the Transform Component
 	const TransformComponent& tForm = transforms.GetTransformComponent( entityID );
 
 	//CALCULATE WORLD TRANSFORMATION//
 
-	D3DXMatrixTranslation( &translation, tForm.translation.x, tForm.translation.y, tForm.translation.z );
-
-	D3DXMatrixRotationX( &localRotationX, tForm.localRotation.x );
-	D3DXMatrixRotationY( &localRotationY, tForm.localRotation.y );
-	D3DXMatrixRotationZ( &localRotationZ, tForm.localRotation.z );
-	
-	D3DXMatrixScaling( &world, tForm.scale.x, tForm.scale.y, 1 );
-
 	//Multplication order: scaling * localRotation * translation * rotation
 	//TODO: Implement non-local rotations?
-	world = world * scaling * localRotationX * localRotationY * localRotationZ * translation;
 
-	effect->SetMatrix( worldHandle, &world );
+	//Set world matrix in shader
 	
-	effect->SetTexture( textureHandle, sprite.Texture );
+	//Set texture in shader
 
 	//CALCULATE TEXTURE TRANSFORMATION//
 
@@ -171,62 +128,231 @@ void SpriteProcessor::DrawSprite( const unsigned int entityID, const SpriteCompo
 	float widthScaling = ( sprite.TextureDimensions.right - sprite.TextureDimensions.left );
 
 	//This transforms the texture coordinates that are hard coded in the vertex array
-	D3DXMatrixScaling( &textureScaling, widthScaling, heightScaling, 1 );
-	D3DXMatrixRotationZ( &textureRotation, sprite.TextureRotation );
-	D3DXMatrixTranslation( &textureTranslation, sprite.TextureDimensions.left, sprite.TextureDimensions.top, 0 );
 	
-	textureTransformation = textureScaling * textureRotation * textureTranslation;
-
-	effect->SetMatrix( texTransHandle, &textureTransformation );
+	//Set texture matrices
 	
-	//TODO: Switch effect file
-	effect->SetTechnique( RenderWithTexture );
-	
-	//Apply the technique contained in the effect 
-	UINT cPasses = 0;
-	effect->Begin( &cPasses, 0 );
-
-	for( int iPass = 0; iPass < cPasses; iPass++ )
-	{
-		effect->BeginPass( iPass );
-
-		//Render the geometry with the applied technique
-		graphics.ErrorCheck( graphics.Device()->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 2 ), "Drawing sprite" );
-
-		effect->EndPass();
-	}
-	
-	effect->End();
-	
-	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, NULL, 0, 0 ), "Clearing stream source" );
-	graphics.ErrorCheck( graphics.Device()->SetIndices( NULL ), "Clearing indices" );
+	//Draw primitive
+	vkCmdDrawIndexed( buffer, static_cast<uint16_t>(drawIndices.size()), 1, 0, 0, 0 );
 }
 
 void SpriteProcessor::Update( const EngineDuration& deltaT )
 {
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW ), "Enabling Culling" );
-	
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZWRITEENABLE, D3DZB_TRUE ), "Enabling Z-writes" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE ), "Enabling Depth Testing" );
-	
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHABLENDENABLE, true ), "Enabling alpha blending" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_ALPHATESTENABLE, false ), "Disabling alpha testing" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA ), "Setting Source blend factor" );
-	graphics.ErrorCheck( graphics.Device()->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA ), "Setting Destination blend factor" );
+	//TODO: Should the processor own the command buffer?
+	//TODO: Should the command buffer be secondary?
+	VkCommandBuffer commandBuffer = Graphics->GetCurrentCommandBuffer();
 
-	graphics.ErrorCheck( graphics.Device()->SetVertexDeclaration( vDecl ), "Setting vertex declaration" );
-	graphics.ErrorCheck( graphics.Device()->SetStreamSource( 0, vBuffer, 0, stride ), "Setting stream source" );
-	graphics.ErrorCheck( graphics.Device()->SetIndices( iBuffer ), "Setting indices" );
+	vkCmdBindPipeline( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, SpritePipeline );
 
-	ListOfSprites::iterator it;
+	//Set vertex data source
+	VkBuffer vertexBuffers[] = { VertexBuffer };
+	VkDeviceSize offsets[] = { 0 };
+	vkCmdBindVertexBuffers( commandBuffer, 0, 1, vertexBuffers, offsets );
 
-	for( it = spriteComponents.begin(); it != spriteComponents.end(); it++ )
+	//Set index data source
+	vkCmdBindIndexBuffer( commandBuffer, IndexBuffer, 0, VK_INDEX_TYPE_UINT16 );
+
+	for( auto& sprite : spriteComponents )
 	{
-		DrawSprite( it->first, it->second );
+		DrawSprite( sprite.first, sprite.second );
 	}
 }
 
 void SpriteProcessor::End( void )
 {
 }
-//*/
+
+VkPipelineVertexInputStateCreateInfo CreateInputDesc( void )
+{
+	auto bindingDescription = Vertex::GetBindingDescription();
+	auto attributeDescriptions = Vertex::GetAttributeDescriptions();
+
+	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
+
+	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>( attributeDescriptions.size() );
+	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+
+	return vertexInputInfo;
+}
+
+VkPipelineInputAssemblyStateCreateInfo CreateInputAssemblyDesc( void )
+{
+	VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
+	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+	inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	inputAssembly.primitiveRestartEnable = VK_FALSE;
+
+	return inputAssembly;
+}
+
+VkPipelineViewportStateCreateInfo CreateViewportDesc( VkExtent2D extent )
+{
+	VkViewport viewport = {};
+	viewport.x = 0.0f;
+	viewport.y = 0.0f;
+	viewport.width = (float) extent.width;
+	viewport.height = (float) extent.height;
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+
+	VkRect2D scissor = {};
+	scissor.offset = { 0, 0 };
+	scissor.extent = extent;
+
+	VkPipelineViewportStateCreateInfo viewportState = {};
+	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	viewportState.viewportCount = 1;
+	viewportState.pViewports = &viewport;
+	viewportState.scissorCount = 1;
+	viewportState.pScissors = &scissor;
+
+	return viewportState;
+}
+
+VkPipelineRasterizationStateCreateInfo CreateRasterizerDesc( void )
+{
+	VkPipelineRasterizationStateCreateInfo rasterizer = {};
+	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+	rasterizer.depthClampEnable = VK_FALSE;
+	rasterizer.rasterizerDiscardEnable = VK_FALSE;
+	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+	rasterizer.lineWidth = 1.0f;
+	rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	rasterizer.depthBiasEnable = VK_FALSE;
+	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
+	rasterizer.depthBiasClamp = 0.0f; // Optional
+	rasterizer.depthBiasSlopeFactor = 0.0f; // Optional
+
+	return rasterizer;
+}
+
+VkPipelineMultisampleStateCreateInfo CreateMultisampleDesc( void )
+{
+	VkPipelineMultisampleStateCreateInfo multisampling = {};
+	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+	multisampling.sampleShadingEnable = VK_FALSE;
+	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+	multisampling.minSampleShading = 1.0f; // Optional
+	multisampling.pSampleMask = nullptr; // Optional
+	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
+	multisampling.alphaToOneEnable = VK_FALSE; // Optional
+
+	return multisampling;
+}
+
+VkPipelineColorBlendStateCreateInfo CreateColorBlendDesc( void )
+{
+	VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
+	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+	colorBlendAttachment.blendEnable = VK_FALSE;
+	colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
+	colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
+	colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
+	colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
+	colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
+	colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
+
+	VkPipelineColorBlendStateCreateInfo colorBlending = {};
+	colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	colorBlending.logicOpEnable = VK_FALSE;
+	colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
+	colorBlending.attachmentCount = 1;
+	colorBlending.pAttachments = &colorBlendAttachment;
+	colorBlending.blendConstants[0] = 0.0f; // Optional
+	colorBlending.blendConstants[1] = 0.0f; // Optional
+	colorBlending.blendConstants[2] = 0.0f; // Optional
+	colorBlending.blendConstants[3] = 0.0f; // Optional
+
+	return colorBlending;
+}
+
+VkPipelineDepthStencilStateCreateInfo CreateDepthStencilDesc( void )
+{
+	VkStencilOpState front = {}, back = {};
+
+	front.failOp = VK_STENCIL_OP_KEEP;
+    front.passOp = VK_STENCIL_OP_KEEP;
+    front.depthFailOp = VK_STENCIL_OP_KEEP;
+    front.compareOp = VK_COMPARE_OP_ALWAYS;
+    front.compareMask = 0;
+    front.writeMask = 0;
+    front.reference = 0;
+
+	VkPipelineDepthStencilStateCreateInfo depth = {};
+
+	depth.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	depth.depthTestEnable = VK_FALSE;
+	depth.depthWriteEnable = VK_FALSE;
+	depth.depthCompareOp = VK_COMPARE_OP_ALWAYS ;
+	depth.depthBoundsTestEnable = VK_FALSE;
+	depth.stencilTestEnable = VK_FALSE;
+	depth.front = front;
+	depth.back = front;
+	depth.minDepthBounds = 0.0f;
+	depth.maxDepthBounds = 1.0f;
+
+	return depth;
+}
+
+void SpriteProcessor::CreatePipeline( void )
+{
+	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
+
+	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	vertShaderStageInfo.module = VertShaderModule;
+	vertShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo fragShaderStageInfo = {};
+
+	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	fragShaderStageInfo.module = FragShaderModule;
+	fragShaderStageInfo.pName = "main";
+
+	std::vector<VkPipelineShaderStageCreateInfo> shaderStages = { vertShaderStageInfo, fragShaderStageInfo };
+
+	auto vertexInputInfo = CreateInputDesc();
+	auto inputAssembly = CreateInputAssemblyDesc();
+	auto viewportState = CreateViewportDesc( Graphics->GetFrameBufferExtent() );
+	auto rasterizer = CreateRasterizerDesc();
+	auto multisampling = CreateMultisampleDesc();
+	auto colorBlending = CreateColorBlendDesc();
+	auto depth = CreateDepthStencilDesc();
+
+	VkPipelineLayoutCreateInfo PipelineLayoutInfo = {};
+	PipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	PipelineLayoutInfo.setLayoutCount = 0; // Optional
+	PipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+	PipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
+	PipelineLayoutInfo.pPushConstantRanges = 0; // Optional
+
+	VERIFY( VK_SUCCESS == vkCreatePipelineLayout( Graphics->LogicalDevice, &PipelineLayoutInfo, nullptr, &PipelineLayout ) );
+
+	VkGraphicsPipelineCreateInfo pipelineInfo = {};
+	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipelineInfo.stageCount = shaderStages.size();
+	pipelineInfo.pStages = shaderStages.data();
+
+	pipelineInfo.pVertexInputState = &vertexInputInfo;
+	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pViewportState = &viewportState;
+	pipelineInfo.pRasterizationState = &rasterizer;
+	pipelineInfo.pMultisampleState = &multisampling;
+	pipelineInfo.pDepthStencilState = &depth; // Optional
+	pipelineInfo.pColorBlendState = &colorBlending;
+	pipelineInfo.pDynamicState = nullptr; // Optional
+
+	pipelineInfo.layout = PipelineLayout;
+
+	pipelineInfo.renderPass = Graphics->GetRenderPass();
+	pipelineInfo.subpass = 0;
+
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+	pipelineInfo.basePipelineIndex = -1; // Optional
+
+	VERIFY( VK_SUCCESS == vkCreateGraphicsPipelines( Graphics->LogicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &SpritePipeline ) );
+}
