@@ -1,23 +1,34 @@
+#include <stdexcept>
+#include <memory>
+
 #include "System/System.h"
+#include "Window/WindowGLFW.h"
+#include "Graphics/GraphicsVK.h"
+#include "Sound/Sound.h"
+#include "Input/Input.h"
 
-#include <stdexcept> 
-
-System* sys = NULL;
+#include "Graphics/DisableSteamOverlay.h"
 
 int main()
 {
+    WindowGLFW window{};
+    GraphicsVK graphics{};
+    Sound sound{};
+    Input input{};
+
+    std::unique_ptr<System> sys;
+
     int result = 0;
 
     try
     {
-        sys = new System();
-        
-        if( !sys )
-        {
-            throw std::runtime_error( "Error during construction" );
-        }
+        HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
 
-        if( !sys->Initialise() )
+        graphics.Window = window.GetWindow();
+
+        sys = std::make_unique<System>( window, graphics, sound, input );
+
+        if( !sys->Init() )
         {
             throw std::runtime_error( "Error during initialisation" );
         }
@@ -30,24 +41,12 @@ int main()
     catch( std::exception error )
     {
         //TODO: Alert the user
-        if( sys != NULL )
-        {
-            sys->Quit();
-        }
+        if( sys ){ sys->Quit(); }
     }
     catch( std::string error )
     {
         //TODO: Alert the user
-        if( sys != NULL )
-        {
-            sys->Quit();
-        }
-    }
-
-    if( sys != NULL )
-    {
-        delete sys;
-        sys = NULL;
+        if( sys ){ sys->Quit(); }
     }
 
     return result;

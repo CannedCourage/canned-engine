@@ -1,23 +1,15 @@
 #define settingsFile "w:/engine/data/settings/MainSettings.json"
 
-#include "Graphics/DisableSteamOverlay.h"
-
-#include "StandardResources/resource.h"
 #include "System/System.h"
 #include "Window/WindowGLFW.h"
 #include "Graphics/GraphicsVK.h"
 
-System::System( void )
+System::System( WindowGLFW& Window,	GraphicsVK& Graphics, Sound& Sound,	Input& Input )
+: Window( Window ), Graphics( Graphics ), Sound( Sound ), Input( Input )
 {
 	std::ifstream mainSettingsFile{ settingsFile };
 	
 	mainSettingsFile >> GlobalSettings;
-
-	HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
-
-	//Instantiate services
-	Window = std::make_unique<WindowGLFW>();
-	Graphics = std::make_unique<GraphicsVK>();
 }
 
 System::~System( void )
@@ -27,17 +19,16 @@ System::~System( void )
 	mainSettingsFile << std::setw(4) << GlobalSettings << std::endl;
 }
 
-int System::Initialise( void )
+int System::Init( void )
 {
 	TRACE( "System Init" );
 
-	Window->Init( this );
-	
-	Graphics->Init();
+	Window.Init();
+	Graphics.Init();
+	Sound.Init();
+	Input.Init();
 
-	sound.Init();
-
-	input.Init();
+	SetupCallbacks();
 
 	//assets?
 	
@@ -105,4 +96,50 @@ void System::Shutdown( void )
 void System::Quit( void )
 {
 	Window->Quit();
+}
+
+void System::SetupCallbacks( void )
+{
+	auto key_callback = [&input]( GLFWwindow* Window, int Key, int Scancode, int Action, int Mods )
+    {
+        input.ReceiveKeyboardInput( Key, Scancode, Action, Mods );
+    };
+
+    auto cursor_position_callback = [&input]( GLFWwindow* Window, double X, double Y )
+    {
+        input.ReceiveMousePosition( X, Y );
+    }
+
+    auto mouse_button_callback = [&input]( GLFWwindow* Window, int Button, int Action, int Mods )
+    {
+        input.ReceiveMouseInput( Button, Action, Mods );
+    }
+
+    auto scroll_callback = [&input]( GLFWwindow* Window, double XOffset, double YOffset )
+    {
+        input.ReceiveScrollInput( XOffset, YOffset );
+    }
+
+    auto scroll_callback = [&input]( GLFWwindow* Window, double XOffset, double YOffset )
+    {
+        input.ReceiveScrollInput( XOffset, YOffset );
+    }
+
+    auto window_size_callback = [&input]( GLFWwindow* Window, int Width, int Height )
+    {
+        //Record in settings?
+    }
+
+    auto framebuffer_size_callback = [&input]( GLFWwindow* Window, int Width, int Height )
+    {
+        //Update graphics service + record in settings
+        //glViewport(0, 0, width, height);
+    }
+
+    glfwSetKeyCallback( window.GetWindow(), key_callback );
+    glfwSetCursorPosCallback( window.GetWindow(), cursor_position_callback );
+    glfwSetMouseButtonCallback( window.GetWindow(), mouse_button_callback );
+    glfwSetScrollCallback( window.GetWindow(), scroll_callback );
+    glfwSetWindowSizeCallback( window.GetWindow(), window_size_callback );
+    glfwSetFramebufferSizeCallback( window.GetWindow(), framebuffer_size_callback );
 }

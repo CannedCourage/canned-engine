@@ -1,14 +1,10 @@
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
 
-#include <memory>
-
 #include "Logging/Log.h"
 #include "Scene/SceneManager.h"
 #include "Engine/Time.h"
-#include "Input/Input.h"
 #include "Assets/AssetManager.h"
-#include "Sound/Sound.h"
 
 #pragma warning( push )
 #pragma warning( disable : 4003 ) //v2.1.1 has 100s of warnings relating to min/max macros. Fixed in v3.
@@ -21,40 +17,41 @@ using json = nlohmann::json;
 
 class WindowGLFW;
 class GraphicsVK;
+class Sound;
+class Input;
 
 class System
 {
 private:
-protected:
 
 	Log log{ "System" };
 
-	std::unique_ptr<WindowGLFW> Window;
-	std::unique_ptr<GraphicsVK> Graphics;
+	WindowGLFW& Window;
+	GraphicsVK& Graphics;
+	Sound&		Sound;
+	Input&		Input;
+
+	void SetupCallbacks( void );
 public:
 
 	Time time;
-
-	//Engine
 	json GlobalSettings;
-	Sound sound;
-	Input input;
-	
 	AssetManager assets{ *this };
-
 	SceneManager sceneManager{ *this };
 
-	System( void );
+	System( WindowGLFW& Window,	GraphicsVK& Graphics, Sound& Sound,	Input& Input );
 	~System( void );
 
-	int Initialise( void );
+	int Init( void );
 	int Run( void );
 	int GameLoop( void );
 	void Shutdown( void );
 	void Quit( void );
 
-	WindowGLFW* GetWindow( void ){ return Window.get(); }
-	GraphicsVK* GetGraphics( void ){ return Graphics.get(); }
+	WindowGLFW* GetWindow( void ){ return &Window; }
+	GraphicsVK* GetGraphics( void ){ return &Graphics; }
+	Sound* GetSound( void ){ return &Sound; }
+	Input* GetInput( void ){ return &Input; }
 };
 
 #endif //_SYSTEM_H_

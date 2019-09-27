@@ -18,11 +18,13 @@ public:
 	WindowGLFW( void );
 	~WindowGLFW( void );
 
-	void Init( System* Sys );
+	void Init( void );
 	void Update( void );
 	void CleanUp( void );
 
 	bool IsValid( void );
+
+	GLFWwindow* GetWindow( void );
 
 	void SetFullscreen( const bool Fullscreen );
 	void SetWindowPosition( int X, int Y );

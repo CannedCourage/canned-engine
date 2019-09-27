@@ -1,51 +1,9 @@
-#include "Window/WindowGLFW.h"
-#include "System/System.h"
-#include "Graphics/GraphicsVK.h"
-#include "Input/Input.h"
-
 #include <stdexcept>
-
 #include <GLFW/glfw3.h>
-#pragma comment(lib, "glfw3dll.lib")
 
-void key_callback( GLFWwindow* Window, int Key, int Scancode, int Action, int Mods )
-{
-	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
+#include "Window/WindowGLFW.h"
 
-	sys->input.ReceiveKeyboardInput( Key, Scancode, Action, Mods );
-}
-
-void cursor_position_callback( GLFWwindow* Window, double X, double Y )
-{
-	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
-
-	sys->input.ReceiveMousePosition( X, Y );
-}
-
-void mouse_button_callback( GLFWwindow* Window, int Button, int Action, int Mods )
-{
-	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
-
-	sys->input.ReceiveMouseInput( Button, Action, Mods );
-}
-
-void scroll_callback( GLFWwindow* Window, double XOffset, double YOffset )
-{
-	System* sys = static_cast<System*>( glfwGetWindowUserPointer( Window ) );
-
-	sys->input.ReceiveScrollInput( XOffset, YOffset );
-}
-
-void window_size_callback( GLFWwindow* Window, int Width, int Height )
-{
-	//Record in settings?
-}
-
-void framebuffer_size_callback( GLFWwindow* Window, int Width, int Height )
-{
-	//Update graphics service + record in settings
-    //glViewport(0, 0, width, height);
-}
+#pragma comment(lib, "glfw3dll.lib") //TODO: Move this to build script
 
 WindowGLFW::WindowGLFW( void )
 {
@@ -57,13 +15,12 @@ WindowGLFW::~WindowGLFW( void )
 	glfwTerminate();
 }
 
-void WindowGLFW::Init( System* Sys )
+void WindowGLFW::Init( void )
 {
 	glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API ); //No OpenGL
     glfwWindowHint( GLFW_RESIZABLE, GLFW_FALSE ); //Prevent resizing
 
     Window = glfwCreateWindow( 800, 600, "GLFW window", nullptr, nullptr );
-    glfwSetWindowUserPointer( Window, Sys ); //Make System available to GLFW
 
     if( !Window )
     {
@@ -72,16 +29,6 @@ void WindowGLFW::Init( System* Sys )
     }
 
     glfwMakeContextCurrent( Window );
-
-    Sys->GetGraphics()->Window = Window;
-
-    glfwSetKeyCallback( Window, key_callback );
-    glfwSetCursorPosCallback( Window, cursor_position_callback );
-    glfwSetMouseButtonCallback( Window, mouse_button_callback );
-    glfwSetScrollCallback( Window, scroll_callback );
-    
-    //glfwSetWindowSizeCallback(Window, window_size_callback);
-    //glfwSetFramebufferSizeCallback(Window, framebuffer_size_callback);
 }
 
 void WindowGLFW::Update( void )
@@ -137,4 +84,9 @@ void WindowGLFW::Quit( void )
 bool WindowGLFW::IsValid( void )
 {
 	return !( glfwWindowShouldClose( Window ) );
+}
+
+GLFWwindow* WindowGLFW::GetWindow( void )
+{
+	return Window;
 }
