@@ -11,20 +11,18 @@
 
 int main()
 {
-    WindowGLFW window{};
-    GraphicsVK graphics{};
-    Sound sound{};
-    Input input{};
-
     std::unique_ptr<System> sys;
 
     int result = 0;
 
     try
     {
+        WindowGLFW window{};
+        GraphicsVK graphics{ window.GetWindow() };
+        Sound sound{};
+        Input input{};
+        
         HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
-
-        graphics.Window = window.GetWindow();
 
         sys = std::make_unique<System>( window, graphics, sound, input );
 

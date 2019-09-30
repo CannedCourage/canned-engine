@@ -82,13 +82,14 @@ class GraphicsVK
 private:
 
 	VkDebugReportCallbackEXT Callback;
-protected:
+
+	GLFWwindow* Window;
 
 	Log log{ "GraphicsVK" };
 
 	json Settings;
 
-	const bool enableDebugLayers = true; //Get from settings file later
+	const bool enableDebugLayers = true; //TODO: Get from settings file later
 
 	std::vector<const char *> InstanceExtensions;
 	std::vector<const char *> DeviceExtensions;
@@ -168,14 +169,12 @@ protected:
 	VkFormat ChooseSupportedFormat( const std::vector<VkFormat>& formats, VkImageTiling tiling, VkFormatFeatureFlags features );
 public:
 
-	GLFWwindow* Window;
-
 	const unsigned int BufferCount = 2;
 	GPU* GPUInfo = nullptr;
 
 	VkDevice LogicalDevice;
 
-	GraphicsVK( void );
+	GraphicsVK( GLFWwindow* Window );
 
 	void Init( void );
 	void CleanUp( void );

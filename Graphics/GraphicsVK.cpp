@@ -20,7 +20,7 @@
 
 static_assert( sizeof(unsigned int) == 4, "Vulkan relies on 32-bit integer data type" );
 
-GraphicsVK::GraphicsVK( void )
+GraphicsVK::GraphicsVK( GLFWwindow* Window ) : Window( Window )
 {
 	AcquireSemaphores.resize( BufferCount );
 	RenderCompleteSemaphores.resize( BufferCount );
