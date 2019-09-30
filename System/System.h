@@ -32,6 +32,7 @@ private:
 	Input&		Input;
 
 	void SetupCallbacks( void );
+	int GameLoop( void );
 public:
 
 	Time time;
@@ -42,10 +43,7 @@ public:
 	System( WindowGLFW& Window,	GraphicsVK& Graphics, Sound& Sound,	Input& Input );
 	~System( void );
 
-	int Init( void );
 	int Run( void );
-	int GameLoop( void );
-	void Shutdown( void );
 	void Quit( void );
 
 	WindowGLFW* GetWindow( void ){ return &Window; }

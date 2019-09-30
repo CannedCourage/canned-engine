@@ -7,21 +7,11 @@
 System::System( WindowGLFW& Window,	GraphicsVK& Graphics, Sound& Sound,	Input& Input )
 : Window( Window ), Graphics( Graphics ), Sound( Sound ), Input( Input )
 {
+	TRACE( "System Init" );
+
 	std::ifstream mainSettingsFile{ settingsFile };
 	
 	mainSettingsFile >> GlobalSettings;
-}
-
-System::~System( void )
-{
-	std::ofstream mainSettingsFile{ settingsFile };
-
-	mainSettingsFile << std::setw(4) << GlobalSettings << std::endl;
-}
-
-int System::Init( void )
-{
-	TRACE( "System Init" );
 
 	Window.Init();
 	Graphics.Init();
@@ -33,8 +23,19 @@ int System::Init( void )
 	//assets?
 	
 	sceneManager.Init();
+}
 
-	return 1;
+System::~System( void )
+{
+	sceneManager.Shutdown();
+	assets.CleanUp();
+	sound.CleanUp();
+	Graphics->CleanUp();
+	Window->CleanUp();
+
+	std::ofstream mainSettingsFile{ settingsFile };
+
+	mainSettingsFile << std::setw(4) << GlobalSettings << std::endl;
 }
 
 int System::Run( void )
@@ -81,16 +82,6 @@ int System::GameLoop( void )
 	Graphics->Submit();
 
 	return 0;
-}
-
-//If the System is shutting down, that means end of program, time to do cleanup
-void System::Shutdown( void )
-{
-	sceneManager.Shutdown();
-	assets.CleanUp();
-	sound.CleanUp();
-	Graphics->CleanUp();
-	Window->CleanUp();
 }
 
 void System::Quit( void )

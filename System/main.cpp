@@ -28,15 +28,8 @@ int main()
 
         sys = std::make_unique<System>( window, graphics, sound, input );
 
-        if( !sys->Init() )
-        {
-            throw std::runtime_error( "Error during initialisation" );
-        }
-
         //Run() is the main loop
         result = sys->Run();
-
-        sys->Shutdown();
     }
     catch( std::exception error )
     {
