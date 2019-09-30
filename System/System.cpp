@@ -13,7 +13,6 @@ System::System( WindowGLFW& Window,	GraphicsVK& Graphics, Sound& Sound,	Input& I
 	
 	mainSettingsFile >> GlobalSettings;
 
-	Window.Init();
 	Graphics.Init();
 	Sound.Init();
 	Input.Init();
@@ -31,7 +30,6 @@ System::~System( void )
 	assets.CleanUp();
 	sound.CleanUp();
 	Graphics->CleanUp();
-	Window->CleanUp();
 
 	std::ofstream mainSettingsFile{ settingsFile };
 
