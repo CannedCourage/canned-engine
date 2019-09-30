@@ -8,15 +8,7 @@
 WindowGLFW::WindowGLFW( void )
 {
 	glfwInit();
-}
 
-WindowGLFW::~WindowGLFW( void )
-{
-	glfwTerminate();
-}
-
-void WindowGLFW::Init( void )
-{
 	glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API ); //No OpenGL
     glfwWindowHint( GLFW_RESIZABLE, GLFW_FALSE ); //Prevent resizing
 
@@ -31,6 +23,13 @@ void WindowGLFW::Init( void )
     glfwMakeContextCurrent( Window );
 }
 
+WindowGLFW::~WindowGLFW( void )
+{
+	glfwDestroyWindow( Window );
+
+	glfwTerminate();
+}
+
 void WindowGLFW::Update( void )
 {
 	/* Poll for and process events */
@@ -40,13 +39,6 @@ void WindowGLFW::Update( void )
 	{
 		Quit();
 	}
-}
-
-void WindowGLFW::CleanUp( void )
-{
-	glfwDestroyWindow( Window );
-
-    glfwTerminate();
 }
 
 void WindowGLFW::SetFullscreen( const bool Fullscreen )

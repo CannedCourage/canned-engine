@@ -18,9 +18,7 @@ public:
 	WindowGLFW( void );
 	~WindowGLFW( void );
 
-	void Init( void );
 	void Update( void );
-	void CleanUp( void );
 
 	bool IsValid( void );
 
