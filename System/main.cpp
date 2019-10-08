@@ -14,6 +14,8 @@ void SetupRenderCallbacks( WindowGLFW& window, GraphicsVK& graphics );
 
 int main()
 {
+    HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
+    
     std::unique_ptr<System> sys;
 
     int result = 0;
@@ -26,8 +28,7 @@ int main()
         Input input{};
 
         SetupInputCallbacks( window, input );
-
-        HandleWin32(); //TODO: Rename this to HandlePlatformSpecific?
+        SetupRenderCallbacks( window, graphics );
 
         sys = std::make_unique<System>( window, graphics, sound, input );
 
